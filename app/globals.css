@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+  --button-color: #00a3ff;
+  --body-background-color: #fff9f9;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+body {
+  background-color: var(--body-background-color);
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+.wallet-button,
+.wallet-connect-button {
+  background-color: var(--button-color);
+}
+
+/* .aptos-connect-button,
+.ant-modal-header,
+.about-aptos-connect-trigger-wrapper,
+.aptos-connect-privacy-policy-wrapper,
+.ant-divider-with-text {
+  display: none;
+} */
+
+/* .ant-modal-body>div>div.wallet-menu-wrapper:first-of-type {
+  display: none;
+} */
+
+/* 
+.ant-modal-body {
+  margin-top: 40px;
+} */
