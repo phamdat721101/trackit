@@ -1,67 +1,30 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { WalletName, useWallet } from '@aptos-labs/wallet-adapter-react';
-import { fetchAssetBalance, fetchNFTsBalance } from "@/utils/getData";
-import { Pagination } from "antd";
-import type { PaginationProps } from 'antd';
-import { it } from "node:test";
-
-interface BalanceDataType {
-  owner_address: string;
-  amount: number;
-  is_frozen: boolean;
-  storage_id: string;
-  metadata: {
-    asset_type: string;
-    creator_address: string;
-    decimals: number;
-    icon_uri: string | null;
-    name: string;
-    project_uri: string | null;
-    symbol: string;
-    token_standard: string;
-    maximum_v2: string | null;
-    supply_v2: string | null;
-  };
-}
-
-interface NftDataType {
-  owner_address: string;
-  amount: number;
-  is_fungible_v2: string | null;
-  is_soulbound_v2: string | null;
-  last_transaction_timestamp: string;
-  non_transferrable_by_owner: string | null;
-  last_transaction_version: number;
-  property_version_v1: number;
-  storage_id: string;
-  table_type_v1: string;
-  token_data_id: string;
-  token_properties_mutated_v1: {};
-  token_standard: string;
-  current_token_data: {
-    collection_id: string;
-    token_name: string;
-    current_collection: {
-      creator_address: string;
-    };
-  };
-}
+import { fetchAssetBalance, fetchNFTsBalance, BalanceDataType, NftDataType } from "@/utils/getData";
+import { Pagination, PaginationProps, Tabs } from 'antd';
+import GlobalContext from "@/context/store";
+import { getBlockchain } from "@/utils/chain";
 
 interface TableAssetDataType {
   name: string;
   symbol: string;
-  amount: number;
+  quantity: number;
   price: string;
-  percentChangeFor24h: string;
+  change24h: string;
   value: string;
 }
 
 interface TableNftDataType {
   name: string;
-  amount: number;
+  quantity: number;
   creator: string;
 }
+
+const tabList = [
+  'Coins',
+  'NFT',
+]
 
 const asset_table_head = [
   'Asset',
@@ -84,9 +47,9 @@ const getTableData = (data: BalanceDataType[]) => {
     // Extract relevant information from each balance item
     const name = item.metadata.name;
     const symbol = item.metadata.symbol;
-    const amount = item.amount;
+    const quantity = item.amount;
     const price = '';
-    const percentChangeFor24h = '';
+    const change24h = '';
     const value = '';
 
     // Fetch price and change data from an external API (replace with your logic)
@@ -101,9 +64,9 @@ const getTableData = (data: BalanceDataType[]) => {
     return {
       name,
       symbol,
-      amount,
+      quantity,
       price,
-      percentChangeFor24h,
+      change24h,
       value,
     };
   });
@@ -114,12 +77,12 @@ const getNftTableData = (data: NftDataType[]) => {
   return data.map((item) => {
     // Extract relevant information from each balance item
     const name = item.current_token_data.token_name;
-    const amount = item.amount;
+    const quantity = item.amount;
     const creator = item.current_token_data.current_collection.creator_address;
 
     return {
       name,
-      amount,
+      quantity,
       creator,
     };
   });
@@ -127,158 +90,227 @@ const getNftTableData = (data: NftDataType[]) => {
 
 export default function HomePage() {
   const { connect, disconnect, account, connected } = useWallet();
-  const [aptBalance, setAptBalance] = useState<number>();
+  const [aptBalance, setAptBalance] = useState<number | undefined>();
   const [currentAddress, setCurrentAddress] = useState();
   const [assetData, setAssetData] = useState<TableAssetDataType[] | []>();
   const [nftData, setNftData] = useState<TableNftDataType[] | []>();
-
+  const [selectedTab, setSelectedTab] = useState<string>('0');
   const [currentPage, setCurrentPage] = useState(1);
+  const [curentNftPage, setCurentNftPage] = useState(1);
+  const { chain } = useContext(GlobalContext);
 
   useEffect(() => {
+    const blockchain = getBlockchain(chain);
+
     const fetchData = async () => {
       if (account?.address) {
-        const assetData = await fetchAssetBalance(account?.address);
-        const processedAssetData = getTableData(assetData);
+        if (chain === 'apt') {
+          const assetData = await blockchain.fetchAssetBalance(account?.address);
+          const processedAssetData = getTableData(assetData);
 
-        const assetBalance = processedAssetData.filter(token => token.symbol === 'APT');
+          const assetBalance = processedAssetData.filter(token => token.symbol === 'APT');
 
-        const nftData = await fetchNFTsBalance(account?.address);
-        const processedNftData = getNftTableData(nftData);
+          const nftData = await blockchain.fetchNFTsBalance(account?.address);
+          const processedNftData = getNftTableData(nftData);
 
-        setAptBalance(assetBalance[0].amount);
-        setAssetData(processedAssetData);
-        setNftData(processedNftData);
+          setAptBalance(assetBalance[0].quantity);
+          setAssetData(processedAssetData);
+          setNftData(processedNftData);
+        }
+
+        if (chain === 'sui' || chain === 'icp') {
+          const assetData: TableAssetDataType[] = await blockchain.fetchAssetBalance(account?.address);
+          let assetBalance: TableAssetDataType[];
+          if (chain === 'sui') {
+            assetBalance = assetData.filter(token => token.symbol === 'SUI');
+          } else {
+            assetBalance = assetData.filter(token => token.symbol === 'ICP');
+          }
+          const nftData = await blockchain.fetchNFTsBalance(account?.address);
+
+          assetBalance.length > 0 ? setAptBalance(assetBalance[0].quantity) : setAptBalance(0);
+          setAssetData(assetData);
+          setNftData(nftData);
+        }
       }
     };
 
     fetchData();
-  }, [account?.address]);
+    setCurrentPage(1);
+    setCurentNftPage(1);
+  }, [account?.address, chain]);
 
-  const onChange: PaginationProps['onChange'] = (page) => {
-    console.log(page);
+  const changeHandler: PaginationProps['onChange'] = (page) => {
     setCurrentPage(page);
   };
 
+  const changeNftHandler: PaginationProps['onChange'] = (page) => {
+    setCurentNftPage(page);
+  };
+
+  const tabChangeHandler = (key: string) => {
+    setSelectedTab(key);
+  };
+
   return (
-    <main className="flex-grow px-20 py-8">
+    <main className="flex-grow px-5 sm:px-20 py-8">
       <section className="flex flex-col gap-6">
         <div>
           <div className="text-2xl leading-normal font-semibold">Your Account</div>
-          <div>{account?.address}</div>
-        </div>
-        <div className="bg-white p-4 rounded-lg">
-          <h2 className="mb-1 text-xs leading-normal font-bold text-[#76808f]">Aptos Balance</h2>
-          <div className="flex justify-between items-end">
-            <p className="text-xl font-semibold leading-6	">{aptBalance ? aptBalance / 100000000 : '--'} APT</p>
-            <p className="text-xs ">5 $</p>
+          <div className="text-ellipsis overflow-hidden">
+            {chain === "apt" && account?.address}
+
           </div>
         </div>
-
-        <div className="relative flex flex-col gap-4 px-6 py-4 w-full h-full text-gray-700 bg-white shadow-md rounded-lg bg-clip-border">
-          <h2 className="text-sm">ASSETS HOLDING</h2>
-          <p className="text-sm	text-[#aeb4bc]">A Total of {assetData?.length} tokens</p>
-          <table className="w-full text-left table-auto min-w-max">
-            <thead>
-              <tr>
-                {asset_table_head.map((head, index) => (
-
-                  <th key={index} className="p-4 border-b border-slate-300 bg-customBlue">
-                    <p className="block text-sm font-normal leading-none text-white">
-                      {head}
-                    </p>
-                  </th>
-
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {assetData?.length ? (assetData?.map((token, index) => {
-                return (
-                  <tr key={index} className="">
-                    <td className="p-4 border-b border-slate-200">
-                      <p className="block text-sm">
-                        {token.name}
-                      </p>
-                    </td>
-                    <td className="p-4 border-b border-slate-200">
-                      <p className="block text-sm">
-                        {token.symbol}
-                      </p>
-                    </td>
-                    <td className="p-4 border-b border-slate-200">
-                      <p className="block text-sm">
-                        {Number(token.amount / 100000000).toFixed(3)}
-                      </p>
-                    </td>
-                    <td className="p-4 border-b border-slate-200">
-                    </td>
-                    <td className="p-4 border-b border-slate-200">
-                    </td>
-                    <td className="p-4 border-b border-slate-200">
-                    </td>
-                  </tr>
-                )
-              })) : (
-                <tr>
-                  <td colSpan={asset_table_head.length} className="text-center py-4 border-b border-slate-200">
-                    No Token
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-          {/* <Pagination align="center" current={currentPage} onChange={onChange} total={50} /> */}
+        <div className="bg-white p-4 rounded-lg">
+          <h2 className="mb-1 text-xs leading-normal font-bold text-[#76808f]">
+            {chain === "apt" ? "Aptos" : chain === "sui" ? "Sui" : "Icp"} Balance
+          </h2>
+          <div className="flex justify-between items-end">
+            <p className="text-xl font-semibold leading-6	">
+              {chain === "apt" && (aptBalance ? `${aptBalance / 100000000} APT` : '-- APT')}
+              {chain === "sui" && (aptBalance ? `${aptBalance} SUI` : '-- SUI')}
+              {chain === "icp" && (aptBalance ? `${aptBalance} ICP` : '-- ICP')}
+            </p>
+            {/* <p className="text-xs ">5 $</p> */}
+          </div>
         </div>
+        <Tabs
+          onChange={tabChangeHandler}
+          type="card"
+          items={tabList.map((val, i) => {
+            return {
+              label: `${val}`,
+              key: String(i),
+            };
+          })}
+        />
+        {selectedTab === '0' &&
+          <div className="-mt-10 relative flex flex-col gap-4 px-6 py-4 w-full h-full text-gray-700 bg-white shadow-md rounded-b-lg bg-clip-border">
+            <h2 className="text-sm">ASSETS HOLDING</h2>
+            <p className="text-sm	text-[#aeb4bc]">A Total of {assetData?.length} tokens</p>
+            <div className="overflow-x-auto">
+              <div className="inline-block min-w-full align-middle">
+                <div className="overflow-hidden border-gray-200 shadow sm:rounded-lg">
 
-        <div className="relative flex flex-col gap-4 px-6 py-4 w-full h-full text-gray-700 bg-white shadow-md rounded-lg bg-clip-border">
-          <h2 className="text-sm">NFT ASSETS</h2>
-          <p className="text-sm	text-[#aeb4bc]">A Total of {nftData?.length} NFTs</p>
-          <table className="w-full text-left table-auto min-w-max">
-            <thead>
-              <tr>
-                {nft_table_head.map((head, index) => (
+                  <table className="mb-2 w-full text-left table-auto min-w-max">
+                    <thead>
+                      <tr>
+                        {asset_table_head.map((head, index) => (
 
-                  <th key={index} className="p-4 border-b border-slate-300 bg-customBlue">
-                    <p className="block text-sm font-normal leading-none text-white">
-                      {head}
-                    </p>
-                  </th>
+                          <th key={index} className="p-4 border-b border-slate-300 bg-customBlue">
+                            <p className="block text-sm font-normal leading-none text-white">
+                              {head}
+                            </p>
+                          </th>
 
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {nftData?.length ? (nftData?.map((item, index) => {
-                return (
-                  <tr key={index} className="">
-                    <td className="p-4 border-b border-slate-200">
-                      <p className="block text-sm">
-                        {item.name}
-                      </p>
-                    </td>
-                    <td className="p-4 border-b border-slate-200">
-                      <p className="block text-sm">
-                        {item.amount}
-                      </p>
-                    </td>
-                    <td className="p-4 border-b border-slate-200">
-                      <p className="block text-sm">
-                        {item.creator}
-                      </p>
-                    </td>
-                  </tr>
-                )
-              })) : (
-                <tr>
-                  <td colSpan={nft_table_head.length} className="text-center py-4 border-b border-slate-200">
-                    No NFT
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-          {/* <Pagination align="center" current={currentPage} onChange={onChange} total={50} /> */}
-        </div>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {assetData?.length ? (assetData?.slice((currentPage - 1) * 10, (currentPage - 1) * 10 + 10).map((token, index) => {
+                        return (
+                          <tr key={index} className="transition-colors duration-200 hover:bg-sky-50">
+                            <td className="p-4 border-b border-slate-200">
+                              <p className="block text-sm">
+                                {token.name}
+                              </p>
+                            </td>
+                            <td className="p-4 border-b border-slate-200">
+                              <p className="block text-sm">
+                                {token.symbol}
+                              </p>
+                            </td>
+                            <td className="p-4 border-b border-slate-200">
+                              <p className="block text-sm">
+                                {chain === "apt" ? Number(token.quantity / 100000000).toFixed(3) : Number(token.quantity).toFixed(2)}
+                              </p>
+                            </td>
+                            <td className="p-4 border-b border-slate-200">
+                              {chain !== "apt" ? `${Number(token.price).toFixed(2)} $` : "-"}
+                            </td>
+                            <td className="p-4 border-b border-slate-200">
+                              {chain !== "apt" ? `${token.change24h} %` : "-"}
+                            </td>
+                            <td className="p-4 border-b border-slate-200">
+                              {chain !== "apt" ? `${(Number(token.quantity) * Number(token.price)).toFixed(2)} $` : "-"}
+                            </td>
+                          </tr>
+                        )
+                      })) : (
+                        <tr>
+                          <td colSpan={asset_table_head.length} className="text-center py-4 border-b border-slate-200">
+                            No Token
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <Pagination align="center" current={currentPage} onChange={changeHandler} total={assetData?.length} pageSize={10} />
+          </div>
+        }
+
+        {selectedTab === '1' &&
+          <div className="-mt-10 relative flex flex-col gap-4 px-6 py-4 w-full h-full text-gray-700 bg-white shadow-md rounded-b-lg bg-clip-border">
+            <h2 className="text-sm">NFT ASSETS</h2>
+            <p className="text-sm	text-[#aeb4bc]">A Total of {nftData?.length} NFTs</p>
+            <div className="overflow-x-auto">
+              <div className="inline-block min-w-full align-middle">
+                <div className="overflow-hidden border-gray-200 shadow sm:rounded-lg">
+
+                  <table className="mb-2 w-full text-left table-auto min-w-max">
+                    <thead>
+                      <tr>
+                        {nft_table_head.map((head, index) => (
+
+                          <th key={index} className="p-4 border-b border-slate-300 bg-customBlue">
+                            <p className="block text-sm font-normal leading-none text-white">
+                              {head}
+                            </p>
+                          </th>
+
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {nftData?.length ? (nftData?.slice((currentPage - 1) * 10, (currentPage - 1) * 10 + 10).map((item, index) => {
+                        return (
+                          <tr key={index} className="transition-colors duration-200 hover:bg-sky-50">
+                            <td className="p-4 border-b border-slate-200">
+                              <p className="block text-sm">
+                                {item.name}
+                              </p>
+                            </td>
+                            <td className="p-4 border-b border-slate-200">
+                              <p className="block text-sm">
+                                {item.quantity}
+                              </p>
+                            </td>
+                            <td className="p-4 border-b border-slate-200">
+                              <p className="block text-sm">
+                                {item.creator}
+                              </p>
+                            </td>
+                          </tr>
+                        )
+                      })) : (
+                        <tr>
+                          <td colSpan={nft_table_head.length} className="text-center py-4 border-b border-slate-200">
+                            No NFT
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <Pagination align="center" current={curentNftPage} onChange={changeNftHandler} total={nftData?.length} pageSize={10} />
+          </div>
+        }
       </section>
     </main >
   );
