@@ -16,20 +16,23 @@ import {
     SheetContent,
     SheetTrigger,
 } from "@/components/ui/Sheet"
+import { WalletSelector } from "@aptos-labs/wallet-adapter-ant-design"
+import "@aptos-labs/wallet-adapter-ant-design/dist/index.css"
 
 export default function Header() {
-    const [selectedChain, setSelectedChain] = useState('SUI');
-    const [isClicked, setIsClicked] = useState(false);
+    const [selectedChain, setSelectedChain] = useState('APTOS');
+    const [input, setInput] = useState<string>();
 
-    const clickHandler = () => {
-        setIsClicked(!isClicked);
+    const changeHandler = (value: string) => {
+        setInput(value);
+        console.log(input);
     }
 
     return (
         <header className="border-b">
             <div className="container mx-auto px-5 py-3 flex items-center justify-between">
                 {/* Logo */}
-                <div className="flex items-center">
+                <div className="flex items-center text-white">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"
@@ -69,19 +72,20 @@ export default function Header() {
                                         </SelectContent>
                                     </Select>
                                 </div>
-                                {/* <div className="flex flex-col gap-2">
+                                <div className="flex flex-col gap-2">
                                     <label htmlFor="mobile-search" className="text-sm font-medium">
                                         Search Address
                                     </label>
                                     <div className="relative">
                                         <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                                        <Input id="mobile-search" placeholder="Enter address" className="pl-8" />
+                                        <Input onChange={e => changeHandler(e.target.value)} id="search" placeholder="Type your prompt" className="pl-8" />
                                     </div>
-                                </div> */}
-                                <Button className="w-full" onClick={clickHandler}>
+                                </div>
+                                {/* <Button className="w-full" onClick={clickHandler}>
                                     {!isClicked && (<><Wallet className="mr-2 h-4 w-4" /> Login</>)}
                                     {isClicked && (<span>{`${"0xf22bede237a07e121b56d91a491eb7bcdfd1f5907926a9e58338f964a01b17fa".slice(0, 5)}...${"0xf22bede237a07e121b56d91a491eb7bcdfd1f5907926a9e58338f964a01b17fa".slice(-5)}`}</span>)}
-                                </Button>
+                                </Button> */}
+                                <WalletSelector />
                             </nav>
                         </SheetContent>
                     </Sheet>
@@ -91,7 +95,7 @@ export default function Header() {
                 <div className="hidden md:flex items-center space-x-4">
                     <div className="relative">
                         <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                        <Input placeholder="Type your prompt" className="pl-8 w-[300px]" />
+                        <Input onChange={e => changeHandler(e.target.value)} id="search" placeholder="Type your prompt" className="pl-8 w-[300px]" />
                     </div>
 
                     <Select value={selectedChain} onValueChange={setSelectedChain}>
@@ -104,10 +108,11 @@ export default function Header() {
                         </SelectContent>
                     </Select>
 
-                    <Button onClick={clickHandler}>
+                    {/* <Button onClick={clickHandler}>
                         {!isClicked && (<><Wallet className="mr-2 h-4 w-4" /> Login </>)}
                         {isClicked && (<span>{`${"0xf22bede237a07e121b56d91a491eb7bcdfd1f5907926a9e58338f964a01b17fa".slice(0, 5)}...${"0xf22bede237a07e121b56d91a491eb7bcdfd1f5907926a9e58338f964a01b17fa".slice(-5)}`}</span>)}
-                    </Button>
+                    </Button> */}
+                    <WalletSelector />
                 </div>
             </div>
         </header>

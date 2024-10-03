@@ -13,7 +13,9 @@ import News from "../News";
 import TrackitSearch from "../TrackitSearch";
 import FilterForm from "../FilterForm";
 import { ScrollArea, ScrollBar } from "@/components/ui/ScrollArea"
-
+import { useWallet } from "@aptos-labs/wallet-adapter-react";
+import axios from 'axios';
+import { GovernanceInfo } from "@/lib/interface";
 
 const dummy_airdrop = [
     {
@@ -84,37 +86,70 @@ const dummy_airdrop = [
     <Pool info={item} />
 </li>);
 
-const dummy_gov = Array.from({ length: 3 }, () => {
-    return {
-        name: "ZKsync (ZK)",
-        price: 0.14,
-        change: 12.85,
-    }
-}).map((item, index) => <li key={index}>
-    <Governance />
-</li>);
+
 
 const dummy_price = Array.from({ length: 3 }, () => {
     return {
-        name: "ZKsync (ZK)",
+        name: "ZKsync",
+        symbol: "ZK",
         price: 0.14,
         change: 12.85,
     }
 }).map((item, index) => <li key={index}>
-    <Price />
+    <Price info={item} />
 </li>);
 
 const dummy_news = Array.from({ length: 3 }, () => {
     return {
-        name: "ZKsync (ZK)",
-        price: 0.14,
-        change: 12.85,
+        author: "CoinDesk",
+        is_positive: false,
+        time_created: "1h 18m ago",
+        content: "",
     }
 }).map((item, index) => <li key={index}>
-    <News />
+    <News info={item} />
 </li>);
 
+const renderList = (items: any[], Component: React.ComponentType<{ info: any }>) => {
+    return items.map((item, index) => (
+        <li key={index}>
+            <Component info={item} />
+        </li>
+    ));
+};
+
 const HomePage = () => {
+    const { connect, disconnect, account, connected } = useWallet();
+
+    const [governanceVoteData, setGovernanceVoteData] = useState<GovernanceInfo[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchGovernanceVoteData = async () => {
+            try {
+                const response = await axios.get('http://localhost:3003/api/apt-gov');
+                const formattedData: GovernanceInfo[] = response.data.map((item: any) => ({
+                    proposal_id: item.proposal_id,
+                    num_votes: item.num_votes,
+                    should_pass: item.should_pass,
+                    staking_pool_address: item.staking_pool_address,
+                    transaction_timestamp: item.transaction_timestamp,
+                    transaction_version: item.transaction_version,
+                    voter_address: item.voter_address,
+                }));
+                setGovernanceVoteData(formattedData);
+            } catch (err) {
+                setError('Failed to fetch governance data');
+                console.error('Error fetching governance data:', err);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchGovernanceVoteData();
+    }, []);
+
     return (
         <main className="px-3 py-4">
             <div className="max-w-[2400px] mx-auto grid gap-4 grid-cols-8 lg:grid-cols-12">
@@ -134,7 +169,13 @@ const HomePage = () => {
                     </div>
                     <div className="space-y-4">
                         <Panel title="Governance Vote" height="h-[235px]">
-                            <List list={dummy_gov} />
+                            {isLoading ? (
+                                <div className="flex items-center justify-center h-full">Loading...</div>
+                            ) : error ? (
+                                <div className="text-red-500">{error}</div>
+                            ) : (
+                                <List list={renderList(governanceVoteData, Governance)} />
+                            )}
                         </Panel>
                         <Panel title="TrackItSearch" height="h-[235px]">
                             <TrackitSearch />

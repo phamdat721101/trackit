@@ -1,29 +1,56 @@
 import { Progress } from "./ui/Progress";
+import { formatDistanceToNow } from 'date-fns'
+import { CheckCircle, XCircle, User, Database } from 'lucide-react'
 
-const Governance = () => {
+type Props = {
+    info: {
+        proposal_id: number;
+        num_votes: number;
+        should_pass: boolean;
+        staking_pool_address: string;
+        transaction_timestamp: string;
+        transaction_version: number;
+        voter_address: string;
+    }
+}
+
+function formatAddress(address: string): string {
+    return `${address.slice(0, 6)}...${address.slice(-4)}`
+}
+
+function formatVotes(votes: number): string {
+    return (votes / 1e9).toFixed(2) + 'B'
+}
+
+const Governance: React.FC<Props> = ({ info }) => {
     return (
-        <div className="p-4 block rounded-lg transition-colors duration-300 mt-2 ml-1 mr-2 bg-gray-800 hover:bg-gray-700 text-gray-100">
-            <div className="flex justify-between items-center">
-                <h3 className="font-semibold">Proposal Id</h3>
-                <p className="text-sm text-gray-100">#106</p>
+        <div className="p-4 block rounded-lg transition-colors duration-300 mt-2 ml-1 mr-2 bg-gray-800 hover:bg-gray-700 text-gray-50">
+            <div className="flex justify-between items-center mb-2">
+                <span className="text-sm font-medium">Proposal {info.proposal_id}</span>
+                <span className="text-xs text-gray-400">
+                    {formatDistanceToNow(new Date(info.transaction_timestamp), { addSuffix: true })}
+                </span>
             </div>
-            {/* <p className="text-sm">[Non-Constitutional] Arbitrum DAO Delegate Incentive Program</p> */}
-            <div className="flex justify-between text-sm mt-2">
-                <span>Votes</span>
-                <span>FOR - DIP V1.5</span>
+            <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                    <User size={16} className="text-blue-400" />
+                    <span className="text-xs">{formatAddress(info.voter_address)}</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                    <Database size={16} className="text-green-400" />
+                    <span className="text-xs font-medium">{formatVotes(info.num_votes)} votes</span>
+                </div>
             </div>
-            <div className="flex justify-between text-sm">
-                <span>121.4M (3329 Voters)</span>
-                <span>87.2M</span>
-            </div>
-            <Progress value={72} className="mt-2" />
-            <div className="flex justify-between text-sm mt-2">
-                <span>Quorum</span>
-                <span>Progress</span>
-            </div>
-            <div className="flex justify-between text-sm">
-                <span>121.4M</span>
-                <Progress value={20} className="w-24" />
+            <div className="mt-2 flex items-center justify-between">
+                <div className="flex items-center space-x-1">
+                    {info.should_pass ? (
+                        <CheckCircle size={16} className="text-green-500" />
+                    ) : (
+                        <XCircle size={16} className="text-red-500" />
+                    )}
+                    <span className="text-xs">{info.should_pass ? 'Pass' : 'Reject'}</span>
+                </div>
+                <span className="text-xs text-gray-400">v{info.transaction_version}</span>
             </div>
         </div>
     );

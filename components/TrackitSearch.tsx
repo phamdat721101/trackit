@@ -2,7 +2,7 @@ import { Search } from "lucide-react";
 
 const TrackitSearch = () => {
     return (
-        <div className="flex flex-col items-center space-y-4">
+        <div className="flex flex-col items-center space-y-4 text-white">
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
