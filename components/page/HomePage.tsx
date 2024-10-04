@@ -8,96 +8,14 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import List from "../List";
 import Governance from "../Gov";
 import { Search, X, Maximize2, DollarSign, BarChart2, TrendingUp, Droplet } from 'lucide-react'
-import Price from "../Price";
+import Indicator from "../Indicator";
 import News from "../News";
 import TrackitSearch from "../TrackitSearch";
 import FilterForm from "../FilterForm";
 import { ScrollArea, ScrollBar } from "@/components/ui/ScrollArea"
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import axios from 'axios';
-import { GovernanceInfo } from "@/lib/interface";
-
-const dummy_airdrop = [
-    {
-        coin_type: "0xf22bede237a07e121b56d91a491eb7bcdfd1f5907926a9e58338f964a01b17fa::asset::WETH",
-        name: "Wrapped Ether",
-        price: 2500,
-        change: 2.85,
-        transaction_timestamp: "2024-09-30T09:16:01",
-        transaction_version_created: 1740927519,
-    },
-    {
-        coin_type: "0xf22bede237a07e121b56d91a491eb7bcdfd1f5907926a9e58338f964a01b17fa::asset::USDC",
-        name: "USD Coin",
-        price: 1,
-        change: 0.05,
-        transaction_timestamp: "2024-09-30T09:13:22",
-        transaction_version_created: 1740922012,
-    },
-    {
-        coin_type: "0xf22bede237a07e121b56d91a491eb7bcdfd1f5907926a9e58338f964a01b17fa::asset::USDD",
-        name: "Decentralized USD",
-        price: 1,
-        change: 0.05,
-        transaction_timestamp: "2024-09-21T06:54:28",
-        transaction_version_created: 1713889549,
-    },
-    {
-        coin_type: "0xf22bede237a07e121b56d91a491eb7bcdfd1f5907926a9e58338f964a01b17fa::asset::WBTC",
-        name: "Wrapped BTC",
-        price: 64000,
-        change: 1.05,
-        transaction_timestamp: "2024-09-30T01:55:06",
-        transaction_version_created: 1740033631,
-    },
-    {
-        coin_type: "0xf22bede237a07e121b56d91a491eb7bcdfd1f5907926a9e58338f964a01b17fa::asset::WETH",
-        name: "Wrapped Ether",
-        price: 2500,
-        change: 2.85,
-        transaction_timestamp: "2024-09-30T09:16:01",
-        transaction_version_created: 1740927519,
-    },
-    {
-        coin_type: "0xf22bede237a07e121b56d91a491eb7bcdfd1f5907926a9e58338f964a01b17fa::asset::USDC",
-        name: "USD Coin",
-        price: 1,
-        change: 0.05,
-        transaction_timestamp: "2024-09-30T09:13:22",
-        transaction_version_created: 1740922012,
-    },
-    {
-        coin_type: "0xf22bede237a07e121b56d91a491eb7bcdfd1f5907926a9e58338f964a01b17fa::asset::USDD",
-        name: "Decentralized USD",
-        price: 1,
-        change: 0.05,
-        transaction_timestamp: "2024-09-21T06:54:28",
-        transaction_version_created: 1713889549,
-    },
-    {
-        coin_type: "0xf22bede237a07e121b56d91a491eb7bcdfd1f5907926a9e58338f964a01b17fa::asset::WBTC",
-        name: "Wrapped BTC",
-        price: 64000,
-        change: 1.05,
-        transaction_timestamp: "2024-09-30T01:55:06",
-        transaction_version_created: 1740033631,
-    }
-].map((item, index) => <li key={index}>
-    <Pool info={item} />
-</li>);
-
-
-
-const dummy_price = Array.from({ length: 3 }, () => {
-    return {
-        name: "ZKsync",
-        symbol: "ZK",
-        price: 0.14,
-        change: 12.85,
-    }
-}).map((item, index) => <li key={index}>
-    <Price info={item} />
-</li>);
+import { GovernanceInfo, TokenSentimentInfo, TokenIndicatorInfo } from "@/lib/interface";
 
 const dummy_news = Array.from({ length: 3 }, () => {
     return {
@@ -120,8 +38,10 @@ const renderList = (items: any[], Component: React.ComponentType<{ info: any }>)
 
 const HomePage = () => {
     const { connect, disconnect, account, connected } = useWallet();
-
     const [governanceVoteData, setGovernanceVoteData] = useState<GovernanceInfo[]>([]);
+    const [tokenSentimentData, setTokenSentimentData] = useState<TokenSentimentInfo[]>([]);
+    const [tokenIndicatorData, setTokenIndicatorData] = useState<TokenIndicatorInfo[]>([]);
+
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -147,32 +67,93 @@ const HomePage = () => {
             }
         };
 
+        const getTokenSentiment = async() =>{
+            try {
+                const response = await axios.get('http://localhost:3003/api/token-sentiment');
+                console.log("Token sentiment: ", response.data)
+                const formattedData: TokenSentimentInfo[] = response.data.map((item: any) => ({
+                    name: item.name,
+                    price: item.price,
+                    change_24h: item.change_24h,
+                    transaction_timestamp: Date.now(),
+                    sentiment: item.sentiment,
+                    description: item.description,
+                }));
+                console.log("Token format: ", formattedData)
+                setTokenSentimentData(formattedData);
+            } catch (err) {
+                setError('Failed to fetch token sentiment data');
+                console.error('Error fetching token sentiment data:', err);
+            } finally {
+                setIsLoading(false);
+            }
+        }
+
+        const getTokenIndicator = async() =>{
+            try {
+                const response = await axios.get('http://localhost:3003/api/token-indicator');
+                const formattedData: TokenIndicatorInfo[] = response.data.map((item: any) => ({
+                    name: item.name,
+                    symbol: item.symbol,
+                    price: item.price,
+                    volume_24h: item.volume_24h,
+                    rsi: item.rsi,
+                    moving_average_50d: item.moving_average_50d,
+                    moving_average_200d: item.moving_average_200d,
+                    signal: item.signal,
+                    description: item.description,
+                }));
+                console.log("Token format: ", formattedData)
+                setTokenIndicatorData(formattedData);
+            } catch (err) {
+                setError('Failed to fetch token indicator data');
+                console.error('Error fetching token indicator data:', err);
+            } finally {
+                setIsLoading(false);
+            }
+        }
+        
+        
         fetchGovernanceVoteData();
+        getTokenSentiment();
+        getTokenIndicator()
     }, []);
 
     return (
         <main className="px-3 py-4">
             <div className="max-w-[2400px] mx-auto grid gap-4 grid-cols-8 lg:grid-cols-12">
                 <div className="col-span-2 lg:col-span-3 hidden lg:block">
-                    <Panel title="Coins Created" height="h-[490px]">
-                        <List list={dummy_airdrop} />
+                    <Panel title="Token Sentiment" height="h-[490px]">
+                        {isLoading ? (
+                            <div className="flex items-center justify-center h-full">Loading...</div>
+                            ) : error ? (
+                                <div className="text-red-500">{error}</div>
+                            ) : (
+                                <List list={renderList(tokenSentimentData, Pool)} />
+                            )}
                     </Panel>
                 </div>
                 <div className="col-span-8 lg:col-span-6 grid grid-cols-2 gap-4">
                     <div className="space-y-4">
-                        <Panel title="News" height="h-[235px]">
+                        <Panel title="Analysis" height="h-[235px]">
                             <List list={dummy_news} />
                         </Panel>
-                        <Panel title="Prices" height="h-[235px]">
-                            <List list={dummy_price} />
+                        <Panel title="Token Indicator" height="h-[235px]">
+                            {isLoading ? (
+                                <div className="flex items-center justify-center h-full">Loading...</div>
+                                ) : error ? (
+                                    <div className="text-red-500">{error}</div>
+                                ) : (
+                                    <List list={renderList(tokenIndicatorData, Indicator)} />
+                            )}
                         </Panel>
                     </div>
                     <div className="space-y-4">
-                        <Panel title="Governance Vote" height="h-[235px]">
+                        <Panel title="Proposal Effects" height="h-[235px]">
                             {isLoading ? (
                                 <div className="flex items-center justify-center h-full">Loading...</div>
                             ) : error ? (
-                                <div className="text-red-500">{error}</div>
+                                <div className="text-gray-50">{error}</div>
                             ) : (
                                 <List list={renderList(governanceVoteData, Governance)} />
                             )}

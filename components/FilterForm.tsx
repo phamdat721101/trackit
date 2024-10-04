@@ -4,8 +4,11 @@ import { Input } from "@/components/ui/Input"
 import { Label } from "@/components/ui/Label"
 import { Button } from "@/components/ui/Button"
 import { ScrollArea } from './ui/ScrollArea'
+import Popup from './Popup'
+import toast, { Toaster } from 'react-hot-toast'
 
-export default function FilterForm() {
+const FilterForm = () => {
+
     const [filters, setFilters] = useState({
         withAtLeast1Social: false,
         top10Holders: false,
@@ -20,7 +23,7 @@ export default function FilterForm() {
         totalHoldersMax: '',
         createdMin: '',
         createdMax: ''
-    })
+    });
 
     const handleCheckboxChange = (name: string) => {
         setFilters((prev: any) => ({ ...prev, [name]: !prev[name] }))
@@ -50,12 +53,13 @@ export default function FilterForm() {
     }
 
     const handleApply = () => {
-        console.log('Applied filters:', filters)
-        // Here you would typically send the filters to a parent component or trigger a data fetch
+        console.log('Applied filters:', filters);
+        toast.success('Filters applied successfully');
     }
 
     return (
         <ScrollArea className="h-[490px] bg-gray-800 text-white p-4 rounded-lg max-w-xs">
+            <Toaster position="top-center" />
             <div className="space-y-4">
                 <div className="space-y-2">
                     {[
@@ -88,7 +92,7 @@ export default function FilterForm() {
                             placeholder="K"
                             value={filters.mktCapMin}
                             onChange={handleInputChange}
-                            className="bg-gray-100 border-gray-700"
+                            className="bg-gray-100 border-gray-700 text-gray-800"
                         />
                         <Input
                             id="mktCapMax"
@@ -96,7 +100,7 @@ export default function FilterForm() {
                             placeholder="K"
                             value={filters.mktCapMax}
                             onChange={handleInputChange}
-                            className="bg-gray-100 border-gray-700"
+                            className="bg-gray-100 border-gray-700 text-gray-800"
                         />
                     </div>
                 </div>
@@ -110,7 +114,7 @@ export default function FilterForm() {
                             placeholder="Number"
                             value={filters.tkMin}
                             onChange={handleInputChange}
-                            className="bg-gray-100 border-gray-700"
+                            className="bg-gray-100 border-gray-700 text-gray-800"
                         />
                         <Input
                             id="tkMax"
@@ -118,7 +122,7 @@ export default function FilterForm() {
                             placeholder="Number"
                             value={filters.tkMax}
                             onChange={handleInputChange}
-                            className="bg-gray-100 border-gray-700"
+                            className="bg-gray-100 border-gray-700 text-gray-800"
                         />
                     </div>
                 </div>
@@ -132,7 +136,7 @@ export default function FilterForm() {
                             placeholder="Number"
                             value={filters.totalHoldersMin}
                             onChange={handleInputChange}
-                            className="bg-gray-100 border-gray-700"
+                            className="bg-gray-100 border-gray-700 text-gray-800"
                         />
                         <Input
                             id="totalHoldersMax"
@@ -140,7 +144,7 @@ export default function FilterForm() {
                             placeholder="Number"
                             value={filters.totalHoldersMax}
                             onChange={handleInputChange}
-                            className="bg-gray-100 border-gray-700"
+                            className="bg-gray-100 border-gray-700 text-gray-800"
                         />
                     </div>
                 </div>
@@ -162,7 +166,7 @@ export default function FilterForm() {
                             placeholder="max"
                             value={filters.createdMax}
                             onChange={handleInputChange}
-                            className="bg-gray-100 border-gray-700"
+                            className="bg-gray-100 border-gray-700 text-gray-800"
                         />
                     </div>
                 </div>
@@ -175,7 +179,12 @@ export default function FilterForm() {
                         Apply
                     </Button>
                 </div>
+
+                <Popup />
             </div>
+
         </ScrollArea>
     )
 }
+
+export default FilterForm;

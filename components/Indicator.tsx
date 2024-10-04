@@ -12,7 +12,7 @@ type Props = {
     }
 }
 
-const Price: React.FC<Props> = ({ info }) => {
+const Indicator: React.FC<Props> = ({ info }) => {
     return (
         <div className="block rounded-lg transition-colors duration-300 mt-2 mx-2 bg-gray-800 hover:bg-gray-700 text-gray-50">
             <div className="p-4">
@@ -25,8 +25,8 @@ const Price: React.FC<Props> = ({ info }) => {
                         <p className="font-semibold text-lg">{info.price.toFixed(6)}</p>
                         <p className="text-sm">Volume 24h: {info.volume_24h.toLocaleString()}</p>
                     </div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4 mb-4">
+                </div>
+                <div className="grid grid-cols-2 gap-4 mb-4">
                     <div>
                         <p className="text-sm font-semibold">RSI</p>
                         <p>{info.rsi}</p>
@@ -46,11 +46,11 @@ const Price: React.FC<Props> = ({ info }) => {
                 </div>
                 <p className="text-sm mb-4">{info.description}</p>
                 <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                View Chart
+                    View Chart
                 </button>
             </div>
-         </div>
+        </div>
     )
 }
 
-export default Price;
+export default Indicator;

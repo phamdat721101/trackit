@@ -78,7 +78,7 @@ export default function Header() {
                                     </label>
                                     <div className="relative">
                                         <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                                        <Input onChange={e => changeHandler(e.target.value)} id="search" placeholder="Type your prompt" className="pl-8" />
+                                        <Input onChange={e => changeHandler(e.target.value)} id="search" placeholder="Search tokens, protocols, wallets, or transactions across multiple chains..." className="pl-8" />
                                     </div>
                                 </div>
                                 {/* <Button className="w-full" onClick={clickHandler}>
@@ -95,7 +95,7 @@ export default function Header() {
                 <div className="hidden md:flex items-center space-x-4">
                     <div className="relative">
                         <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                        <Input onChange={e => changeHandler(e.target.value)} id="search" placeholder="Type your prompt" className="pl-8 w-[300px]" />
+                        <Input onChange={e => changeHandler(e.target.value)} id="search" placeholder="Search tokens, protocols, wallets, or transactions across multiple chains..." className="pl-8 w-[300px]" />
                     </div>
 
                     <Select value={selectedChain} onValueChange={setSelectedChain}>
