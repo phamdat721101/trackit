@@ -1,4 +1,4 @@
-import Token from "../../../components/page/Token";
+import Token from "@/components/page/Token";
 
 export default function TokenPage() {
   return <Token />;
