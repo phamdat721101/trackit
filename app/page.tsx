@@ -1,7 +1,5 @@
-import HomePage from "@/components/page/HomePage";
+import Meme from "@/components/page/Meme";
 
-export default function Home() {
-  return (
-    <HomePage />
-  );
+export default function Page() {
+  return <Meme />;
 }

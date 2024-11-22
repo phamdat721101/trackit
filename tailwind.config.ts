@@ -1,22 +1,13 @@
-const { fontFamily } = require("tailwindcss/defaultTheme")
-
 import type { Config } from "tailwindcss";
 
-const config: Config = {
-  darkMode: ["class"],
+export default {
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  darkMode: ["class"],
   theme: {
-    container: {
-      center: true,
-      padding: "2rem",
-      screens: {
-        "2xl": "1400px",
-      },
-    },
     extend: {
       colors: {
         border: "hsl(var(--border))",
@@ -52,43 +43,26 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        green: {
-          DEFAULT: "hsl(var(--custom-green))",
+        bluesky: {
+          DEFAULT: "hsl(var(--primary-custom-color))",
           foreground: "hsl(var(--foreground))",
         },
-        blue: {
-          DEFAULT: "hsl(var(--custom-blue))",
-          foreground: "hsl(var(--foreground))",
+        panel: {
+          DEFAULT: "hsl(var(--secondary-custom-color))",
         },
-        lido: {
-          DEFAULT: "hsl(var(--lido-color-accent-sky))",
-          foreground: "hsl(var(--foreground))",
-        }
+        item: {
+          DEFAULT: "hsl(var(--secondary-custom-color-light))",
+        },
+        itemborder: {
+          DEFAULT: "hsl(var(--custom-border))",
+        },
       },
       borderRadius: {
         lg: `var(--radius)`,
         md: `calc(var(--radius) - 2px)`,
         sm: "calc(var(--radius) - 4px)",
       },
-      fontFamily: {
-        sans: ["var(--font-sans)", ...fontFamily.sans],
-      },
-      keyframes: {
-        "accordion-down": {
-          from: { height: "0" },
-          to: { height: "var(--radix-accordion-content-height)" },
-        },
-        "accordion-up": {
-          from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: "0" },
-        },
-      },
-      animation: {
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
-      },
     },
   },
   plugins: [require("tailwindcss-animate")],
-};
-export default config;
+} satisfies Config;
