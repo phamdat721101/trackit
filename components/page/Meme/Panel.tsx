@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { Button } from "../../ui/button";
+import { ScrollArea, ScrollBar } from "../../ui/scroll-area";
 import { FilterIcon } from "lucide-react";
 
 type PanelProps = {

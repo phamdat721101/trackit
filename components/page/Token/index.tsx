@@ -1,7 +1,7 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "../../ui/button";
+import { Card } from "../../ui/card";
+import { Tabs, TabsList, TabsTrigger } from "../../ui/tabs";
 import {
   ArrowDown,
   ArrowUp,
