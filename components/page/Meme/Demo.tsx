@@ -8,9 +8,9 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "../../ui/card";
-import { Input } from "../../ui/input";
-import { Button } from "../../ui/button";
+} from "../../ui/Card";
+import { Input } from "../../ui/Input";
+import { Button } from "../../ui/Button";
 import { Badge } from "../../ui/badge";
 import {
   Search,

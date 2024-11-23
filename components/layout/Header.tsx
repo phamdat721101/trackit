@@ -1,17 +1,17 @@
 "use client";
 
 import { FormEvent, useContext, useState } from "react";
-import { button } from "../ui/button";
-import { Input } from "../ui/input";
+import { Button } from "../ui/Button";
+import { Input } from "../ui/Input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
+} from "../ui/Select";
 import { Menu, Search } from "lucide-react";
-import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
+import { Sheet, SheetContent, SheetTrigger } from "../ui/Sheet";
 import { WalletSelector } from "../wallet/WalletSelector";
 import GlobalContext from "@/context/store";
 import Link from "next/link";

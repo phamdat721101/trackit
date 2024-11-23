@@ -1,4 +1,4 @@
-import { Button } from "../../ui/button";
+import { Button } from "../../ui/Button";
 import { ScrollArea, ScrollBar } from "../../ui/scroll-area";
 import { FilterIcon } from "lucide-react";
 

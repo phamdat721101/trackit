@@ -24,7 +24,7 @@ import {
   ArrowRightFromLine,
 } from "lucide-react";
 import { useCallback, useState } from "react";
-import { Button } from "../ui/button";
+import { Button } from "../ui/Button";
 import {
   Collapsible,
   CollapsibleContent,
