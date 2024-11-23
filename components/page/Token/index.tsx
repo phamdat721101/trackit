@@ -1,7 +1,5 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card } from "../../ui/card";
 import {
   ArrowDown,
   ArrowUp,
@@ -14,7 +12,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Chart from "./CustomChart";
 import { useContext, useEffect } from "react";
-import GlobalContext from "@/context/store";
+import GlobalContext from "../../../context/store";
 import TxHistory from "./TxHistory";
 
 export default function Token() {

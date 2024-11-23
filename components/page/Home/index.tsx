@@ -3,7 +3,7 @@ import {
   GovernanceInfo,
   TokenIndicatorInfo,
   TokenSentimentInfo,
-} from "@/types/interface";
+} from "../../../types/interface";
 import Governance from "./Governance";
 import Indicator from "./Indicator";
 import List, { renderList } from "../List";
@@ -11,7 +11,7 @@ import News from "./News";
 import Panel from "./Panel";
 import Pool from "./Pool";
 import { useEffect, useState } from "react";
-import { API_URL } from "@/constants/constants";
+import { API_URL } from "../../../constants/constants";
 import axios from "axios";
 
 const dummy_news = [

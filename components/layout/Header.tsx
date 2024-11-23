@@ -1,18 +1,18 @@
 "use client";
 
 import { FormEvent, useContext, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "../ui/select";
 import { Menu, Search } from "lucide-react";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { WalletSelector } from "@/components/wallet/WalletSelector";
+import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
+import { WalletSelector } from "../wallet/WalletSelector";
 import GlobalContext from "@/context/store";
 import Link from "next/link";
 import { useRouter } from "next/navigation";

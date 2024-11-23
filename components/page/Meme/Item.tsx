@@ -5,9 +5,9 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+} from "../../ui/card";
+import { Button } from "../../ui/button";
+import { Badge } from "../../ui/badge";
 import { TrendingUp, DollarSign, Users, ExternalLink } from "lucide-react";
 import { TokenInfo } from "@/types/interface";
 import { useContext } from "react";

@@ -3,7 +3,7 @@ import Panel from "./Panel";
 import List, { renderList } from "../List";
 import Item from "./Item";
 import { useEffect, useState } from "react";
-import { TokenInfo } from "@/types/interface";
+import { TokenInfo } from "../../../types/interface";
 import axios from "axios";
 
 const cryptoData = [

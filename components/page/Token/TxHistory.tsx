@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { ChevronDown, Filter } from "lucide-react";
 import { useParams } from "next/navigation";
-import { TxnInfo } from "@/types/interface";
+import { TxnInfo } from "../../../types/interface";
 import axios from "axios";
 import { format } from "date-fns";
 
