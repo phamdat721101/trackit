@@ -20,7 +20,7 @@ import Image from "next/image";
 
 export default function Header() {
   const { setLoadingFullScreen } = useContext(GlobalContext);
-  const [selectedChain, setSelectedChain] = useState("APTOS");
+  // const [selectedChain, setSelectedChain] = useState("APTOS");
   const [input, setInput] = useState<string>();
   const router = useRouter();
 
@@ -57,7 +57,7 @@ export default function Header() {
             </SheetTrigger>
             <SheetContent side="right" className="w-[300px] sm:w-[400px]">
               <nav className="flex flex-col gap-4">
-                <div className="flex flex-col gap-2">
+                {/* <div className="flex flex-col gap-2">
                   <label htmlFor="mobile-chain" className="text-sm font-medium">
                     Select Chain
                   </label>
@@ -73,7 +73,7 @@ export default function Header() {
                       <SelectItem value="APTOS">APTOS</SelectItem>
                     </SelectContent>
                   </Select>
-                </div>
+                </div> */}
                 <div className="flex flex-col gap-2">
                   <label
                     htmlFor="mobile-search"
@@ -113,7 +113,7 @@ export default function Header() {
             <Input type="submit" value="Search" className="hidden" />
           </form>
 
-          <Select value={selectedChain} onValueChange={setSelectedChain}>
+          {/* <Select value={selectedChain} onValueChange={setSelectedChain}>
             <SelectTrigger className="w-[120px]">
               <SelectValue placeholder="Select chain" />
             </SelectTrigger>
@@ -121,7 +121,14 @@ export default function Header() {
               <SelectItem value="SUI">SUI</SelectItem>
               <SelectItem value="APTOS">APTOS</SelectItem>
             </SelectContent>
-          </Select>
+          </Select> */}
+
+          <Image
+            src={"/movement-mark.svg"}
+            alt={"movement logo"}
+            width={24}
+            height={24}
+          />
 
           <WalletSelector />
         </div>

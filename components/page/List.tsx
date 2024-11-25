@@ -4,7 +4,7 @@ type Props = {
 
 const List: React.FC<Props> = ({ list }) => {
   return (
-    <ul className="space-y-2">
+    <ul className="space-y-4">
       {list.map((item, index) => (
         <li key={index}>{item}</li>
       ))}

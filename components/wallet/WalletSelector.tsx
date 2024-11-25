@@ -110,7 +110,7 @@ export function WalletSelector(walletSortingOptions: WalletSortingOptions) {
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
         <Button className="bg-bluesky hover:bg-bluesky/80 font-bold">
-          Connect a Wallet
+          {/* Connect a Wallet */} Social login
         </Button>
       </DialogTrigger>
       <ConnectWalletDialog close={closeDialog} {...walletSortingOptions} />
@@ -299,3 +299,4 @@ function renderEducationScreen(screen: AboutAptosConnectEducationScreen) {
     </>
   );
 }
+
