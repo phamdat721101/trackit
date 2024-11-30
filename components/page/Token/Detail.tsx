@@ -1,5 +1,5 @@
 import { Button } from "../../ui/Button";
-import { Card } from "../../ui/card";
+import { Card } from "../../ui/Card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../ui/Tabs";
 import {
   ArrowDown,
@@ -13,7 +13,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useContext, useEffect } from "react";
 import GlobalContext from "../../../context/store";
-import { Progress } from "../../ui/progress";
+import { Progress } from "../../ui/Progress";
 import TabDetail from "./TabDetail";
 
 const formatVolume = (volume: number): string => {
