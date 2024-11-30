@@ -33,7 +33,7 @@ export interface TokenInfo {
   id: string;
   name: string;
   tickerSymbol: string;
-  desc: string;
+  desc: string | null;
   creator: string;
   mintAddr: string;
   image: string;

@@ -114,7 +114,7 @@ export default function TxHistory() {
   }, [params.id]);
 
   return (
-    <div className="container mx-auto text-gray-100 rounded-lg">
+    <div className="w-full mx-auto text-gray-100 rounded-lg">
       <div className="overflow-x-auto rounded-lg">
         <table className="min-w-full bg-panel border border-gray-700 rounded-lg">
           <thead>
