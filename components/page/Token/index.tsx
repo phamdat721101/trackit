@@ -1,6 +1,6 @@
 "use client";
 import { Card } from "../../ui/Card";
-import { Tabs, TabsList, TabsTrigger } from "../../ui/Tabs";
+import { Tabs, TabsList, TabsTrigger } from "../../ui/tabs";
 import {
   ArrowDown,
   ArrowUp,
