@@ -1,5 +1,6 @@
 "use client";
 
+import GlobalContext from "../../../context/store";
 import {
   createChart,
   IChartApi,
@@ -10,7 +11,7 @@ import {
   DeepPartial,
   Time,
 } from "lightweight-charts";
-import React, { useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 
 // Constants
 const TOOLTIP_CONFIG = {
@@ -23,6 +24,7 @@ const TOOLTIP_CONFIG = {
       VALUE: "#D1D4DC",
       GREEN: "rgb(38, 166, 154)",
       RED: "rgb(239, 83, 80)",
+      WHITE: "rgb(255, 255, 255)",
     },
     UP: "rgba(38, 166, 154, 0.3)",
     DOWN: "rgba(239, 83, 80, 0.3)",
@@ -141,12 +143,27 @@ export default function Chart(): JSX.Element {
   const candlestickSeriesRef = useRef<ISeriesApi<"Candlestick"> | null>(null);
   const volumeSeriesRef = useRef<ISeriesApi<"Histogram"> | null>(null);
   const tooltipRef = useRef<HTMLDivElement | null>(null);
+  const symbolLabelRef = useRef<HTMLDivElement | null>(null);
+  const { selectedToken } = useContext(GlobalContext);
 
   useEffect(() => {
     if (!chartContainerRef.current) return;
 
     // Initialize chart
     chartRef.current = createChart(chartContainerRef.current, chartOptions);
+
+    // Create and position symbol label
+    const symbolLabel = document.createElement("div");
+    symbolLabel.style.position = "absolute";
+    symbolLabel.style.top = "-10px";
+    symbolLabel.style.left = "10px";
+    symbolLabel.style.zIndex = "10";
+    symbolLabel.style.color = TOOLTIP_CONFIG.COLORS.TEXT.WHITE;
+    symbolLabel.style.fontSize = "16px";
+    symbolLabel.style.fontWeight = "bold";
+    symbolLabel.textContent = selectedToken?.tickerSymbol || "Token";
+    symbolLabelRef.current = symbolLabel;
+    chartContainerRef.current.appendChild(symbolLabel);
 
     // Setup candlestick series
     candlestickSeriesRef.current = chartRef.current.addCandlestickSeries({
@@ -221,18 +238,35 @@ export default function Chart(): JSX.Element {
 
       if (!candlestickData) return;
 
+      const trendColor =
+        candlestickData.open > candlestickData.close
+          ? TOOLTIP_CONFIG.COLORS.RED
+          : TOOLTIP_CONFIG.COLORS.GREEN;
+
       tooltipRef.current.style.display = "flex";
       tooltipRef.current.innerHTML = `
-          <span style="color: ${TOOLTIP_CONFIG.COLORS.TEXT.LABEL}">O</span>
-          <span>${formatNumber(candlestickData.open)}</span>
-          <span style="color: ${TOOLTIP_CONFIG.COLORS.TEXT.LABEL}">H</span>
-          <span>${formatNumber(candlestickData.high)}</span>
-          <span style="color: ${TOOLTIP_CONFIG.COLORS.TEXT.LABEL}">L</span>
-          <span>${formatNumber(candlestickData.low)}</span>
-          <span style="color: ${TOOLTIP_CONFIG.COLORS.TEXT.LABEL}">C</span>
-          <span>${formatNumber(candlestickData.close)}</span>
-          <span style="color: ${TOOLTIP_CONFIG.COLORS.TEXT.LABEL}">Volume</span>
-          <span>${formatVolume(volumeData?.value ?? 0)}</span>
+          <div style="display: flex; align-items: center; gap: 8px; margin-top: 20px;">
+          <span style="color: ${TOOLTIP_CONFIG.COLORS.TEXT.WHITE}">O</span>
+          <span style="color: ${trendColor}">${formatNumber(
+        candlestickData.open
+      )}</span>
+          <span style="color: ${TOOLTIP_CONFIG.COLORS.TEXT.WHITE}">H</span>
+          <span style="color: ${trendColor}">${formatNumber(
+        candlestickData.high
+      )}</span>
+          <span style="color: ${TOOLTIP_CONFIG.COLORS.TEXT.WHITE}">L</span>
+          <span style="color: ${trendColor}">${formatNumber(
+        candlestickData.low
+      )}</span>
+          <span style="color: ${TOOLTIP_CONFIG.COLORS.TEXT.WHITE}">C</span>
+          <span style="color: ${trendColor}">${formatNumber(
+        candlestickData.close
+      )}</span>
+          <span style="color: ${TOOLTIP_CONFIG.COLORS.TEXT.WHITE}">Volume</span>
+          <span style="color: ${trendColor}">${formatVolume(
+        volumeData?.value ?? 0
+      )}</span>
+        </div>
         `;
     };
 
@@ -248,7 +282,7 @@ export default function Chart(): JSX.Element {
       }
       tooltipRef.current?.remove();
     };
-  }, []);
+  }, [selectedToken]);
 
   return (
     <div className="w-full h-[500px] p-4 rounded-lg shadow-md">

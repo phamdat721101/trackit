@@ -26,12 +26,12 @@ export default function Header() {
 
   const changeHandler = (value: string) => {
     setInput(value);
-    console.log(input);
+    // console.log(input);
   };
 
   const submitHandler = (e: FormEvent) => {
     e.preventDefault();
-    console.log(input);
+    // console.log(input);
     setLoadingFullScreen(true);
     setTimeout(() => setLoadingFullScreen(false), 2000);
     setInput("");

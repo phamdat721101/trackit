@@ -100,7 +100,7 @@ export default function TxHistory() {
         );
         if (response.status === 200) {
           const data: TxnInfo[] = response.data.txnData;
-          console.log(data);
+          // console.log(data);
           setTxnData(data);
         }
       } catch (err) {

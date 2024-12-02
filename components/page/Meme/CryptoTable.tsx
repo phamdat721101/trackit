@@ -1,6 +1,14 @@
 "use client";
 
-import { Star, Flame, ArrowUpRight, ArrowRight } from "lucide-react";
+import {
+  Star,
+  Flame,
+  ArrowUpRight,
+  ArrowRight,
+  EarthIcon,
+  TwitterIcon,
+  SendIcon,
+} from "lucide-react";
 import { ScrollArea, ScrollBar } from "../../ui/scroll-area";
 import { Button } from "../../ui/Button";
 import {
@@ -54,7 +62,7 @@ export default function CryptoTable() {
         const response = await axios.get(
           `https://trackit-be.vercel.app/v1/token/info`
         );
-        console.log(response);
+        // console.log(response);
         if (response.status === 200) {
           const data: TokenInfo[] = response.data;
           setTokenInfoList(data);
@@ -90,7 +98,7 @@ export default function CryptoTable() {
                 key={token.id}
                 className="border-itemborder hover:bg-item"
               >
-                <TableCell className="font-medium">
+                <TableCell className="w-60 font-medium">
                   <div className="flex items-center gap-2">
                     <img
                       src={token.image}
@@ -98,9 +106,14 @@ export default function CryptoTable() {
                       className="h-8 w-8 rounded-full"
                     />
                     <div className="flex flex-col">
-                      <span className="font-semibold">
-                        {token.tickerSymbol}
-                      </span>
+                      <div className="flex items-center gap-1">
+                        <span className="font-semibold">
+                          {token.tickerSymbol}
+                        </span>
+                        <EarthIcon width={12} height={12} />
+                        <TwitterIcon width={12} height={12} />
+                        <SendIcon width={12} height={12} />
+                      </div>
                       <span className="text-xs">
                         {formatAddress(token.creator)}
                       </span>

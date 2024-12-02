@@ -33,7 +33,7 @@ const sub_tabs = [
 
 export default function Token() {
   const { selectedToken } = useContext(GlobalContext);
-  console.log(selectedToken);
+  // console.log(selectedToken);
 
   return (
     <div className="flex flex-col w-full text-foreground p-3 gap-4">
