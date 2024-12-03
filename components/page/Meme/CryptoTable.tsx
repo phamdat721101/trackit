@@ -8,6 +8,9 @@ import {
   EarthIcon,
   TwitterIcon,
   SendIcon,
+  Copy,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { ScrollArea, ScrollBar } from "../../ui/scroll-area";
 import { Button } from "../../ui/Button";
@@ -49,10 +52,29 @@ export default function CryptoTable() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const itemsPerPage = 8;
 
   const clickHandler = (token: TokenInfo) => {
-    router.push(`/token/${token.mintAddr}`);
     setSelectedToken(token);
+    router.push(`/token/${token.mintAddr}`);
+  };
+
+  const copyAddress = async (token: TokenInfo) => {
+    setSelectedToken(token);
+    try {
+      await navigator.clipboard.writeText(token.mintAddr);
+    } catch (error) {
+      console.error("Cannot copy address");
+    }
+  };
+
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth", // Optional: adds a smooth scrolling effect
+    });
   };
 
   useEffect(() => {
@@ -60,7 +82,7 @@ export default function CryptoTable() {
       try {
         setIsLoading(true);
         const response = await axios.get(
-          `https://trackit-be.vercel.app/v1/token/info`
+          `https://trackit-be.vercel.app/v1/token/list?limit=${itemsPerPage}&offset=${currentPage}`
         );
         // console.log(response);
         if (response.status === 200) {
@@ -75,7 +97,7 @@ export default function CryptoTable() {
     };
 
     fetchTokenInfoList();
-  }, []);
+  }, [currentPage, itemsPerPage]);
 
   return (
     <div className="w-full bg-panel text-gray-100 rounded-lg">
@@ -92,74 +114,103 @@ export default function CryptoTable() {
           </TableHeader>
           <TableBody>
             {isLoading &&
-              [...Array(5)].map((_, index) => <LoadingRow key={index} />)}
-            {tokenInfoList.map((token) => (
-              <TableRow
-                key={token.id}
-                className="border-itemborder hover:bg-item"
-              >
-                <TableCell className="w-60 font-medium">
-                  <div className="flex items-center gap-2">
-                    <img
-                      src={token.image}
-                      alt=""
-                      className="h-8 w-8 rounded-full"
-                    />
-                    <div className="flex flex-col">
-                      <div className="flex items-center gap-1">
-                        <span className="font-semibold">
-                          {token.tickerSymbol}
-                        </span>
-                        <EarthIcon width={12} height={12} />
-                        <TwitterIcon width={12} height={12} />
-                        <SendIcon width={12} height={12} />
+              [...Array(8)].map((_, index) => <LoadingRow key={index} />)}
+            {!isLoading &&
+              tokenInfoList.map((token) => (
+                <TableRow
+                  key={token.id}
+                  className="border-itemborder hover:bg-item"
+                >
+                  <TableCell className="w-60 font-medium">
+                    <div className="flex items-center gap-2">
+                      <img
+                        src={token.image}
+                        alt=""
+                        className="h-8 w-8 rounded-full"
+                      />
+                      <div className="flex flex-col">
+                        <div className="flex items-center gap-1">
+                          <span className="font-semibold">
+                            {token.tickerSymbol}
+                          </span>
+                          <EarthIcon width={12} height={12} />
+                          <TwitterIcon width={12} height={12} />
+                          <SendIcon width={12} height={12} />
+                        </div>
+                        <div className="text-xs">
+                          <button
+                            className="flex items-center gap-1"
+                            onClick={() => copyAddress(token)}
+                          >
+                            <span>{formatAddress(token.creator)}</span>
+                            <Copy className="h-2 w-2" />
+                          </button>
+                        </div>
                       </div>
-                      <span className="text-xs">
-                        {formatAddress(token.creator)}
-                      </span>
                     </div>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  {format(new Date(token.cdate), "yyyy-MM-dd")}
-                </TableCell>
-                <TableCell>${token.aptosUSDPrice.toFixed(2)}</TableCell>
-                <TableCell>{formatVolume(token.marketCapUSD)}</TableCell>
-                <TableCell>5</TableCell>
-                <TableCell>10</TableCell>
-                <TableCell>15</TableCell>
-                <TableCell
-                  className={false ? "text-red-500" : "text-green-500"}
-                >
-                  5
-                </TableCell>
-                <TableCell
-                  className={false ? "text-red-500" : "text-green-500"}
-                >
-                  10
-                </TableCell>
-                <TableCell
-                  className={false ? "text-red-500" : "text-green-500"}
-                >
-                  15
-                </TableCell>
-                <TableCell>
-                  <Button
-                    size="sm"
-                    className="bg-gray-800 hover:bg-gray-700 text-gray-100"
-                    onClick={() => clickHandler(token)}
+                  </TableCell>
+                  <TableCell>
+                    {format(new Date(token.cdate), "yyyy-MM-dd")}
+                  </TableCell>
+                  <TableCell>${token.aptosUSDPrice.toFixed(2)}</TableCell>
+                  <TableCell>{formatVolume(token.marketCapUSD)}</TableCell>
+                  <TableCell>5</TableCell>
+                  <TableCell>10</TableCell>
+                  <TableCell>15</TableCell>
+                  <TableCell
+                    className={false ? "text-red-500" : "text-green-500"}
                   >
-                    Detail
-                    <ArrowRight className="h-4 w-4 ml-1" />
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
+                    5
+                  </TableCell>
+                  <TableCell
+                    className={false ? "text-red-500" : "text-green-500"}
+                  >
+                    10
+                  </TableCell>
+                  <TableCell
+                    className={false ? "text-red-500" : "text-green-500"}
+                  >
+                    15
+                  </TableCell>
+                  <TableCell>
+                    <Button
+                      size="sm"
+                      className="bg-gray-800 hover:bg-gray-700 text-gray-100"
+                      onClick={() => clickHandler(token)}
+                    >
+                      Detail
+                      <ArrowRight className="h-4 w-4 ml-1" />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
-      <div className="mt-4"></div>
+
+      {!isLoading && (
+        <div className="flex justify-center items-center space-x-2 mt-4 pb-4">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="h-6 text-white"
+          >
+            <ChevronLeft className="h-4 w-4" stroke="#000" />
+          </Button>
+          <span>Page {currentPage}</span>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => handlePageChange(currentPage + 1)}
+            className="h-6 text-white"
+          >
+            <ChevronRight className="h-4 w-4" stroke="#000" />
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

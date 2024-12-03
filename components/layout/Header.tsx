@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useContext, useState } from "react";
+import { FormEvent, useContext, useRef, useState } from "react";
 import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
 import {
@@ -19,23 +19,26 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 
 export default function Header() {
-  const { setLoadingFullScreen } = useContext(GlobalContext);
-  // const [selectedChain, setSelectedChain] = useState("APTOS");
-  const [input, setInput] = useState<string>();
+  const { setLoadingFullScreen, setSelectedToken } = useContext(GlobalContext);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
   const router = useRouter();
-
-  const changeHandler = (value: string) => {
-    setInput(value);
-    // console.log(input);
-  };
 
   const submitHandler = (e: FormEvent) => {
     e.preventDefault();
-    // console.log(input);
-    setLoadingFullScreen(true);
-    setTimeout(() => setLoadingFullScreen(false), 2000);
-    setInput("");
-    router.push("/kana");
+
+    const inputValue = inputRef.current?.value || "";
+
+    if (inputValue.trim()) {
+      setLoadingFullScreen(true);
+      setTimeout(() => setLoadingFullScreen(false), 2000);
+      router.push(`/token/${inputValue}`);
+
+      // Reset form
+      if (formRef.current) {
+        formRef.current.reset();
+      }
+    }
   };
 
   return (
@@ -81,14 +84,17 @@ export default function Header() {
                   >
                     Search
                   </label>
-                  <form className="relative" onSubmit={(e) => submitHandler(e)}>
+                  <form
+                    className="relative"
+                    ref={formRef}
+                    onSubmit={submitHandler}
+                  >
                     <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                     <Input
-                      onChange={(e) => changeHandler(e.target.value)}
                       id="search"
                       placeholder="Search with TrackIt"
                       className="pl-8"
-                      value={input}
+                      ref={inputRef}
                     />
                     <Input type="submit" value="Search" className="hidden" />
                   </form>
@@ -101,11 +107,10 @@ export default function Header() {
 
         {/* Desktop menu */}
         <div className="hidden md:flex items-center space-x-4">
-          <form className="relative" onSubmit={(e) => submitHandler(e)}>
+          <form className="relative" ref={formRef} onSubmit={submitHandler}>
             <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
-              value={input}
-              onChange={(e) => changeHandler(e.target.value)}
+              ref={inputRef}
               id="search"
               placeholder="Search with TrackIt"
               className="pl-8 w-[300px]"
