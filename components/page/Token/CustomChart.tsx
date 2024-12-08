@@ -10,6 +10,8 @@ import {
   ChartOptions,
   DeepPartial,
   Time,
+  SeriesMarkerPosition,
+  SeriesMarkerShape,
 } from "lightweight-charts";
 import React, { useContext, useEffect, useRef } from "react";
 
@@ -182,6 +184,47 @@ export default function Chart(): JSX.Element {
     });
 
     candlestickSeriesRef.current.setData(candlestickSeriesData);
+
+    // determining the dates for the 'buy' and 'sell' markers added below.
+    const datesForMarkers = [
+      candlestickSeriesData[candlestickSeriesData.length - 39],
+      candlestickSeriesData[candlestickSeriesData.length - 19],
+    ];
+    let indexOfMinPrice = 0;
+    for (let i = 1; i < datesForMarkers.length; i++) {
+      if (datesForMarkers[i].high < datesForMarkers[indexOfMinPrice].high) {
+        indexOfMinPrice = i;
+      }
+    }
+    const markers = [
+      {
+        time: candlestickSeriesData[candlestickSeriesData.length - 48].time,
+        position: "aboveBar" as SeriesMarkerPosition,
+        color: "#f68410",
+        shape: "circle" as SeriesMarkerShape,
+        text: "D",
+      },
+    ];
+    for (let i = 0; i < datesForMarkers.length; i++) {
+      if (i !== indexOfMinPrice) {
+        markers.push({
+          time: datesForMarkers[i].time,
+          position: "aboveBar" as SeriesMarkerPosition,
+          color: "rgb(239, 83, 80)",
+          shape: "arrowDown" as SeriesMarkerShape,
+          text: "Sell",
+        });
+      } else {
+        markers.push({
+          time: datesForMarkers[i].time,
+          position: "belowBar" as SeriesMarkerPosition,
+          color: "rgb(38, 166, 154)",
+          shape: "arrowUp" as SeriesMarkerShape,
+          text: "Buy",
+        });
+      }
+    }
+    candlestickSeriesRef.current.setMarkers(markers);
 
     // Setup volume series
     volumeSeriesRef.current = chartRef.current.addHistogramSeries({

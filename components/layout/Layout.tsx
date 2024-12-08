@@ -1,4 +1,5 @@
 "use client";
+import DexList from "./DexList";
 import Footer from "./Footer";
 import Header from "./Header";
 
@@ -10,7 +11,7 @@ const Layout = ({
   return (
     <main className="flex flex-col min-h-screen">
       <Header />
-      {children}
+      <div className="flex-1">{children}</div>
       {/* <Footer /> */}
     </main>
   );

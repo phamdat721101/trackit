@@ -43,7 +43,7 @@ export default function Header() {
 
   return (
     <header className="mb-1">
-      <div className="container mx-auto px-5 py-3 flex items-center justify-between">
+      <div className="mx-auto px-5 py-3 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center text-white">
           <Image src={"/logo.png"} alt="trackit" height={40} width={40} />
