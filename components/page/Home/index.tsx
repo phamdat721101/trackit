@@ -125,10 +125,10 @@ export default function HomePage() {
   }, []);
 
   return (
-    <main className="p-3 grow">
-      <div className="max-w-[2400px] mx-auto grid gap-4 grid-cols-8 lg:grid-cols-12">
-        <div className="col-span-8 lg:col-span-3 lg:block">
-          <Panel title="Token Sentiment" height="h-[445px]">
+    <main className="p-3 h-full">
+      <div className="max-w-[2400px] mx-auto space-y-4 md:space-y-0 md:gap-4 md:flex h-full">
+        <div className="lg:block w-full">
+          <Panel title="Token Sentiment" height="h-full">
             {isLoading ? (
               <div className="flex items-center justify-center h-full text-gray-50">
                 Loading...
@@ -142,9 +142,9 @@ export default function HomePage() {
             )}
           </Panel>
         </div>
-        <div className="col-span-8 lg:col-span-6 grid grid-cols-2 gap-4">
-          <div className="space-y-4">
-            <Panel title="Analysis" height="h-[190px]">
+        <div className="lg:block w-full flex flex-col space-y-4">
+          <div className="h-1/2">
+            <Panel title="Analysis" height="h-full">
               {isLoading ? (
                 <div className="flex items-center justify-center h-full text-gray-50">
                   Loading...
@@ -157,7 +157,9 @@ export default function HomePage() {
                 <List list={renderList(dummy_news, News)} />
               )}
             </Panel>
-            <Panel title="Token Indicator" height="h-[191px]">
+          </div>
+          <div className="h-[calc(50%-16px)]">
+            <Panel title="Token Indicator" height="h-full">
               {isLoading ? (
                 <div className="flex items-center justify-center h-full text-gray-50">
                   Loading...
@@ -171,23 +173,37 @@ export default function HomePage() {
               )}
             </Panel>
           </div>
-          <div className="space-y-4 ">
-            <Panel title="Proposal Effects" height="h-[445px]">
-              {isLoading ? (
-                <div className="flex items-center justify-center h-full text-gray-50">
-                  Loading...
-                </div>
-              ) : error ? (
-                <div className="flex items-center justify-center text-red-500">
-                  {error}
-                </div>
-              ) : (
-                <List list={renderList(governanceVoteData, Governance)} />
-              )}
-            </Panel>
-          </div>
         </div>
-        <div className="col-span-2 lg:col-span-3 hidden lg:block"></div>
+        <div className="lg:block w-full">
+          <Panel title="Proposal Effects" height="h-full">
+            {isLoading ? (
+              <div className="flex items-center justify-center h-full text-gray-50">
+                Loading...
+              </div>
+            ) : error ? (
+              <div className="flex items-center justify-center text-red-500">
+                {error}
+              </div>
+            ) : (
+              <List list={renderList(governanceVoteData, Governance)} />
+            )}
+          </Panel>
+        </div>
+        <div className="lg:block w-full">
+          <Panel title="Proposal Effects" height="h-full">
+            {isLoading ? (
+              <div className="flex items-center justify-center h-full text-gray-50">
+                Loading...
+              </div>
+            ) : error ? (
+              <div className="flex items-center justify-center text-red-500">
+                {error}
+              </div>
+            ) : (
+              <List list={renderList(governanceVoteData, Governance)} />
+            )}
+          </Panel>
+        </div>
       </div>
     </main>
   );

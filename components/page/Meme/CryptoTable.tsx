@@ -34,7 +34,7 @@ import { Alert, AlertDescription, AlertTitle } from "../../ui/Alert";
 
 const table_header = [
   "Token",
-  "Age",
+  "Created on",
   "Price",
   "Mkt Cap",
   "% Holder",
@@ -121,7 +121,7 @@ export default function CryptoTable() {
                   key={token.id}
                   className="border-itemborder hover:bg-item"
                 >
-                  <TableCell className="w-60 font-medium">
+                  <TableCell className="w-50 font-medium">
                     <div className="flex items-center gap-2">
                       <img
                         src={token.image}

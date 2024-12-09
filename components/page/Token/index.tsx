@@ -36,7 +36,7 @@ export default function Token() {
   // console.log(selectedToken);
 
   return (
-    <div className="flex flex-col w-full text-foreground p-3 gap-4">
+    <div className="grow flex flex-col w-full text-foreground p-3 gap-4">
       {/* Main Content */}
       <div className="grid md:grid-cols-[1fr_300px] flex-1 gap-4">
         {/* Left Sidebar */}
@@ -48,14 +48,14 @@ export default function Token() {
             <Chart />
           </div>
 
-          {/* Recent Transactions */}
+          {/* Tabs */}
           <Tabs defaultValue="Activity" className="w-full">
             <TabsList className="p-0 text-center bg-transparent space-x-5">
               {main_tabs.map((tab, index) => (
                 <TabsTrigger
                   key={index}
                   value={tab}
-                  className="px-5  grid bg-item data-[state=active]:bg-itemborder data-[state=active]:text-gray-50 h-full rounded-lg data-[state=active]:rounded-lg"
+                  className="md:px-5 grid bg-item data-[state=active]:bg-itemborder data-[state=active]:text-gray-50 h-full rounded-lg data-[state=active]:rounded-lg"
                 >
                   <span>{tab}</span>
                 </TabsTrigger>
