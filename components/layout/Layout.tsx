@@ -1,5 +1,4 @@
 "use client";
-import DexList from "../page/Meme/DexList";
 import Footer from "./Footer";
 import Header from "./Header";
 

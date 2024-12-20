@@ -53,7 +53,7 @@ export default function CryptoTable() {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const itemsPerPage = 8;
+  const itemsPerPage = 7;
 
   const clickHandler = (token: TokenInfo) => {
     setSelectedToken(token);
@@ -100,97 +100,103 @@ export default function CryptoTable() {
   }, [currentPage, itemsPerPage]);
 
   return (
-    <div className="w-full bg-panel text-gray-100 rounded-lg">
-      <ScrollArea>
-        <Table>
-          <TableHeader>
-            <TableRow className="border-itemborder hover:bg-transparent">
-              {table_header.map((header, index) => (
-                <TableHead key={index} className="text-gray-400">
-                  {header}
-                </TableHead>
-              ))}
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {isLoading &&
-              [...Array(8)].map((_, index) => <LoadingRow key={index} />)}
-            {!isLoading &&
-              tokenInfoList.map((token) => (
-                <TableRow
-                  key={token.id}
-                  className="border-itemborder hover:bg-item"
-                >
-                  <TableCell className="w-50 font-medium">
-                    <div className="flex items-center gap-2">
-                      <img
-                        src={token.image}
-                        alt=""
-                        className="h-8 w-8 rounded-full"
-                      />
-                      <div className="flex flex-col">
-                        <div className="flex items-center gap-1">
-                          <span className="font-semibold">
-                            {token.tickerSymbol}
-                          </span>
-                          <EarthIcon width={12} height={12} />
-                          <TwitterIcon width={12} height={12} />
-                          <SendIcon width={12} height={12} />
-                        </div>
-                        <div className="text-xs">
-                          <button
-                            className="flex items-center gap-1"
-                            onClick={() => copyAddress(token)}
-                          >
-                            <span>{formatAddress(token.creator)}</span>
-                            <Copy className="h-2 w-2" />
-                          </button>
+    <div className="w-full h-[calc(100vh-6rem)] bg-panel text-gray-100 rounded-lg overflow-hidden flex flex-col">
+      <div className="flex-1 max-w-full overflow-hidden">
+        <ScrollArea className="w-full h-full">
+          <Table>
+            <TableHeader className="sticky top-0 bg-panel z-10">
+              <TableRow className="border-itemborder hover:bg-transparent whitespace-nowrap">
+                {table_header.map((header, index) => (
+                  <TableHead key={index} className="text-gray-400">
+                    {header}
+                  </TableHead>
+                ))}
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {isLoading &&
+                [...Array(8)].map((_, index) => <LoadingRow key={index} />)}
+              {!isLoading &&
+                tokenInfoList.map((token) => (
+                  <TableRow
+                    key={token.id}
+                    className="border-itemborder hover:bg-item whitespace-nowrap"
+                  >
+                    <TableCell className="min-w-[200px] font-medium">
+                      <div className="flex items-center gap-2">
+                        <img
+                          src={token.image}
+                          alt=""
+                          className="h-8 w-8 rounded-full"
+                        />
+                        <div className="flex flex-col">
+                          <div className="flex items-center gap-1">
+                            <span className="font-semibold">
+                              {token.tickerSymbol}
+                            </span>
+                            <EarthIcon width={12} height={12} />
+                            <TwitterIcon width={12} height={12} />
+                            <SendIcon width={12} height={12} />
+                          </div>
+                          <div className="text-xs">
+                            <button
+                              className="flex items-center gap-1"
+                              onClick={() => copyAddress(token)}
+                            >
+                              <span>{formatAddress(token.creator)}</span>
+                              <Copy className="h-2 w-2" />
+                            </button>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    {format(new Date(token.cdate), "yyyy-MM-dd")}
-                  </TableCell>
-                  <TableCell>${token.aptosUSDPrice.toFixed(2)}</TableCell>
-                  <TableCell>{formatVolume(token.marketCapUSD)}</TableCell>
-                  <TableCell>5</TableCell>
-                  <TableCell>10</TableCell>
-                  <TableCell>15</TableCell>
-                  <TableCell
-                    className={false ? "text-red-500" : "text-green-500"}
-                  >
-                    5
-                  </TableCell>
-                  <TableCell
-                    className={false ? "text-red-500" : "text-green-500"}
-                  >
-                    10
-                  </TableCell>
-                  <TableCell
-                    className={false ? "text-red-500" : "text-green-500"}
-                  >
-                    15
-                  </TableCell>
-                  <TableCell>
-                    <Button
-                      size="sm"
-                      className="bg-gray-800 hover:bg-gray-700 text-gray-100"
-                      onClick={() => clickHandler(token)}
+                    </TableCell>
+                    <TableCell className="min-w-[100px]">
+                      {format(new Date(token.cdate), "yyyy-MM-dd")}
+                    </TableCell>
+                    <TableCell className="min-w-[80px]">
+                      ${token.aptosUSDPrice.toFixed(2)}
+                    </TableCell>
+                    <TableCell className="min-w-[100px]">
+                      {formatVolume(token.marketCapUSD)}
+                    </TableCell>
+                    <TableCell>5</TableCell>
+                    <TableCell>10</TableCell>
+                    <TableCell>15</TableCell>
+                    <TableCell
+                      className={false ? "text-red-500" : "text-green-500"}
                     >
-                      Detail
-                      <ArrowRight className="h-4 w-4 ml-1" />
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-          </TableBody>
-        </Table>
-        <ScrollBar orientation="horizontal" />
-      </ScrollArea>
+                      5
+                    </TableCell>
+                    <TableCell
+                      className={false ? "text-red-500" : "text-green-500"}
+                    >
+                      10
+                    </TableCell>
+                    <TableCell
+                      className={false ? "text-red-500" : "text-green-500"}
+                    >
+                      15
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        size="sm"
+                        className="bg-gray-800 hover:bg-gray-700 text-gray-100"
+                        onClick={() => clickHandler(token)}
+                      >
+                        Detail
+                        <ArrowRight className="h-4 w-4 ml-1" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+            </TableBody>
+          </Table>
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
+      </div>
 
       {!isLoading && (
-        <div className="flex justify-center items-center space-x-2 mt-4 pb-4">
+        <div className="flex justify-center items-center space-x-2 py-4 border-t border-itemborder">
           <Button
             variant="outline"
             size="sm"

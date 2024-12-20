@@ -3,8 +3,7 @@ import DexList from "../components/page/Meme/DexList";
 
 export default function Page() {
   return (
-    <div className="md:flex">
-      <DexList />
+    <div className="w-full">
       <Meme />
     </div>
   );
