@@ -1,5 +1,5 @@
 "use client";
-import { AppSidebar } from "@/components/layout/Sidebar/app-sidebar";
+import { AppSidebar } from "../layout/Sidebar/AppSidebar";
 import SearchForm from "./SearchForm";
 import {
   SidebarInset,
