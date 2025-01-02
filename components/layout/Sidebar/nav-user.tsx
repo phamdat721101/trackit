@@ -28,12 +28,14 @@ import {
 
 export function NavUser({
   user,
+  showDetails,
 }: {
   user: {
     name: string;
     email: string;
     avatar: string;
   };
+  showDetails?: boolean;
 }) {
   const { isMobile } = useSidebar();
 

@@ -115,40 +115,60 @@ export default function TxHistory() {
 
   return (
     <div className="w-full mx-auto text-gray-100 rounded-lg">
-      <div className="overflow-x-auto rounded-lg">
-        <table className="min-w-full bg-panel border border-gray-700 rounded-lg">
-          <thead>
-            <tr className="text-sm">
-              {header_table.map((header) => (
-                <th
-                  key={header}
-                  className="px-4 py-2 text-left font-medium text-gray-400"
-                >
-                  <div className="flex items-center">
-                    {header}
-                    <Filter className="ml-2 w-4 h-4 text-gray-500" />
-                  </div>
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {txnData.map((trade, index) => (
-              <tr key={index} className="border-t border-gray-700 text-sm">
-                <td className="px-4 py-2">
-                  {format(
-                    new Date(+trade.timestamp / 1000),
-                    "yyyy-MM-dd HH:mm:ss"
-                  )}
-                </td>
-                <td
-                  className={`px-4 py-2 ${
-                    trade.side === "BUY" ? "text-green-500" : "text-red-500"
-                  }`}
-                >
-                  {trade.side}
-                </td>
-                {/* <td
+      {/* Container with fixed height and overflow handling */}
+      <div className="relative rounded-lg border border-gray-700 bg-panel">
+        {/* Table container with sticky header */}
+        <div className="overflow-x-auto">
+          <div className="overflow-y-auto max-h-[200px] rounded-lg">
+            {/* Adjust max-h value based on your needs */}
+            <table className="min-w-full table-fixed">
+              <thead className="sticky top-0 bg-panel z-10">
+                <tr className="text-sm border-b border-gray-700">
+                  {header_table.map((header) => (
+                    <th
+                      key={header}
+                      className="min-w-40 px-4 py-2 text-left font-medium text-gray-400"
+                    >
+                      <div className="flex items-center">
+                        {header}
+                        <Filter className="ml-2 w-4 h-4 text-gray-500" />
+                      </div>
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-700">
+                {isLoading ? (
+                  <tr>
+                    <td
+                      colSpan={6}
+                      className="px-4 py-4 text-center text-gray-400"
+                    >
+                      Loading...
+                    </td>
+                  </tr>
+                ) : txnData.length > 0 ? (
+                  txnData.map((trade, index) => (
+                    <tr
+                      key={index}
+                      className="text-sm hover:bg-gray-800/50 transition-colors"
+                    >
+                      <td className="px-4 py-2 whitespace-nowrap">
+                        {format(
+                          new Date(+trade.timestamp / 1000),
+                          "yyyy-MM-dd HH:mm:ss"
+                        )}
+                      </td>
+                      <td
+                        className={`px-4 py-2 whitespace-nowrap ${
+                          trade.side === "BUY"
+                            ? "text-green-500"
+                            : "text-red-500"
+                        }`}
+                      >
+                        {trade.side}
+                      </td>
+                      {/* <td
                   className={`px-4 py-2 ${
                     trade.usd.startsWith("<")
                       ? "text-green-500"
@@ -157,20 +177,20 @@ export default function TxHistory() {
                 >
                   {trade.usd}
                 </td> */}
-                <td className="px-4 py-2">
-                  {(+trade.xAmt).toLocaleString("en-US", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}
-                </td>
-                <td className="px-4 py-2">
-                  {(+trade.yAmt).toLocaleString("en-US", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}
-                </td>
-                {/* <td
-                  className={`px-4 py-2 ${
+                      <td className="px-4 py-2 whitespace-nowrap">
+                        {(+trade.xAmt).toLocaleString("en-US", {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })}
+                      </td>
+                      <td className="px-4 py-2 whitespace-nowrap">
+                        {(+trade.yAmt).toLocaleString("en-US", {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })}
+                      </td>
+                      {/* <td
+                  className={`px-4 py-2 whitespace-nowrap ${
                     trade.price.startsWith("0.02")
                       ? "text-green-500"
                       : "text-red-500"
@@ -178,14 +198,28 @@ export default function TxHistory() {
                 >
                   {trade.price}
                 </td> */}
-                <td className="px-4 py-2">
-                  {formatAddress(trade.userWalletAddr)}
-                </td>
-                <td className="px-4 py-2">{formatAddress(trade.txnHash)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                      <td className="px-4 py-2 whitespace-nowrap">
+                        {formatAddress(trade.userWalletAddr)}
+                      </td>
+                      <td className="px-4 py-2 whitespace-nowrap">
+                        {formatAddress(trade.txnHash)}
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      colSpan={6}
+                      className="px-4 py-4 text-center text-gray-400"
+                    >
+                      No transactions found
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   );

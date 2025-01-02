@@ -26,14 +26,13 @@ const sub_tabs = [
   "Whale",
   "Fresh",
   "Snipers",
-  "Top",
-  "DEV",
-  "Insiders",
+  // "Top",
+  // "DEV",
+  // "Insiders",
 ];
 
 export default function Token() {
   const { selectedToken } = useContext(GlobalContext);
-  // console.log(selectedToken);
 
   return (
     <div className="grid md:grid-cols-[minmax(0,1fr)_300px] flex-1 gap-4">

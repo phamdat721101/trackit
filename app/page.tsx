@@ -1,10 +1,10 @@
-import Meme from "../components/page/Meme";
-import DexList from "../components/page/Meme/DexList";
+import Home from "../components/page/Home";
+import DexList from "../components/page/Home/DexList";
 
 export default function Page() {
   return (
     <div className="w-full">
-      <Meme />
+      <Home />
     </div>
   );
 }

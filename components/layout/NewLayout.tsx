@@ -1,5 +1,6 @@
 "use client";
 import { AppSidebar } from "@/components/layout/Sidebar/app-sidebar";
+import SearchForm from "./SearchForm";
 import {
   SidebarInset,
   SidebarProvider,
@@ -13,15 +14,24 @@ const Layout = ({
 }>) => {
   return (
     <SidebarProvider className="text-gray-50">
-      <AppSidebar />
-      <SidebarInset className="bg-transparent">
-        <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
-          <div className="flex items-center gap-2 px-4">
-            <SidebarTrigger className="-ml-1" />
-          </div>
-        </header>
-        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">{children}</div>
-      </SidebarInset>
+      <div className="flex min-h-screen w-full">
+        <div className="md:sticky top-0 h-screen flex-shrink-0">
+          <AppSidebar />
+        </div>
+        <main className="flex-1 min-w-0">
+          <SidebarInset className="flex flex-col min-h-screen bg-transparent">
+            <header className="flex h-16 shrink-0 items-center gap-2">
+              {/* <SidebarTrigger className="-ml-1" /> */}
+
+              {/* Search Form */}
+              <SearchForm />
+            </header>
+            <div className="flex-1">
+              <div className="p-4 w-full">{children}</div>
+            </div>
+          </SidebarInset>
+        </main>
+      </div>
     </SidebarProvider>
   );
 };
