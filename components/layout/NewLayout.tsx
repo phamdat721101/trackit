@@ -6,6 +6,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "../ui/sidebar";
+import { ChatBox } from "./Chatbox";
 
 const Layout = ({
   children,
@@ -28,6 +29,7 @@ const Layout = ({
             </header>
             <div className="flex-1">
               <div className="p-4 w-full">{children}</div>
+              <ChatBox />
             </div>
           </SidebarInset>
         </main>
