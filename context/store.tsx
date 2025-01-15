@@ -7,6 +7,8 @@ interface ContextProps {
   setLoadingFullScreen: Dispatch<SetStateAction<boolean>>;
   selectedToken: TokenInfo | null;
   setSelectedToken: Dispatch<SetStateAction<TokenInfo | null>>;
+  selectedChain: string;
+  setSelectedChain: Dispatch<SetStateAction<string>>;
 }
 
 const GlobalContext = createContext<ContextProps>({
@@ -14,6 +16,8 @@ const GlobalContext = createContext<ContextProps>({
   setLoadingFullScreen: () => {},
   selectedToken: null,
   setSelectedToken: () => {},
+  selectedChain: "movement",
+  setSelectedChain: () => {},
 });
 
 export default GlobalContext;
@@ -25,6 +29,7 @@ export const GlobalContextProvider = ({
 }>) => {
   const [loadingFullScreen, setLoadingFullScreen] = useState(false);
   const [selectedToken, setSelectedToken] = useState<TokenInfo | null>(token);
+  const [selectedChain, setSelectedChain] = useState<string>("movement");
 
   return (
     <GlobalContext.Provider
@@ -33,6 +38,8 @@ export const GlobalContextProvider = ({
         setLoadingFullScreen,
         selectedToken,
         setSelectedToken,
+        selectedChain,
+        setSelectedChain,
       }}
     >
       {children}

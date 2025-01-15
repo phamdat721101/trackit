@@ -73,3 +73,50 @@ export interface TxnInfo {
   timestamp: string;
   status: string;
 }
+
+export interface PoolInfo {
+  token: string;
+  apr: string;
+  unit: string;
+  protocol: string;
+}
+
+export interface SwapPool {
+  id: number;
+  attributes: {
+    title: string;
+    description_en: string;
+    description_zh: string;
+    link: string;
+    apy: string | null;
+    category: string;
+    vToken: string;
+    createdAt: string;
+    updatedAt: string;
+    publishedAt: string;
+    apy_var: string | null;
+    logo: {
+      data: {
+        id: number;
+        attributes: {
+          name: string;
+          alternativeText: string | null;
+          caption: string | null;
+          width: number;
+          height: number;
+          formats: string | null;
+          hash: string;
+          ext: string;
+          mime: string;
+          size: number;
+          url: string;
+          previewUrl: string | null;
+          provider: string;
+          provider_metadata: string | null;
+          createdAt: string;
+          updatedAt: string;
+        };
+      };
+    };
+  };
+}

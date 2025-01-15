@@ -42,6 +42,7 @@ import {
 import { VisuallyHidden, Root } from "@radix-ui/react-visually-hidden";
 import Image from "next/image";
 import Link from "next/link";
+import GlobalContext from "../../../context/store";
 
 interface ChainButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -83,7 +84,7 @@ export function AppSidebar() {
         <div
           className={`
           relative 
-          ${isCollapsed ? "w-[80px]" : "w-60"}
+          ${isCollapsed ? "w-[84px]" : "w-60"}
           transition-all duration-300
           h-screen
         `}
@@ -171,6 +172,7 @@ function MobileSidebarContent() {
 }
 
 function DesktopSidebarContent({ isCollapsed }: { isCollapsed: boolean }) {
+  const { selectedChain, setSelectedChain } = React.useContext(GlobalContext);
   return (
     <>
       <div className="p-4 bg-panel">
@@ -213,9 +215,15 @@ function DesktopSidebarContent({ isCollapsed }: { isCollapsed: boolean }) {
         <SidebarGroup>
           <SidebarMenu className="space-y-1">
             {chains.map((chain, index) => (
-              <SidebarMenuItem key={index}>
+              <SidebarMenuItem
+                key={index}
+                className={`${
+                  selectedChain === chain.value ? "bg-gray-600 rounded-lg" : ""
+                }`}
+                onClick={() => setSelectedChain(chain.value)}
+              >
                 <SidebarMenuButton asChild>
-                  <a href="#" className="flex items-center gap-2">
+                  <a href="#" className="flex items-center gap-3">
                     <div className="w-5 h-5 flex items-center justify-center flex-shrink-0">
                       <Image
                         src={chain.logo}
@@ -478,34 +486,42 @@ const chains = [
   {
     name: "Movement",
     logo: "/chains/movement-mark.svg",
+    value: "movement",
+  },
+  {
+    name: "Kaia",
+    logo: "/chains/kaia.svg",
+    value: "kaia",
   },
   {
     name: "Polkadot",
     logo: "/chains/polkadot.svg",
+    value: "polkadot",
   },
   {
     name: "Berachain",
     logo: "/chains/berachain.png",
+    value: "berachain",
   },
   {
     name: "Starknet",
     logo: "/chains/starknet.svg",
+    value: "starknet",
   },
 
   {
     name: "Manta",
     logo: "/chains/manta.svg",
-  },
-  {
-    name: "Kaia",
-    logo: "/chains/kaia.svg",
+    value: "manta",
   },
   {
     name: "Ancient8",
     logo: "/chains/ancient8.svg",
+    value: "ancient8",
   },
   {
     name: "Sui",
     logo: "/chains/sui.svg",
+    value: "sui",
   },
 ];

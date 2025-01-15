@@ -252,7 +252,7 @@ export default function CryptoTable() {
                     <Button
                       size="sm"
                       onClick={() => clickHandler(token)}
-                      className="bg-gray-800 hover:bg-gray-700"
+                      className="bg-bluesky hover:bg-blue-300"
                     >
                       Details
                     </Button>
