@@ -53,31 +53,35 @@ export default function YieldInfo() {
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {swapPools.map((pool) => (
-            <Card
-              key={pool.id}
-              className="flex items-center p-4 hover:bg-accent transition-colors cursor-pointer"
-            >
-              <div className="relative flex items-center flex-1">
-                <div className="relative w-12 h-12">
-                  <Image
-                    src={pool.attributes.logo.data.attributes.url}
-                    alt={pool.attributes.title}
-                    width={48}
-                    height={48}
-                    className="rounded-full"
-                  />
+          {swapPools.length > 0 ? (
+            swapPools.map((pool) => (
+              <Card
+                key={pool.id}
+                className="flex items-center p-4 hover:bg-accent transition-colors cursor-pointer"
+              >
+                <div className="relative flex items-center flex-1">
+                  <div className="relative w-12 h-12">
+                    <Image
+                      src={pool.attributes.logo.data.attributes.url}
+                      alt={pool.attributes.title}
+                      width={48}
+                      height={48}
+                      className="rounded-full"
+                    />
+                  </div>
+                  <div className="ml-4">
+                    <h3 className="font-medium">{pool.attributes.title}</h3>
+                    <p className="text-sm text-muted-foreground">
+                      {pool.attributes.description_en}
+                    </p>
+                  </div>
                 </div>
-                <div className="ml-4">
-                  <h3 className="font-medium">{pool.attributes.title}</h3>
-                  <p className="text-sm text-muted-foreground">
-                    {pool.attributes.description_en}
-                  </p>
-                </div>
-              </div>
-              <ChevronRight className="w-5 h-5 text-muted-foreground" />
-            </Card>
-          ))}
+                <ChevronRight className="w-5 h-5 text-muted-foreground" />
+              </Card>
+            ))
+          ) : (
+            <span>No pools</span>
+          )}
         </div>
       </section>
 
@@ -93,37 +97,41 @@ export default function YieldInfo() {
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {earnPools.map((pool) => (
-            <Card
-              key={pool.protocol}
-              className="flex items-center p-4 hover:bg-accent transition-colors cursor-pointer"
-            >
-              <div className="relative flex items-center flex-1">
-                <div className="relative w-12 h-12">
-                  <Image
-                    src="/logo.png"
-                    alt={pool.protocol}
-                    width={48}
-                    height={48}
-                    className="rounded-full"
-                  />
-                </div>
-                <div className="ml-4">
-                  <h3 className="font-medium">{pool.protocol}</h3>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm text-muted-foreground">
-                      Est.APY
-                    </span>
-                    <span className="font-medium">
-                      {pool.apr}
-                      {pool.unit}
-                    </span>
+          {earnPools.length > 0 ? (
+            earnPools.map((pool) => (
+              <Card
+                key={pool.protocol}
+                className="flex items-center p-4 hover:bg-accent transition-colors cursor-pointer"
+              >
+                <div className="relative flex items-center flex-1">
+                  <div className="relative w-12 h-12">
+                    <Image
+                      src="/logo.png"
+                      alt={pool.protocol}
+                      width={48}
+                      height={48}
+                      className="rounded-full"
+                    />
+                  </div>
+                  <div className="ml-4">
+                    <h3 className="font-medium">{pool.protocol}</h3>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-muted-foreground">
+                        Est.APY
+                      </span>
+                      <span className="font-medium">
+                        {pool.apr}
+                        {pool.unit}
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <ChevronRight className="w-5 h-5 text-muted-foreground" />
-            </Card>
-          ))}
+                <ChevronRight className="w-5 h-5 text-muted-foreground" />
+              </Card>
+            ))
+          ) : (
+            <span>No pools</span>
+          )}
         </div>
       </section>
     </div>

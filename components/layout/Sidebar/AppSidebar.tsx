@@ -110,8 +110,7 @@ export function AppSidebar() {
 }
 
 function MobileSidebarContent() {
-  const [activeChain, setActiveChain] = React.useState("Movement");
-
+  const { selectedChain, setSelectedChain } = React.useContext(GlobalContext);
   return (
     <>
       <div className="p-4">
@@ -157,8 +156,8 @@ function MobileSidebarContent() {
               key={chain.name}
               logo={chain.logo}
               name={chain.name}
-              // isActive={activeChain === chain.name}
-              // onClick={() => setActiveChain(chain.name)}
+              isActive={selectedChain === chain.value}
+              onClick={() => setSelectedChain(chain.value)}
             />
           ))}
         </SidebarGroup>
@@ -262,8 +261,8 @@ function ChainButton({
   return (
     <button
       className={cn(
-        "group relative flex flex-col items-center justify-center rounded-xl p-4 text-center transition-colors hover:bg-accent",
-        isActive && "bg-blue-500",
+        "group relative flex flex-col items-center justify-center rounded-xl p-4 text-center",
+        isActive && "bg-gray-600",
         className
       )}
       {...props}
@@ -280,9 +279,7 @@ function ChainButton({
         height={20}
         className="mb-2 text-2xl"
       />
-      <span className="text-xs font-medium text-muted-foreground group-hover:text-primary">
-        {name}
-      </span>
+      <span className="text-xs font-medium text-gray-50">{name}</span>
     </button>
   );
 }
