@@ -29,7 +29,7 @@
     --secondary-custom-color: 240 8% 22%;
     --secondary-custom-color-light: 240 8% 19%;
 
-    --custom-border: 240 4.7% 29.2%;
+    --custom-border: #1a3c78;
   }
 
   .dark {
@@ -62,8 +62,21 @@
 
   body {
     @apply font-sans antialiased bg-background text-foreground;
-    font-feature-settings: "rlig" 1, "calt" 1;
-    font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
-    background-color: rgb(28, 28, 33);
+    background-color: #0c1934;
+  }
+
+  .sidebar {
+    background-color: #0a172b;
+  }
+
+  .selected-nav {
+    padding: 4px 8px;
+    background-color: #112548;
+    border-radius: 25px;
+    font-weight: 600;
+  }
+
+  .bg {
+    background-color: #0e203f;
   }
 }

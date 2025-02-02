@@ -1,6 +1,7 @@
 "use client";
+import { Button } from "../../ui/Button";
 import { Card } from "../../ui/Card";
-import { Tabs, TabsList, TabsTrigger } from "../../ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "../../ui/Tabs";
 import {
   ArrowDown,
   ArrowUp,
@@ -39,7 +40,7 @@ export default function Token() {
       {/* Middle */}
       <div className="space-y-4 min-w-0 transition-all duration-100 ease-in-out">
         {/* Chart Area */}
-        <div className="bg-panel rounded-lg">
+        <div className="bg rounded-lg">
           <Chart />
         </div>
 
@@ -50,7 +51,7 @@ export default function Token() {
               <TabsTrigger
                 key={index}
                 value={tab}
-                className="md:px-5 grid bg-item data-[state=active]:bg-itemborder data-[state=active]:text-gray-50 h-full rounded-lg data-[state=active]:rounded-lg"
+                className="md:px-5 grid bg-[#102447] data-[state=active]:bg-[#005880] data-[state=active]:text-gray-300 h-full rounded-lg data-[state=active]:rounded-lg"
               >
                 <span>{tab}</span>
               </TabsTrigger>
@@ -58,12 +59,12 @@ export default function Token() {
           </TabsList>
         </Tabs>
         <Tabs defaultValue="All" className="w-full">
-          <TabsList className="p-0 text-center bg-transparent border border-itemborder rounded-xl">
+          <TabsList className="p-0 text-center bg-[#102447] border border-[#1a3c78] rounded-xl">
             {sub_tabs.map((tab, index) => (
               <TabsTrigger
                 key={index}
                 value={tab}
-                className="grid data-[state=active]:bg-itemborder data-[state=active]:text-gray-50 h-full rounded-lg data-[state=active]:rounded-none data-[state=active]:first:rounded-s-lg data-[state=active]:last:rounded-e-lg"
+                className="grid data-[state=active]:bg-[#005880] data-[state=active]:text-gray-50 h-full rounded-lg data-[state=active]:rounded-none data-[state=active]:first:rounded-s-lg data-[state=active]:last:rounded-e-lg"
               >
                 <span>{tab}</span>
               </TabsTrigger>

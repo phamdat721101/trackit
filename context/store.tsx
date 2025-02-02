@@ -3,21 +3,29 @@ import { TokenInfo } from "../types/interface";
 import { createContext, Dispatch, SetStateAction, useState } from "react";
 
 interface ContextProps {
+  isLogged: boolean;
+  setIsLogged: Dispatch<SetStateAction<boolean>>;
   loadingFullScreen: boolean;
   setLoadingFullScreen: Dispatch<SetStateAction<boolean>>;
   selectedToken: TokenInfo | null;
   setSelectedToken: Dispatch<SetStateAction<TokenInfo | null>>;
   selectedChain: string;
   setSelectedChain: Dispatch<SetStateAction<string>>;
+  selectedNav: string;
+  setSelectedNav: Dispatch<SetStateAction<string>>;
 }
 
 const GlobalContext = createContext<ContextProps>({
+  isLogged: false,
+  setIsLogged: () => {},
   loadingFullScreen: false,
   setLoadingFullScreen: () => {},
   selectedToken: null,
   setSelectedToken: () => {},
   selectedChain: "movement",
   setSelectedChain: () => {},
+  selectedNav: "Meme",
+  setSelectedNav: () => {},
 });
 
 export default GlobalContext;
@@ -27,19 +35,25 @@ export const GlobalContextProvider = ({
 }: Readonly<{
   children: React.ReactNode;
 }>) => {
+  const [isLogged, setIsLogged] = useState(false);
   const [loadingFullScreen, setLoadingFullScreen] = useState(false);
   const [selectedToken, setSelectedToken] = useState<TokenInfo | null>(token);
   const [selectedChain, setSelectedChain] = useState<string>("movement");
+  const [selectedNav, setSelectedNav] = useState<string>("Meme");
 
   return (
     <GlobalContext.Provider
       value={{
+        isLogged,
+        setIsLogged,
         loadingFullScreen,
         setLoadingFullScreen,
         selectedToken,
         setSelectedToken,
         selectedChain,
         setSelectedChain,
+        selectedNav,
+        setSelectedNav,
       }}
     >
       {children}

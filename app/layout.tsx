@@ -1,19 +1,13 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
+import { Red_Hat_Text } from "next/font/google";
 import "./globals.css";
 import { GlobalContextProvider } from "@/context/store";
 import WalletProvider from "../provider/WalletProvider";
 import Layout from "../components/layout/NewLayout";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
+const redHatText = Red_Hat_Text({
+  subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -30,7 +24,7 @@ export default function RootLayout({
     <html lang="en">
       <body
         suppressHydrationWarning
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${redHatText.className} antialiased`}
       >
         <WalletProvider>
           <GlobalContextProvider>

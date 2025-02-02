@@ -59,7 +59,18 @@ const exchangeData = [
   },
 ];
 
+interface ResponseProps {
+  srcAsset: string;
+  dstAsset: string;
+  srcAmount: string;
+  dstAmount: string;
+  feeAmount: string;
+  isFeeIn: boolean;
+  paths: Path[][];
+}
+
 interface Path {
+  poolId: string;
   source: string;
   srcAsset: string;
   dstAsset: string;
@@ -93,20 +104,17 @@ export default function SearchForm() {
         throw new Error("Please enter a token address");
       }
       const response = await fetch(
-        `https://trackit-be.vercel.app/v1/token/route?token=${encodeURIComponent(
-          searchValue
-        )}`
+        `https://trackit-be.vercel.app/v1/token/route?src_asset=${searchValue}&dst_asset=${searchValue}`
       );
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const data = await response.json();
+      const data: ResponseProps = await response.json();
 
       if (!data.paths) return;
-
-      setResults(data.paths);
+      setResults(data.paths[0]);
       setIsOpen(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to fetch data");
@@ -117,17 +125,20 @@ export default function SearchForm() {
   };
 
   return (
-    <div className="max-w-2xl ml-auto p-4">
+    <div className="max-w-2xl">
       {/* Search Form */}
       <form onSubmit={handleSearch} className="relative">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+          <Search
+            className="absolute left-3 top-1/2 -translate-y-1/2 h-7 w-7 text-gray-400"
+            strokeWidth={1}
+          />
           <input
             type="text"
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
-            placeholder="Search with TrackIt..."
-            className="w-full pl-10 pr-4 py-2 rounded-lg bg-gray-800 text-gray-300 border border-gray-700 focus:outline-none focus:border-gray-600 text-sm"
+            placeholder="Search"
+            className="w-full pl-12 pr-4 py-2 rounded-3xl bg-[#102447] text-gray-500 focus:outline-none focus:border-gray-600 text-sm"
           />
         </div>
         {error && <div className="text-rose-500 text-sm">{error}</div>}

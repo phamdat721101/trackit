@@ -16,7 +16,6 @@ import {
 import React, { useContext, useEffect, useRef, useCallback } from "react";
 
 // Constants
-// Constants
 const TOOLTIP_CONFIG = {
   HEIGHT: 22, // Reduced height for single line
   PADDING: 8,
@@ -51,7 +50,7 @@ interface ChartData {
 const chartOptions: DeepPartial<ChartOptions> = {
   layout: {
     textColor: "white",
-    background: { color: "#34333D" },
+    background: { color: "transparent" },
   },
   grid: {
     vertLines: {

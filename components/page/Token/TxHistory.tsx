@@ -1,11 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ChevronDown, Filter } from "lucide-react";
+import { ChevronDown, ChevronsUpDownIcon, Filter } from "lucide-react";
 import { useParams } from "next/navigation";
 import { TxnInfo } from "../../../types/interface";
 import axios from "axios";
 import { format } from "date-fns";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../../ui/Table";
 
 interface Trade {
   date: string;
@@ -116,50 +124,49 @@ export default function TxHistory() {
   return (
     <div className="w-full mx-auto text-gray-100 rounded-lg">
       {/* Container with fixed height and overflow handling */}
-      <div className="relative rounded-lg border border-gray-700 bg-panel">
+      <div className="relative rounded-lg">
         {/* Table container with sticky header */}
         <div className="overflow-x-auto">
           <div className="overflow-y-auto max-h-[200px] rounded-lg">
             {/* Adjust max-h value based on your needs */}
-            <table className="min-w-full table-fixed">
-              <thead className="sticky top-0 bg-panel z-10">
-                <tr className="text-sm border-b border-gray-700">
+            <Table className="min-w-full table">
+              <TableHeader className="sticky top-0 bg z-10">
+                <TableRow className="text-sm hover:bg-transparent">
                   {header_table.map((header) => (
-                    <th
+                    <TableHead
                       key={header}
                       className="min-w-40 px-4 py-2 text-left font-medium text-gray-400"
                     >
-                      <div className="flex items-center">
-                        {header}
-                        <Filter className="ml-2 w-4 h-4 text-gray-500" />
-                      </div>
-                    </th>
+                      <button className="flex items-center">
+                        {header} <ChevronsUpDownIcon width={14} height={14} />
+                      </button>
+                    </TableHead>
                   ))}
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-700">
+                </TableRow>
+              </TableHeader>
+              <TableBody className="divide-y divide-gray-700 bg">
                 {isLoading ? (
-                  <tr>
-                    <td
+                  <TableRow>
+                    <TableCell
                       colSpan={6}
                       className="px-4 py-4 text-center text-gray-400"
                     >
                       Loading...
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 ) : txnData.length > 0 ? (
                   txnData.map((trade, index) => (
-                    <tr
+                    <TableRow
                       key={index}
-                      className="text-sm hover:bg-gray-800/50 transition-colors"
+                      className="text-sm hover:bg-blue-900 transition-colors"
                     >
-                      <td className="px-4 py-2 whitespace-nowrap">
+                      <TableCell className="px-4 py-2 whitespace-nowrap">
                         {format(
                           new Date(+trade.timestamp / 1000),
                           "yyyy-MM-dd HH:mm:ss"
                         )}
-                      </td>
-                      <td
+                      </TableCell>
+                      <TableCell
                         className={`px-4 py-2 whitespace-nowrap ${
                           trade.side === "BUY"
                             ? "text-green-500"
@@ -167,7 +174,7 @@ export default function TxHistory() {
                         }`}
                       >
                         {trade.side}
-                      </td>
+                      </TableCell>
                       {/* <td
                   className={`px-4 py-2 ${
                     trade.usd.startsWith("<")
@@ -177,18 +184,18 @@ export default function TxHistory() {
                 >
                   {trade.usd}
                 </td> */}
-                      <td className="px-4 py-2 whitespace-nowrap">
+                      <TableCell className="px-4 py-2 whitespace-nowrap">
                         {(+trade.xAmt).toLocaleString("en-US", {
                           minimumFractionDigits: 2,
                           maximumFractionDigits: 2,
                         })}
-                      </td>
-                      <td className="px-4 py-2 whitespace-nowrap">
+                      </TableCell>
+                      <TableCell className="px-4 py-2 whitespace-nowrap">
                         {(+trade.yAmt).toLocaleString("en-US", {
                           minimumFractionDigits: 2,
                           maximumFractionDigits: 2,
                         })}
-                      </td>
+                      </TableCell>
                       {/* <td
                   className={`px-4 py-2 whitespace-nowrap ${
                     trade.price.startsWith("0.02")
@@ -198,26 +205,26 @@ export default function TxHistory() {
                 >
                   {trade.price}
                 </td> */}
-                      <td className="px-4 py-2 whitespace-nowrap">
+                      <TableCell className="px-4 py-2 whitespace-nowrap">
                         {formatAddress(trade.userWalletAddr)}
-                      </td>
-                      <td className="px-4 py-2 whitespace-nowrap">
+                      </TableCell>
+                      <TableCell className="px-4 py-2 whitespace-nowrap">
                         {formatAddress(trade.txnHash)}
-                      </td>
-                    </tr>
+                      </TableCell>
+                    </TableRow>
                   ))
                 ) : (
-                  <tr>
-                    <td
+                  <TableRow className="hover:bg-transparent">
+                    <TableCell
                       colSpan={6}
                       className="px-4 py-4 text-center text-gray-400"
                     >
                       No transactions found
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 )}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           </div>
         </div>
       </div>

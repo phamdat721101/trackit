@@ -1,6 +1,6 @@
 import { Button } from "../../ui/Button";
 import { Card } from "../../ui/Card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../ui/Tabs";
 import {
   ArrowDown,
   ArrowUp,
@@ -30,7 +30,7 @@ const tabs = ["1M", "5M", "1H", "24H"];
 export default function Detail() {
   const { selectedToken } = useContext(GlobalContext);
   return (
-    <div className="p-4 bg-panel rounded-lg space-y-4">
+    <div className="p-4 bg rounded-lg space-y-4">
       <Card className="p-4 bg-items text-white border-itemborder">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-2">

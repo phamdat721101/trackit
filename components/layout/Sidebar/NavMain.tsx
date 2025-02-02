@@ -6,7 +6,7 @@ import {
   SidebarMenuItem,
   SidebarMenu,
   SidebarGroup,
-} from "../../ui/sidebar";
+} from "../../ui/Sidebar";
 import {
   Collapsible,
   CollapsibleContent,
