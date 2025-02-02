@@ -43,7 +43,7 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "../../ui/Tooltip";
+} from "../../ui/tooltip";
 import { Badge } from "../../ui/badge";
 import Image from "next/image";
 import Twitter from "../../icons/twitter";

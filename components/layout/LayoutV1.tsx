@@ -23,7 +23,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "../ui/Sidebar";
+} from "../ui/sidebar";
 import Link from "next/link";
 import Image from "next/image";
 

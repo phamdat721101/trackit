@@ -1,6 +1,6 @@
 import { Button } from "../../ui/Button";
 import { Card } from "../../ui/Card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../ui/Tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../ui/tabs";
 import {
   ArrowDown,
   ArrowUp,

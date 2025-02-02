@@ -1,7 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "../../../components/ui/Avatar";
 import { Button } from "../../../components/ui/Button";
 import { Card, CardContent } from "../../../components/ui/Card";
-import { Tabs, TabsList, TabsTrigger } from "../../../components/ui/Tabs";
+import { Tabs, TabsList, TabsTrigger } from "../../../components/ui/tabs";
 import { Badge } from "../../../components/ui/badge";
 import {
   MoreVertical,

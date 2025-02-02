@@ -5,7 +5,7 @@ import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
-} from "../ui/Sidebar";
+} from "../ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/Avatar";
 import { ChatBox } from "./Chatbox";
 import { useContext } from "react";
