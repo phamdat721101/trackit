@@ -49,13 +49,13 @@ import { useContext, useEffect, useState } from "react";
 import GlobalContext from "../../../context/store";
 import axios from "axios";
 import { Skeleton } from "../../ui/Skeleton";
-import { Alert, AlertDescription, AlertTitle } from "../../ui/Alert
+import { Alert, AlertDescription, AlertTitle } from "../../ui/Alert"
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "../../ui/tooltip";
-import { Badge } from "../../ui/\";
+import { Badge } from "../../ui/badge";
 import Image from "next/image";
 import Twitter from "../../icons/twitter";
 import PricePredictionModal from "./PricePrediction";
