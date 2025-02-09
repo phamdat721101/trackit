@@ -36,7 +36,7 @@ export default function Token() {
   const { selectedToken } = useContext(GlobalContext);
 
   return (
-    <div className="grid md:grid-cols-[minmax(0,1fr)_300px] flex-1 gap-4">
+    <div className="grid md:grid-cols-[3.5fr_1.2fr] flex-1 gap-4">
       {/* Middle */}
       <div className="space-y-4 min-w-0 transition-all duration-100 ease-in-out">
         {/* Chart Area */}

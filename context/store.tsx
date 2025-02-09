@@ -1,5 +1,5 @@
 "use client";
-import { TokenInfo } from "../types/interface";
+import { TokenInfo, TokenInfoSui } from "../types/interface";
 import { createContext, Dispatch, SetStateAction, useState } from "react";
 
 interface ContextProps {
@@ -7,8 +7,8 @@ interface ContextProps {
   setIsLogged: Dispatch<SetStateAction<boolean>>;
   loadingFullScreen: boolean;
   setLoadingFullScreen: Dispatch<SetStateAction<boolean>>;
-  selectedToken: TokenInfo | null;
-  setSelectedToken: Dispatch<SetStateAction<TokenInfo | null>>;
+  selectedToken: TokenInfo | TokenInfoSui | null;
+  setSelectedToken: Dispatch<SetStateAction<TokenInfo | TokenInfoSui | null>>;
   selectedChain: string;
   setSelectedChain: Dispatch<SetStateAction<string>>;
   selectedNav: string;
@@ -37,7 +37,9 @@ export const GlobalContextProvider = ({
 }>) => {
   const [isLogged, setIsLogged] = useState(false);
   const [loadingFullScreen, setLoadingFullScreen] = useState(false);
-  const [selectedToken, setSelectedToken] = useState<TokenInfo | null>(token);
+  const [selectedToken, setSelectedToken] = useState<
+    TokenInfo | TokenInfoSui | null
+  >(token);
   const [selectedChain, setSelectedChain] = useState<string>("movement");
   const [selectedNav, setSelectedNav] = useState<string>("Meme");
 

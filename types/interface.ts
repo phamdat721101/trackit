@@ -54,6 +54,48 @@ export interface TokenInfo {
   seeded: string | null;
 }
 
+export interface TokenInfoSui {
+  token_address: string;
+  bonding_curve: string;
+  created_at: string;
+  created_by: string;
+  deployment_fee: string;
+  description: string;
+  full_updated: boolean;
+  is_completed: boolean;
+  lp_type: number;
+  market_cap_sui: number;
+  market_cap_usd: number;
+  name: string;
+  pool_id: string;
+  real_sui_reserves: string;
+  real_token_reserves: string;
+  remain_token_reserves: string;
+  symbol: string;
+  telegram: string;
+  token_metadata: {
+    decimals: number;
+    name: string;
+    symbol: string;
+    description: string;
+    iconUrl: string;
+    id: string;
+  };
+  token_price_sui: number;
+  token_price_usd: number;
+  token_supply: string;
+  twitter: string;
+  updated_at: string;
+  uri: string;
+  virtual_sui_reserves: string;
+  virtual_token_reserves: string;
+  volume_24h_sui: number;
+  volume_24h_usd: number;
+  volume_sui: string;
+  volume_usd: string;
+  website: string;
+}
+
 export interface TradeInfo {
   side: string;
   count: string;
@@ -119,4 +161,36 @@ export interface SwapPool {
       };
     };
   };
+}
+
+export interface PricePredictionData {
+  _id: string;
+  coin: string;
+  lastUpdated: number;
+  buyTrades: number;
+  sellTrades: number;
+  firstTradeTime: number;
+  lastTradeTime: number;
+  currentVolumeWeightedAveragePrice: number;
+  currentShortTermMovingAveragePrice: number;
+  currentLongTermMovingAveragePrice: number;
+  currentMovingAveragePriceAnalysis: string;
+  currentPriceLow: number;
+  currentPriceHigh: number;
+  expectedPriceHighInNext24Hours: number;
+  expectedPriceLowInNext24Hours: number;
+  expectedPriceTrends: string[];
+  likelyAveragePriceInNext24Hours: number;
+  totalUniqueUsers: number;
+  coinMetadata: {
+    _id: string;
+    coinType: string;
+    decimals: 9;
+    description: string;
+    iconUrl: string;
+    id: string;
+    name: string;
+    symbol: string;
+  };
+  coinPrice: number;
 }

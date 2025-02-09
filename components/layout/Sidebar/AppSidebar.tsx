@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { cn } from "../../../lib/utils";
 import {
   Link as Chain,
   Scan,
@@ -27,9 +27,21 @@ import {
   DatabaseIcon,
   FileChartColumnIncreasingIcon,
   LogInIcon,
+  NewspaperIcon,
+  SquareStackIcon,
+  SendIcon,
+  RocketIcon,
+  ViewIcon,
+  ChartSplineIcon,
+  FishSymbolIcon,
+  HandCoinsIcon,
+  ChartCandlestickIcon,
+  RadarIcon,
+  MessageSquareMoreIcon,
+  TrophyIcon,
 } from "lucide-react";
-import { NavMain } from "../../layout/Sidebar/NavMain";
-import { NavUser } from "../../layout/Sidebar/nav-user";
+import { NavMain } from "../Sidebar/NavMain";
+import { NavUser } from "../Sidebar/nav-user";
 import {
   Sheet,
   SheetContent,
@@ -45,6 +57,7 @@ import {
   SidebarMenu,
   SidebarGroup,
   SidebarSeparator,
+  SidebarHeader,
 } from "../../ui/sidebar";
 import { VisuallyHidden, Root } from "@radix-ui/react-visually-hidden";
 import Image from "next/image";
@@ -179,6 +192,81 @@ function MobileSidebarContent() {
             />
           ))}
         </SidebarGroup>
+        <SidebarSeparator className="bg-gray-500" />
+        <SidebarGroup>
+          <SidebarMenu className="gap-4">
+            {secondNav.map((nav) => (
+              <SidebarMenuItem
+                key={nav.name}
+                className={`${selectedNav === nav.name ? "selected-nav" : ""}`}
+              >
+                <SidebarMenuButton
+                  asChild
+                  onClick={() => setSelectedNav(nav.name)}
+                >
+                  <a
+                    href={nav.url}
+                    className={
+                      selectedNav === nav.name
+                        ? "text-bluesky"
+                        : "text-gray-500"
+                    }
+                  >
+                    {nav.icon}
+                    <span
+                      className={
+                        selectedNav === nav.name
+                          ? "text-gray-400"
+                          : "text-gray-500"
+                      }
+                    >
+                      {nav.name}
+                    </span>
+                  </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
+          </SidebarMenu>
+        </SidebarGroup>
+        <SidebarSeparator className="bg-gray-500" />
+        <SidebarGroup>
+          <SidebarHeader className="uppercase text-sm font-semibold">
+            Premium Tools
+          </SidebarHeader>
+          <SidebarMenu className="gap-4">
+            {thirdNav.map((nav) => (
+              <SidebarMenuItem
+                key={nav.name}
+                className={`${selectedNav === nav.name ? "selected-nav" : ""}`}
+              >
+                <SidebarMenuButton
+                  asChild
+                  onClick={() => setSelectedNav(nav.name)}
+                >
+                  <a
+                    href={nav.url}
+                    className={
+                      selectedNav === nav.name
+                        ? "text-bluesky"
+                        : "text-gray-500"
+                    }
+                  >
+                    {nav.icon}
+                    <span
+                      className={
+                        selectedNav === nav.name
+                          ? "text-gray-400"
+                          : "text-gray-500"
+                      }
+                    >
+                      {nav.name}
+                    </span>
+                  </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
+          </SidebarMenu>
+        </SidebarGroup>
       </div>
 
       <div className="p-4">
@@ -204,6 +292,81 @@ function DesktopSidebarContent({ isCollapsed }: { isCollapsed: boolean }) {
         <SidebarGroup>
           <SidebarMenu className="gap-4">
             {mainNav.map((nav) => (
+              <SidebarMenuItem
+                key={nav.name}
+                className={`${selectedNav === nav.name ? "selected-nav" : ""}`}
+              >
+                <SidebarMenuButton
+                  asChild
+                  onClick={() => setSelectedNav(nav.name)}
+                >
+                  <a
+                    href={nav.url}
+                    className={
+                      selectedNav === nav.name
+                        ? "text-bluesky"
+                        : "text-gray-500"
+                    }
+                  >
+                    {nav.icon}
+                    <span
+                      className={
+                        selectedNav === nav.name
+                          ? "text-gray-400"
+                          : "text-gray-500"
+                      }
+                    >
+                      {nav.name}
+                    </span>
+                  </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
+          </SidebarMenu>
+        </SidebarGroup>
+        <SidebarSeparator className="bg-gray-500" />
+        <SidebarGroup>
+          <SidebarMenu className="gap-4">
+            {secondNav.map((nav) => (
+              <SidebarMenuItem
+                key={nav.name}
+                className={`${selectedNav === nav.name ? "selected-nav" : ""}`}
+              >
+                <SidebarMenuButton
+                  asChild
+                  onClick={() => setSelectedNav(nav.name)}
+                >
+                  <a
+                    href={nav.url}
+                    className={
+                      selectedNav === nav.name
+                        ? "text-bluesky"
+                        : "text-gray-500"
+                    }
+                  >
+                    {nav.icon}
+                    <span
+                      className={
+                        selectedNav === nav.name
+                          ? "text-gray-400"
+                          : "text-gray-500"
+                      }
+                    >
+                      {nav.name}
+                    </span>
+                  </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
+          </SidebarMenu>
+        </SidebarGroup>
+        <SidebarSeparator className="bg-gray-500" />
+        <SidebarGroup>
+          <SidebarHeader className="uppercase text-sm font-semibold">
+            Premium Tools
+          </SidebarHeader>
+          <SidebarMenu className="gap-4">
+            {thirdNav.map((nav) => (
               <SidebarMenuItem
                 key={nav.name}
                 className={`${selectedNav === nav.name ? "selected-nav" : ""}`}
@@ -520,6 +683,11 @@ const chains = [
     value: "sui",
   },
   {
+    name: "Aptos",
+    logo: "/chains/aptos.png",
+    value: "aptos",
+  },
+  {
     name: "Viction",
     logo: "/chains/viction.svg",
     value: "viction",
@@ -581,6 +749,72 @@ const mainNav = [
   {
     icon: <FileChartColumnIncreasingIcon />,
     name: "Follow",
+    url: "#",
+  },
+];
+
+const secondNav = [
+  {
+    icon: <ChartSplineIcon />,
+    name: "Token Analytics",
+    url: "#",
+  },
+  {
+    icon: <ViewIcon />,
+    name: "Wallet Analyzer",
+    url: "#",
+  },
+  {
+    icon: <FishSymbolIcon />,
+    name: "Whales Tracker",
+    url: "#",
+  },
+  {
+    icon: <RocketIcon />,
+    name: "IPSO Launchpad",
+    url: "#",
+  },
+  {
+    icon: <SendIcon />,
+    name: "Telegram Bot",
+    url: "#",
+  },
+  {
+    icon: <SquareStackIcon />,
+    name: "Multicharts",
+    url: "#",
+  },
+  {
+    icon: <NewspaperIcon />,
+    name: "News Aggregator",
+    url: "#",
+  },
+];
+
+const thirdNav = [
+  {
+    icon: <TrophyIcon />,
+    name: "Top Traders",
+    url: "#",
+  },
+  {
+    icon: <MessageSquareMoreIcon />,
+    name: "InsightsGPT",
+    url: "#",
+  },
+  {
+    icon: <RadarIcon />,
+    name: "Dump Risk Radar",
+    url: "#",
+  },
+  {
+    icon: <ChartCandlestickIcon />,
+    name: "Smart Traders Moves",
+    url: "#",
+  },
+  {
+    icon: <HandCoinsIcon />,
+    name: "Hype Tracker",
     url: "#",
   },
 ];

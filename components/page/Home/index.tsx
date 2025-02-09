@@ -5,7 +5,6 @@ import Item from "./Item";
 import { useContext, useEffect, useState } from "react";
 import { TokenInfo } from "../../../types/interface";
 import axios from "axios";
-
 import CryptoTable from "./CryptoTable";
 import GlobalContext from "../../../context/store";
 import YieldInfo from "./YieldInfo";
@@ -16,7 +15,9 @@ export default function Page() {
 
   return (
     <div className="grow w-full">
-      {selectedChain === "movement" || selectedChain === "sui" ? (
+      {selectedChain === "movement" ||
+      selectedChain === "sui" ||
+      selectedChain === "aptos" ? (
         <CryptoTable />
       ) : selectedChain === "viction" ? (
         <TokenCards />

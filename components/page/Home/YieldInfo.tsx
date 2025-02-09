@@ -18,7 +18,7 @@ export default function YieldInfo() {
     const fetchSwapPools = async () => {
       try {
         const response = await fetch(
-          "https://trackit-be.vercel.app/v1/yield/info?chain=kaia"
+          `${process.env.NEXT_PUBLIC_TRACKIT_API_HOST}/yield/info?chain=kaia`
         );
         const result = await response.json();
         setSwapPools(result);
@@ -30,7 +30,7 @@ export default function YieldInfo() {
     const fetchEarnPools = async () => {
       try {
         const response = await fetch(
-          "https://trackit-be.vercel.app/v1/yield/info?chain=kaia&token=kaia"
+          `${process.env.NEXT_PUBLIC_TRACKIT_API_HOST}/yield/info?chain=kaia&token=kaia`
         );
         const result = await response.json();
         setEarnPools(result);

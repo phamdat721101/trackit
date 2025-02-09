@@ -14,6 +14,7 @@ import {
   SeriesMarkerShape,
 } from "lightweight-charts";
 import React, { useContext, useEffect, useRef, useCallback } from "react";
+import { isTokenInfo } from "../../../types/helper";
 
 // Constants
 const TOOLTIP_CONFIG = {
@@ -192,7 +193,10 @@ export default function Chart(): JSX.Element {
     symbolLabel.style.color = TOOLTIP_CONFIG.COLORS.TEXT.WHITE;
     symbolLabel.style.fontSize = "16px";
     symbolLabel.style.fontWeight = "bold";
-    symbolLabel.textContent = selectedToken?.tickerSymbol || "Token";
+    symbolLabel.textContent =
+      selectedToken && isTokenInfo(selectedToken)
+        ? selectedToken.tickerSymbol
+        : selectedToken && selectedToken.symbol;
     symbolLabelRef.current = symbolLabel;
     chartContainerRef.current.appendChild(symbolLabel);
 

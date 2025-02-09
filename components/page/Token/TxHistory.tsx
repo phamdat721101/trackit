@@ -102,9 +102,9 @@ export default function TxHistory() {
       try {
         setIsLoading(true);
         const response = await axios.get(
-          `https://trackit-be.vercel.app/v1/token/txs?token=${decodeURIComponent(
-            params.id
-          )}`
+          `${
+            process.env.NEXT_PUBLIC_TRACKIT_API_HOST
+          }/token/txs?token=${decodeURIComponent(params.id)}`
         );
         if (response.status === 200) {
           const data: TxnInfo[] = response.data.txnData;

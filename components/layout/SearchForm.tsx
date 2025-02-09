@@ -5,7 +5,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "../../components/ui/dialog";
+} from "../ui/dialog";
 
 // Mock data - replace with your actual API data
 const exchangeData = [
@@ -104,7 +104,7 @@ export default function SearchForm() {
         throw new Error("Please enter a token address");
       }
       const response = await fetch(
-        `https://trackit-be.vercel.app/v1/token/route?src_asset=${searchValue}&dst_asset=${searchValue}`
+        `${process.env.NEXT_PUBLIC_TRACKIT_API_HOST}/token/route?src_asset=${searchValue}&dst_asset=usdc`
       );
 
       if (!response.ok) {

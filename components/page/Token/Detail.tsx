@@ -15,6 +15,8 @@ import { useContext, useEffect } from "react";
 import GlobalContext from "../../../context/store";
 import { Progress } from "../../ui/Progress";
 import TabDetail from "./TabDetail";
+import { formatTokenPrice, isTokenInfo } from "../../../types/helper";
+import { PriceFormatter } from "../PriceFormatter";
 
 const formatVolume = (volume: number): string => {
   if (volume >= 1000000) {
@@ -35,14 +37,22 @@ export default function Detail() {
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-2">
             <Image
-              src={selectedToken?.image || ""}
+              src={
+                selectedToken && isTokenInfo(selectedToken)
+                  ? selectedToken.image
+                  : selectedToken?.token_metadata.iconUrl || ""
+              }
               alt={selectedToken?.name || ""}
               width={40}
               height={40}
               className="rounded-full"
             />
             <div>
-              <h3 className="font-bold">{selectedToken?.tickerSymbol}</h3>
+              <h3 className="font-bold">
+                {selectedToken && isTokenInfo(selectedToken)
+                  ? selectedToken.tickerSymbol
+                  : selectedToken?.token_metadata.symbol}
+              </h3>
               <p className="text-sm text-muted-foreground">
                 {selectedToken?.name}
               </p>
@@ -58,12 +68,31 @@ export default function Detail() {
             <div>
               <div className="text-sm text-muted-foreground">PRICE USD</div>
               <div className="text-base font-bold">
-                ${selectedToken?.aptosUSDPrice.toFixed(2)}
+                $
+                {selectedToken && isTokenInfo(selectedToken) ? (
+                  <PriceFormatter price={selectedToken.aptosUSDPrice} />
+                ) : (
+                  <PriceFormatter price={selectedToken?.token_price_usd || 0} />
+                )}
               </div>
             </div>
             <div>
               <div className="text-sm text-muted-foreground">PRICE</div>
-              <div className="text-base font-bold">0.001 MOV</div>
+              <div className="text-base font-bold">
+                {selectedToken && isTokenInfo(selectedToken) ? (
+                  <>
+                    <PriceFormatter price={selectedToken.aptosUSDPrice} />
+                    MOV
+                  </>
+                ) : (
+                  <>
+                    <PriceFormatter
+                      price={selectedToken?.token_price_sui || 0}
+                    />
+                    SUI
+                  </>
+                )}
+              </div>
             </div>
           </div>
 
@@ -80,7 +109,9 @@ export default function Detail() {
               <div className="text-sm text-muted-foreground">MKT CAP</div>
               <div className="font-bold">
                 $
-                {formatVolume(selectedToken ? +selectedToken?.marketCapUSD : 0)}
+                {selectedToken && isTokenInfo(selectedToken)
+                  ? formatVolume(selectedToken.marketCapUSD)
+                  : formatVolume(selectedToken?.market_cap_usd || 0)}
               </div>
             </div>
           </div>

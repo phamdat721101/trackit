@@ -22,7 +22,7 @@ export function ChatBox() {
     setInputMessage(e.target.value);
   };
 
-  const sendMessage = () => {
+  const sendMessage = async () => {
     if (inputMessage.trim() === "") return;
 
     const newMessage: Message = {
@@ -34,15 +34,38 @@ export function ChatBox() {
     setMessages((prevMessages) => [...prevMessages, newMessage]);
     setInputMessage("");
 
-    // Simulate bot response
-    setTimeout(() => {
+    const reply = await fetchBotMessage(inputMessage);
+
+    if (reply) {
       const botMessage: Message = {
         id: Date.now(),
-        text: "Thank you for your message. This is a simulated response.",
+        text: reply,
         sender: "bot",
       };
       setMessages((prevMessages) => [...prevMessages, botMessage]);
-    }, 1000);
+    }
+  };
+
+  const fetchBotMessage = async (userInput: string) => {
+    const url = "https://api.trackit-app.xyz/v1/agent/chat";
+    const value = {
+      content: userInput,
+    };
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(value),
+      });
+      const result: string = await response.json();
+      const cleanResult = result.replace(/<think>|<\/think>/g, "");
+      return cleanResult;
+    } catch (error) {
+      console.log("Failed to fetch response.");
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
