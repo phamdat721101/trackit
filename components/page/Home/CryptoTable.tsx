@@ -49,13 +49,13 @@ import { useContext, useEffect, useState } from "react";
 import GlobalContext from "../../../context/store";
 import axios from "axios";
 import { Skeleton } from "../../ui/Skeleton";
-import { Alert, AlertDescription, AlertTitle } from "../../ui/Alert";
+import { Alert, AlertDescription, AlertTitle } from "../../ui/Alert
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "../../ui/tooltip";
-import { Badge } from "../../ui/badge";
+import { Badge } from "../../ui/\";
 import Image from "next/image";
 import Twitter from "../../icons/twitter";
 import PricePredictionModal from "./PricePrediction";
@@ -585,18 +585,11 @@ export default function CryptoTable() {
                         <TableCell>
                           <div className="flex items-center">
                             <Image
-                              src="/dexes/routex.png"
-                              alt="routex"
+                              src="/dexes/sui_dex.png"
+                              alt="sui_dex"
                               width={32}
                               height={32}
                               className="rounded-full"
-                            />
-                            <Image
-                              src="/dexes/warpgate.png"
-                              alt="routex"
-                              width={32}
-                              height={32}
-                              className="rounded-full -ml-4"
                             />
                           </div>
                         </TableCell>
