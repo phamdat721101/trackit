@@ -52,6 +52,8 @@ export interface TokenInfo {
   holderPercentage: string;
   bondinCurvepercentage: number;
   seeded: string | null;
+  exchange: string;
+  pool_url: string;
 }
 
 export interface TokenInfoSui {

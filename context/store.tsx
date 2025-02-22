@@ -64,28 +64,37 @@ export const GlobalContextProvider = ({
 };
 
 const token = {
-  id: "a90ffda0-ad6e-11ef-9d7e-fb2b1f0dc49c",
-  name: "Selfie",
-  tickerSymbol: "SELFIE",
-  desc: null,
-  creator: "0xbbf0540b817ebd012b335c7ce3575bcbf58d0ed05d37a9f777c01213cb7a375f",
+  id: "e8153a20-f0ca-11ef-bdff-3b9df9be0b0a",
+  name: "WARPGATE",
+  tickerSymbol: "WARPGATE",
+  desc: "WARPGATE",
+  creator: "0xc60bab2ac8295e7a2c12c3196848e5a423d2bf13fec044c201704e4818756667",
   mintAddr:
-    "0xbbf0540b817ebd012b335c7ce3575bcbf58d0ed05d37a9f777c01213cb7a375f::SELFIE::SELFIE",
-  image: "https://hatchy.s3.us-east-2.amazonaws.com/1732787626438-source.gif",
+    "0xc60bab2ac8295e7a2c12c3196848e5a423d2bf13fec044c201704e4818756667::WARPGATE::WARPGATE",
+  image: "https://hatchy.s3.us-east-2.amazonaws.com/1740193973728-gifs_1_.gif",
   twitter: null,
   telegram: null,
   website: null,
   status: "ACTIVE",
-  cdate: "2024-11-28T09:53:46.000Z",
-  creatorName: "Leo Wong",
+  cdate: "2025-02-22T03:12:53.000Z",
+  creatorName: "anteriorrecipient",
   creatorWalletAddr:
-    "0xbbf0540b817ebd012b335c7ce3575bcbf58d0ed05d37a9f777c01213cb7a375f",
+    "0xc60bab2ac8295e7a2c12c3196848e5a423d2bf13fec044c201704e4818756667",
   creatorAvatar: null,
   replies: 0,
-  marketCapUSD: 28898.2429290334,
-  trades: [],
-  aptosUSDPrice: 288.982429290334,
+  marketCapUSD: 41832.5875056111,
+  trades: [
+    {
+      side: "BUY",
+      count: "16",
+      volume: "15952.000000000000000000",
+    },
+  ],
+  aptosUSDPrice: 0.483807,
   holderPercentage: "1",
-  bondinCurvepercentage: 0,
-  seeded: null,
+  bondinCurvepercentage: 105.2832,
+  seeded: "COMPLETED",
+  exchange: "warpgate",
+  pool_url:
+    "https://warpgate.fun/trading-view/0xc60bab2ac8295e7a2c12c3196848e5a423d2bf13fec044c201704e4818756667::WARPGATE::WARPGATE",
 };

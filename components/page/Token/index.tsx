@@ -46,7 +46,7 @@ export default function Token() {
 
         {/* Tabs */}
         <Tabs defaultValue="Activity" className="w-full">
-          <TabsList className="p-0 text-center bg-transparent space-x-5">
+          {/* <TabsList className="p-0 text-center bg-transparent space-x-5">
             {main_tabs.map((tab, index) => (
               <TabsTrigger
                 key={index}
@@ -56,7 +56,7 @@ export default function Token() {
                 <span>{tab}</span>
               </TabsTrigger>
             ))}
-          </TabsList>
+          </TabsList> */}
         </Tabs>
         <Tabs defaultValue="All" className="w-full">
           <TabsList className="p-0 text-center bg-[#102447] border border-[#1a3c78] rounded-xl">
@@ -64,6 +64,7 @@ export default function Token() {
               <TabsTrigger
                 key={index}
                 value={tab}
+                disabled={tab !== "All"}
                 className="grid data-[state=active]:bg-[#005880] data-[state=active]:text-gray-50 h-full rounded-lg data-[state=active]:rounded-none data-[state=active]:first:rounded-s-lg data-[state=active]:last:rounded-e-lg"
               >
                 <span>{tab}</span>

@@ -1,5 +1,5 @@
 "use client";
-import { AppSidebar } from "@/components/layout/Sidebar/AppSidebar";
+import { AppSidebar } from "../layout/Sidebar/AppSidebar";
 import SearchForm from "./SearchForm";
 import {
   SidebarInset,
@@ -10,16 +10,17 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/Avatar";
 import { ChatBox } from "./Chatbox";
 import { useContext } from "react";
 import GlobalContext from "../../context/store";
-import { BellIcon, BoltIcon } from "lucide-react";
+import { BellIcon, BoltIcon, UserCircleIcon } from "lucide-react";
 import { Separator } from "../ui/separator";
 import SelectChain from "./SelectChain";
+import { WalletSelector } from "../wallet/WalletConnect";
 
 const Layout = ({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) => {
-  const { selectedNav } = useContext(GlobalContext);
+  const { selectedNav, isLogged, setIsLogged } = useContext(GlobalContext);
 
   return (
     <SidebarProvider className="text-gray-50">
@@ -39,16 +40,17 @@ const Layout = ({
               <div className="hidden md:flex items-center text-gray-500 gap-8">
                 <SearchForm />
                 <SelectChain />
-                <BoltIcon strokeWidth={1} />
-                <BellIcon strokeWidth={1} />
+                <button>
+                  <BoltIcon strokeWidth={1} />
+                </button>
+                <button>
+                  <BellIcon strokeWidth={1} />
+                </button>
                 <Separator
                   orientation="vertical"
                   className="h-5 w-0.5 bg-gray-700"
                 />
-                <Avatar className="h-10 w-10 rounded-lg cursor-pointer">
-                  <AvatarImage src="/logo.png" alt="avatar" />
-                  <AvatarFallback className="rounded-lg">N/A</AvatarFallback>
-                </Avatar>
+                <WalletSelector />
               </div>
             </header>
             <div className="flex-1">

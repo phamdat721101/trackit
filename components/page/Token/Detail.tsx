@@ -17,6 +17,7 @@ import { Progress } from "../../ui/Progress";
 import TabDetail from "./TabDetail";
 import { formatTokenPrice, isTokenInfo } from "../../../types/helper";
 import { PriceFormatter } from "../PriceFormatter";
+import TokenSwap from "./Swap";
 
 const formatVolume = (volume: number): string => {
   if (volume >= 1000000) {
@@ -139,6 +140,8 @@ export default function Detail() {
           ))}
         </Tabs>
       </Card>
+
+      <TokenSwap token={selectedToken} />
 
       <Image
         src={"/banner.png"}

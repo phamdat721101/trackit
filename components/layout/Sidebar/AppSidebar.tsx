@@ -65,6 +65,7 @@ import Link from "next/link";
 import GlobalContext from "../../../context/store";
 import { useState } from "react";
 import { useContext } from "react";
+import { useWallet } from "@aptos-labs/wallet-adapter-react";
 
 interface ChainButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -279,6 +280,8 @@ function MobileSidebarContent() {
 function DesktopSidebarContent({ isCollapsed }: { isCollapsed: boolean }) {
   const { selectedNav, setSelectedNav, isLogged, setIsLogged } =
     useContext(GlobalContext);
+  const { connected, disconnect, connect } = useWallet();
+
   return (
     <>
       <div className="py-4 mx-auto">
@@ -405,7 +408,7 @@ function DesktopSidebarContent({ isCollapsed }: { isCollapsed: boolean }) {
         {/* <NavUser user={data.user} showDetails={!isCollapsed} /> */}
         <SidebarGroup>
           <SidebarMenu>
-            {isLogged && (
+            {connected && (
               <>
                 <SidebarMenuItem>
                   <SidebarMenuButton className="text-gray-400">
@@ -416,7 +419,7 @@ function DesktopSidebarContent({ isCollapsed }: { isCollapsed: boolean }) {
                 <SidebarMenuItem>
                   <SidebarMenuButton
                     className="text-gray-400"
-                    onClick={() => setIsLogged(false)}
+                    onClick={disconnect}
                   >
                     <LogOutIcon />
                     <span>Logout</span>
@@ -424,12 +427,9 @@ function DesktopSidebarContent({ isCollapsed }: { isCollapsed: boolean }) {
                 </SidebarMenuItem>
               </>
             )}
-            {!isLogged && (
+            {!connected && (
               <SidebarMenuItem>
-                <SidebarMenuButton
-                  className="text-gray-400"
-                  onClick={() => setIsLogged(true)}
-                >
+                <SidebarMenuButton className="text-gray-400" onClick={() => {}}>
                   <LogInIcon />
                   <span>Login</span>
                 </SidebarMenuButton>
