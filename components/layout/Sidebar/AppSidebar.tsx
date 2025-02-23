@@ -66,6 +66,7 @@ import GlobalContext from "../../../context/store";
 import { useState } from "react";
 import { useContext } from "react";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
+import { WalletSelector } from "../../wallet/WalletConnect";
 
 interface ChainButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -133,8 +134,9 @@ export function AppSidebar() {
 }
 
 function MobileSidebarContent() {
-  const { selectedChain, setSelectedChain } = useContext(GlobalContext);
-  const { selectedNav, setSelectedNav } = useContext(GlobalContext);
+  const { selectedChain, setSelectedChain, selectedNav, setSelectedNav } =
+    useContext(GlobalContext);
+  const { connected } = useWallet();
 
   return (
     <>
@@ -271,7 +273,7 @@ function MobileSidebarContent() {
       </div>
 
       <div className="p-4">
-        <NavUser user={data.user} />
+        <WalletSelector />
       </div>
     </>
   );

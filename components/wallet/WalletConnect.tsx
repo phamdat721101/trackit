@@ -52,6 +52,7 @@ import {
 import { Avatar, AvatarImage } from "../ui/Avatar";
 import { useToast } from "../../hooks/use-toast";
 import { useRouter } from "next/navigation";
+import { formatAddress } from "../../types/helper";
 
 export function WalletSelector(walletSortingOptions: WalletSortingOptions) {
   const { account, connected, disconnect, wallet } = useWallet();
@@ -85,7 +86,7 @@ export function WalletSelector(walletSortingOptions: WalletSortingOptions) {
   return connected ? (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button>
+        <button className="flex items-center gap-2">
           <Tooltip>
             <TooltipTrigger asChild>
               <Avatar className="h-10 w-10 rounded-lg cursor-pointer">
@@ -98,6 +99,9 @@ export function WalletSelector(walletSortingOptions: WalletSortingOptions) {
                 "Unknown"}
             </TooltipContent>
           </Tooltip>
+          <span className="md:hidden text-sm text-gray-50">
+            {formatAddress(account?.address || "N/A")}
+          </span>
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
@@ -127,8 +131,11 @@ export function WalletSelector(walletSortingOptions: WalletSortingOptions) {
   ) : (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
-        <button className="font-bold w-10 h-10 p-0 flex items-center justify-center">
-          <UserCircleIcon />
+        <button className="font-bold w-fit h-10 p-0 flex items-center justify-start md:justify-center">
+          <div className="flex gap-2 text-gray-400">
+            <UserCircleIcon />
+            <span className="md:hidden text-gray-400">Connect Wallet</span>
+          </div>
         </button>
       </DialogTrigger>
       <ConnectWalletDialog close={closeDialog} {...walletSortingOptions} />

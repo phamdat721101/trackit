@@ -78,7 +78,7 @@ export default function CryptoTable() {
   const [hasMore, setHasMore] = useState(true);
   const [pricePrediction, setPricePrediction] =
     useState<PricePredictionData | null>(null);
-  const itemsPerPage = 8;
+  const itemsPerPage = 10;
 
   const clickHandler = (token: TokenInfo | TokenInfoSui) => {
     setSelectedToken(token);
@@ -228,8 +228,7 @@ export default function CryptoTable() {
       {/* Table Section */}
       <div className="flex-1 max-w-full overflow-hidden">
         <ScrollArea className="w-full h-full">
-          {/* Desktop View */}
-          <Table className="hidden md:table bg">
+          <Table className="table bg">
             {isLoading && (
               <TableBody>
                 {[...Array(14)].map((_, index) => (
@@ -239,9 +238,9 @@ export default function CryptoTable() {
             )}
             {!isLoading && (
               <>
-                <TableHeader className="sticky top-0 z-10 bg">
+                <TableHeader className="sticky top-0 z-50 bg">
                   <TableRow className="hover:bg-transparent">
-                    <TableHead className="min-w-52 text-gray-400 font-medium">
+                    <TableHead className="sticky left-0 z-20 bg-[#0e203f] min-w-52 text-gray-400 font-medium">
                       Token
                     </TableHead>
                     <TableHead className="min-w-32 text-gray-400 font-medium">
@@ -292,7 +291,7 @@ export default function CryptoTable() {
                           className="hover:bg-blue-900"
                           onClick={() => clickHandler(token)}
                         >
-                          <TableCell>
+                          <TableCell className="sticky left-0 z-20 bg-[#0e203f]">
                             <div className="flex items-center gap-2">
                               <Tooltip>
                                 {/* Wrap the date cell content with a Tooltip */}
@@ -528,7 +527,7 @@ export default function CryptoTable() {
                           className="hover:bg-blue-900"
                           onClick={() => clickHandler(token)}
                         >
-                          <TableCell>
+                          <TableCell className="sticky left-0 z-20 bg-[#0e203f]">
                             <div className="flex items-center gap-2">
                               <Tooltip>
                                 {/* Wrap the date cell content with a Tooltip */}
@@ -742,129 +741,8 @@ export default function CryptoTable() {
               data={pricePrediction}
             />
           )}
-          {/* Mobile View */}
-          {/* <ul className="md:hidden divide-y divide-itemborder">
-            {!isLoading &&
-              tokenInfoList.map((token) => {
-                if (isTokenInfo(token)) {
-                  return (
-                    <li key={token.id} className="p-4 hover:bg-item/50">
-                      <div className="flex items-center justify-between mb-3">
-                        <div className="flex items-center gap-2">
-                          <img
-                            src={token.image}
-                            alt=""
-                            className="h-8 w-8 rounded-full"
-                          />
-                          <div>
-                            <div className="font-semibold">
-                              {token.tickerSymbol}
-                            </div>
-                            <div className="text-xs text-gray-400">
-                              {formatAddress(token.creator)}
-                            </div>
-                          </div>
-                        </div>
-                        <Button
-                          size="sm"
-                          onClick={() => clickHandler(token)}
-                          className="px-5 flex items-center bg-transparent hover:bg-bluesky text-[#8899A8] hover:text-gray-50"
-                        >
-                          <Image
-                            src="/flash.png"
-                            alt="flash"
-                            width={20}
-                            height={20}
-                          />
-                          <span className="text-[15px] font-medium">Buy</span>
-                        </Button>
-                      </div>
-                      <dl className="grid grid-cols-2 gap-4 text-sm">
-                        <div>
-                          <dt className="text-gray-400">Price</dt>
-                          <dd className="font-medium">
-                            ${token.aptosUSDPrice.toFixed(2)}
-                          </dd>
-                        </div>
-                        <div>
-                          <dt className="text-gray-400">Market Cap</dt>
-                          <dd>{formatVolume(token.marketCapUSD)}</dd>
-                        </div>
-                        <div>
-                          <dt className="text-gray-400">24h Change</dt>
-                          <dd
-                            className={true ? "text-green-500" : "text-red-500"}
-                          >
-                            2.99%
-                          </dd>
-                        </div>
-                        <div>
-                          <dt className="text-gray-400">Volume</dt>
-                          <dd>{formatVolume(15000000)}</dd>
-                        </div>
-                      </dl>
-                    </li>
-                  );
-                } else {
-                  <li key={token.symbol} className="p-4 hover:bg-item/50">
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center gap-2">
-                        <img
-                          src={token.token_metadata.iconUrl}
-                          alt=""
-                          className="h-8 w-8 rounded-full"
-                        />
-                        <div>
-                          <div className="font-semibold">{token.symbol}</div>
-                          <div className="text-xs text-gray-400">
-                            {formatAddress(token.created_by)}
-                          </div>
-                        </div>
-                      </div>
-                      <Button
-                        size="sm"
-                        onClick={() => clickHandler(token)}
-                        className="px-5 flex items-center bg-transparent hover:bg-bluesky text-[#8899A8] hover:text-gray-50"
-                      >
-                        <Image
-                          src="/flash.png"
-                          alt="flash"
-                          width={20}
-                          height={20}
-                        />
-                        <span className="text-[15px] font-medium">Buy</span>
-                      </Button>
-                    </div>
-                    <dl className="grid grid-cols-2 gap-4 text-sm">
-                      <div>
-                        <dt className="text-gray-400">Price</dt>
-                        <dd className="font-medium">
-                          ${token.token_price_usd.toFixed(2)}
-                        </dd>
-                      </div>
-                      <div>
-                        <dt className="text-gray-400">Market Cap</dt>
-                        <dd>{formatVolume(token.market_cap_usd)}</dd>
-                      </div>
-                      <div>
-                        <dt className="text-gray-400">24h Change</dt>
-                        <dd
-                          className={true ? "text-green-500" : "text-red-500"}
-                        >
-                          2.99%
-                        </dd>
-                      </div>
-                      <div>
-                        <dt className="text-gray-400">Volume</dt>
-                        <dd>{formatVolume(15000000)}</dd>
-                      </div>
-                    </dl>
-                  </li>;
-                }
-              })}
-          </ul> */}
           <ScrollBar orientation="horizontal" />
-          <div className="flex justify-center items-center p-4 w-full bg border-t border-[#132D5B]">
+          <div className="hidden md:flex justify-center items-center p-4 w-full bg border-t border-[#132D5B]">
             {hasMore && (
               <Button
                 variant="outline"
@@ -886,6 +764,25 @@ export default function CryptoTable() {
           </div>
         </ScrollArea>
       </div>
+
+      {hasMore && (
+        <Button
+          variant="outline"
+          size="lg"
+          onClick={fetchTokenInfoList}
+          disabled={isLoading}
+          className="md:hidden bg-blue-950 hover:bg-blue-900 text-gray-100 hover:text-gray-100 border-gray-700"
+        >
+          {isLoading ? (
+            <>
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              Loading...
+            </>
+          ) : (
+            "Load More"
+          )}
+        </Button>
+      )}
     </div>
   );
 }

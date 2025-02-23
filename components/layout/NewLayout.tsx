@@ -37,6 +37,10 @@ const Layout = ({
                 {selectedNav}
               </span>
 
+              <div className="md:hidden ml-auto">
+                <SearchForm />
+              </div>
+
               <div className="hidden md:flex items-center text-gray-500 gap-8">
                 <SearchForm />
                 <SelectChain />
