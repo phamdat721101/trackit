@@ -11,7 +11,7 @@
   "dependencies": {
     "@aptos-labs/ts-sdk": "^1.35.0",
     "@aptos-labs/wallet-adapter-ant-design": "^3.0.14",
-    "@aptos-labs/wallet-adapter-react": "^3.7.2",
+    "@aptos-labs/wallet-adapter-react": "^3.7.9",
     "@hookform/resolvers": "^3.9.1",
     "@martianwallet/aptos-wallet-adapter": "^0.0.5",
     "@pontem/wallet-adapter-plugin": "^0.2.1",
