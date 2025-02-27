@@ -9,6 +9,7 @@ import CryptoTable from "./CryptoTable";
 import GlobalContext from "../../../context/store";
 import YieldInfo from "./YieldInfo";
 import TokenCards from "./TokenCards";
+import Home from "./Home";
 
 export default function Page() {
   const { selectedChain } = useContext(GlobalContext);
@@ -18,7 +19,7 @@ export default function Page() {
       {selectedChain === "movement" ||
       selectedChain === "sui" ||
       selectedChain === "aptos" ? (
-        <CryptoTable />
+        <Home />
       ) : selectedChain === "viction" ? (
         <TokenCards />
       ) : (

@@ -188,43 +188,7 @@ export default function CryptoTable() {
   }, [selectedChain]);
 
   return (
-    <div className="w-full h-[calc(100vh-6rem)] text-gray-100 overflow-hidden flex flex-col shadow-lg">
-      {/* Time Filters */}
-      <div className="mb-4 md:flex">
-        <div className="border border-[#1a3c78] rounded-lg w-fit mb-3 md:mb-0">
-          {timeFilters.map((filter) => (
-            <Button
-              key={filter}
-              variant="ghost"
-              disabled={filter !== "1m"}
-              onClick={() => setSelectedTime(filter)}
-              className={`${
-                selectedTime === filter
-                  ? "bg-[#005880] text-gray-300"
-                  : "bg-[#102447] text-gray-500"
-              } text-sm border-r border-r-[#1a3c78] last:border-none rounded-none first:rounded-s-lg last:rounded-e-lg hover:bg-[#005880] hover:text-current`}
-            >
-              {filter}
-            </Button>
-          ))}
-        </div>
-        <div className="ml-auto flex items-center gap-4">
-          <Button
-            className="px-5 text-gray-300 bg-[#102447] hover:bg-[#005880] hover:text-current"
-            onClick={() => setIsFiltered(!isFiltered)}
-          >
-            {!isFiltered ? <FilterIcon /> : <FilterXIcon />}
-            <span className="text-[15px]">Filter Token</span>
-          </Button>
-          <Button
-            variant="default"
-            className="px-5 bg-bluesky text-base font-semibold hover:bg-bluesky/80"
-          >
-            Connect
-          </Button>
-        </div>
-      </div>
-
+    <>
       {/* Table Section */}
       <div className="flex-1 max-w-full overflow-hidden">
         <ScrollArea className="w-full h-full">
@@ -288,10 +252,10 @@ export default function CryptoTable() {
                       return (
                         <TableRow
                           key={index}
-                          className="hover:bg-blue-900"
+                          className="hover:bg-blue-900 transition-colors duration-150 group"
                           onClick={() => clickHandler(token)}
                         >
-                          <TableCell className="sticky left-0 z-20 bg-[#0e203f]">
+                          <TableCell className="sticky left-0 z-20 bg-[#0e203f] group-hover:bg-blue-900 transition-colors duration-150">
                             <div className="flex items-center gap-2">
                               <Tooltip>
                                 {/* Wrap the date cell content with a Tooltip */}
@@ -524,10 +488,10 @@ export default function CryptoTable() {
                       return (
                         <TableRow
                           key={index}
-                          className="hover:bg-blue-900"
+                          className="hover:bg-blue-900 transition-colors duration-150 group"
                           onClick={() => clickHandler(token)}
                         >
-                          <TableCell className="sticky left-0 z-20 bg-[#0e203f]">
+                          <TableCell className="sticky left-0 z-20 bg-[#0e203f] group-hover:bg-blue-900 transition-colors duration-150">
                             <div className="flex items-center gap-2">
                               <Tooltip>
                                 {/* Wrap the date cell content with a Tooltip */}
@@ -783,11 +747,11 @@ export default function CryptoTable() {
           )}
         </Button>
       )}
-    </div>
+    </>
   );
 }
 
-const LoadingRow = () => (
+export const LoadingRow = () => (
   <TableRow className="bg hover:bg-transparent">
     <TableCell colSpan={7} className="p-0">
       <Skeleton className="h-12 w-full rounded-none bg-gray-600 mb-1.5" />
