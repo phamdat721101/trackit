@@ -46,10 +46,10 @@ export interface TokenInfo {
   creatorWalletAddr: string;
   creatorAvatar: string | null;
   replies: number;
-  marketCapUSD: number;
+  marketCapUSD: number | null;
   trades: TradeInfo[];
-  aptosUSDPrice: number;
-  holderPercentage: string;
+  aptosUSDPrice: number | null;
+  holderPercentage: string | number;
   bondinCurvepercentage: number;
   seeded: string | null;
   exchange: string;

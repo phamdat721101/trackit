@@ -71,7 +71,7 @@ export default function Detail() {
               <div className="text-base font-bold">
                 $
                 {selectedToken && isTokenInfo(selectedToken) ? (
-                  <PriceFormatter price={selectedToken.aptosUSDPrice} />
+                  <PriceFormatter price={selectedToken.aptosUSDPrice || 0} />
                 ) : (
                   <PriceFormatter price={selectedToken?.token_price_usd || 0} />
                 )}
@@ -82,7 +82,7 @@ export default function Detail() {
               <div className="text-base font-bold">
                 {selectedToken && isTokenInfo(selectedToken) ? (
                   <>
-                    <PriceFormatter price={selectedToken.aptosUSDPrice} />
+                    <PriceFormatter price={selectedToken.aptosUSDPrice || 0} />
                     MOV
                   </>
                 ) : (
@@ -111,7 +111,7 @@ export default function Detail() {
               <div className="font-bold">
                 $
                 {selectedToken && isTokenInfo(selectedToken)
-                  ? formatVolume(selectedToken.marketCapUSD)
+                  ? formatVolume(selectedToken.marketCapUSD || 0)
                   : formatVolume(selectedToken?.market_cap_usd || 0)}
               </div>
             </div>

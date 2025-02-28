@@ -399,13 +399,17 @@ export default function CryptoTable() {
                                 </span>
                               </TooltipTrigger>
                               <TooltipContent className="bg-gray-50 text-gray-900">
-                                {formatTokenPrice(token.aptosUSDPrice)}
+                                {token.aptosUSDPrice
+                                  ? formatTokenPrice(token.aptosUSDPrice)
+                                  : "N/A"}
                               </TooltipContent>
                             </Tooltip>
                           </TableCell>
                           <TableCell>
                             <span className="text-gray-400 font-semibold text-[15px]">
-                              {formatVolume(token.marketCapUSD)}
+                              {token.marketCapUSD
+                                ? formatVolume(token.marketCapUSD)
+                                : "--"}
                             </span>
                           </TableCell>
                           <TableCell>
@@ -633,7 +637,9 @@ export default function CryptoTable() {
                           </TableCell>
                           <TableCell>
                             <span className="text-gray-400 font-semibold text-[15px]">
-                              {formatVolume(token.market_cap_usd)}
+                              {token.market_cap_sui
+                                ? formatVolume(token.market_cap_usd)
+                                : "--"}
                             </span>
                           </TableCell>
                           <TableCell>

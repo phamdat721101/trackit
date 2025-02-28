@@ -70,9 +70,11 @@ const Item: React.FC<Props> = ({ info }) => {
                   <p className="text-xs text-gray-400">Market Cap</p>
                   <p className="font-semibold text-base">
                     $
-                    {info.marketCapUSD.toLocaleString(undefined, {
-                      maximumFractionDigits: 2,
-                    })}
+                    {info.marketCapUSD
+                      ? info.marketCapUSD.toLocaleString(undefined, {
+                          maximumFractionDigits: 2,
+                        })
+                      : "--"}
                   </p>
                 </div>
               </div>
@@ -82,9 +84,11 @@ const Item: React.FC<Props> = ({ info }) => {
                   <p className="text-xs text-gray-400">Price</p>
                   <p className="font-semibold text-base">
                     $
-                    {info.aptosUSDPrice.toLocaleString(undefined, {
-                      maximumFractionDigits: 2,
-                    })}
+                    {info.aptosUSDPrice
+                      ? info.aptosUSDPrice.toLocaleString(undefined, {
+                          maximumFractionDigits: 2,
+                        })
+                      : "--"}
                   </p>
                 </div>
               </div>

@@ -11,6 +11,13 @@ export const PriceFormatter: React.FC<PriceFormatterProps> = ({
   className = "",
 }) => {
   const formatPrice = (price: number) => {
+    if (!price) {
+      return {
+        prefix: "0.0",
+        zeros: "",
+        mainPart: "0",
+      };
+    }
     if (price < 1e-5) {
       const priceString = formatTokenPrice(price, {
         showCurrencySymbol: false,
