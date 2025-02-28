@@ -26,7 +26,11 @@ const config = new AptosConfig({
   network: Network.CUSTOM,
   fullnode: "https://mainnet.movementnetwork.xyz/v1",
 });
-export const aptos = new Aptos(config);
+const aptos = new Aptos(config);
+
+export function aptosClient() {
+  return aptos;
+}
 
 // Function to fetch pair reserves from blockchain
 async function getPairReserves(tokenA: Currency, tokenB: Currency) {

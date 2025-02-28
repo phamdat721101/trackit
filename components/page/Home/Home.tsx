@@ -5,6 +5,7 @@ import { Button } from "../../ui/Button";
 import CryptoTable from "./CryptoTable";
 import { FilterIcon, FilterXIcon } from "lucide-react";
 import Pools from "./Pools";
+import { useWallet } from "@razorlabs/razorkit";
 
 export default function Home() {
   const [isFiltered, setIsFiltered] = useState<boolean>(false);
