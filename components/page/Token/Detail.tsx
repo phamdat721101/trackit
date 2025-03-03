@@ -11,13 +11,15 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import GlobalContext from "../../../context/store";
 import { Progress } from "../../ui/Progress";
 import TabDetail from "./TabDetail";
 import { formatTokenPrice, isTokenInfo } from "../../../types/helper";
 import { PriceFormatter } from "../PriceFormatter";
 import TokenSwap from "./Swap";
+import axios from "axios";
+import { useParams } from "next/navigation";
 
 const formatVolume = (volume: number): string => {
   if (volume >= 1000000) {
@@ -32,6 +34,32 @@ const tabs = ["1M", "5M", "1H", "24H"];
 
 export default function Detail() {
   const { selectedToken } = useContext(GlobalContext);
+  const params = useParams<{ id: string }>();
+  const [tokenData, setTokenData] = useState();
+
+  useEffect(() => {
+    const fetchToken = async () => {
+      const url = `${
+        process.env.NEXT_PUBLIC_TRACKIT_API_HOST
+      }/token/info?token=${decodeURIComponent(params.id)}`;
+      try {
+        const response = await axios.get(url);
+        if (response.status === 200) {
+          const data = response.data.tokenData;
+          setTokenData(() => {
+            return {
+              ...data,
+            };
+          });
+        }
+      } catch (error) {
+        console.log("Failed to fetch token data");
+      }
+    };
+
+    fetchToken();
+    console.log(selectedToken);
+  }, []);
   return (
     <div className="p-4 bg rounded-lg space-y-4">
       <Card className="p-4 bg-items text-white border-itemborder">
@@ -59,7 +87,15 @@ export default function Detail() {
               </p>
             </div>
           </div>
-          <Link href="#" className="text-blue-500 hover:text-blue-600">
+          <Link
+            href={
+              selectedToken && isTokenInfo(selectedToken)
+                ? selectedToken.pool_url
+                : selectedToken?.website || "#"
+            }
+            target="_blank"
+            className="text-blue-500 hover:text-blue-600"
+          >
             <ExternalLink className="w-4 h-4" />
           </Link>
         </div>

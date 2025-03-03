@@ -50,12 +50,12 @@ export default function Home() {
             {!isFiltered ? <FilterIcon /> : <FilterXIcon />}
             <span className="text-[15px]">Filter Token</span>
           </Button>
-          <Button
+          {/* <Button
             variant="default"
             className="px-5 bg-bluesky text-base font-semibold hover:bg-bluesky/80"
           >
             Connect
-          </Button>
+          </Button> */}
         </div>
       </div>
       {renderComponent()}

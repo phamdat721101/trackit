@@ -772,20 +772,11 @@ const secondNav = [
     url: "#",
   },
   {
-    icon: <RocketIcon />,
-    name: "IPSO Launchpad",
-    url: "#",
-  },
-  {
     icon: <SendIcon />,
     name: "Telegram Bot",
     url: "#",
   },
-  {
-    icon: <SquareStackIcon />,
-    name: "Multicharts",
-    url: "#",
-  },
+
   {
     icon: <NewspaperIcon />,
     name: "News Aggregator",
@@ -804,19 +795,10 @@ const thirdNav = [
     name: "InsightsGPT",
     url: "#",
   },
-  {
-    icon: <RadarIcon />,
-    name: "Dump Risk Radar",
-    url: "#",
-  },
+
   {
     icon: <ChartCandlestickIcon />,
-    name: "Smart Traders Moves",
-    url: "#",
-  },
-  {
-    icon: <HandCoinsIcon />,
-    name: "Hype Tracker",
+    name: "Smart Traders",
     url: "#",
   },
 ];

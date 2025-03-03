@@ -79,4 +79,13 @@
   .bg {
     background-color: #0e203f;
   }
+
+  /* width */
+  ::-webkit-scrollbar {
+    width: 0px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #1a3c78;
+  }
 }

@@ -224,7 +224,7 @@ export default function CryptoTable() {
                     </TableHead>
                     <TableHead className="min-w-28 text-gray-400 font-medium">
                       <button className="flex gap-1 items-center">
-                        % Holder <ChevronsUpDownIcon width={14} height={14} />
+                        Holder <ChevronsUpDownIcon width={14} height={14} />
                       </button>
                     </TableHead>
                     <TableHead className="min-w-28 text-gray-400 font-medium">
@@ -414,7 +414,7 @@ export default function CryptoTable() {
                           </TableCell>
                           <TableCell>
                             <span className="text-gray-400 font-bold text-[15px]">
-                              {(+token.holderPercentage).toFixed(2)}%
+                              {+token.holderPercentage}
                             </span>
                           </TableCell>
                           <TableCell>

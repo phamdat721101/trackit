@@ -104,7 +104,7 @@ export default function SearchForm() {
         throw new Error("Please enter a token address");
       }
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_TRACKIT_API_HOST}/token/route?src_asset=${searchValue}&dst_asset=usdc`
+        `${process.env.NEXT_PUBLIC_TRACKIT_API_HOST}/token/route?src_adr=0x1::aptos_coin::AptosCoin&dst_adr=${searchValue}`
       );
 
       if (!response.ok) {

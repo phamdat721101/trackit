@@ -13,7 +13,11 @@ import {
 } from "../../ui/Table";
 import { useState } from "react";
 import { LoadingRow } from "./CryptoTable";
-import { aptosClient } from "../../warpgate/index";
+import {
+  aptosClient,
+  getSwapParams,
+  TESTNET_SWAP_CONTRACT_ADDRESS,
+} from "../../warpgate/index";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { SWAP_ADDRESS } from "warpgate-swap-sdk";
 
@@ -30,12 +34,12 @@ export default function Pools() {
     const response = await signAndSubmitTransaction({
       sender: account.address,
       data: {
-        function: `${SWAP_ADDRESS}::router::add_liquidity`,
+        function: `${TESTNET_SWAP_CONTRACT_ADDRESS}::router::add_liquidity`,
         typeArguments: [
-          "0xa9e39026c4a793078bec2dda05c0d46a1d961145d3d666eb63d150fdf44b6ccf::rushi_coin::RushiCoin",
-          "0xa9e39026c4a793078bec2dda05c0d46a1d961145d3d666eb63d150fdf44b6ccf::coop_coin::CoopCoin",
+          "0x1::aptos_coin::AptosCoin",
+          "0x18394ec9e2a191e2470612a57547624b12254c9fbb552acaff6750237491d644::MAHA::MAHA",
         ],
-        functionArguments: [1, 1, 1, 1, 1],
+        functionArguments: [100000000, 76201, 0, 0, 9975],
       },
     });
 
@@ -51,12 +55,12 @@ export default function Pools() {
     const response = await signAndSubmitTransaction({
       sender: account.address,
       data: {
-        function: `${SWAP_ADDRESS}::router::remove_liquidity`,
+        function: `${TESTNET_SWAP_CONTRACT_ADDRESS}::router::remove_liquidity`,
         typeArguments: [
-          "0xa9e39026c4a793078bec2dda05c0d46a1d961145d3d666eb63d150fdf44b6ccf::rushi_coin::RushiCoin",
-          "0xa9e39026c4a793078bec2dda05c0d46a1d961145d3d666eb63d150fdf44b6ccf::coop_coin::CoopCoin",
+          "0x1::aptos_coin::AptosCoin",
+          "0x18394ec9e2a191e2470612a57547624b12254c9fbb552acaff6750237491d644::MAHA::MAHA",
         ],
-        functionArguments: [1, 1, 1],
+        functionArguments: [100000000, 100000000, 76201],
       },
     });
 
@@ -69,19 +73,35 @@ export default function Pools() {
       throw new Error("Wallet not connected");
     }
 
+    const params = await getSwapParams(
+      "0x1::aptos_coin::AptosCoin",
+      "MOVE",
+      "0x18394ec9e2a191e2470612a57547624b12254c9fbb552acaff6750237491d644::MAHA::MAHA",
+      "MAHA"
+    );
+
+    if (!params) return;
+    console.log(params);
+
     const response = await signAndSubmitTransaction({
       sender: account.address,
       data: {
-        function: `${SWAP_ADDRESS}::router::swap_exact_input`,
+        function: `${TESTNET_SWAP_CONTRACT_ADDRESS}::router::swap_exact_input`,
         typeArguments: [
-          "0xa9e39026c4a793078bec2dda05c0d46a1d961145d3d666eb63d150fdf44b6ccf::rushi_coin::RushiCoin",
-          "0xa9e39026c4a793078bec2dda05c0d46a1d961145d3d666eb63d150fdf44b6ccf::coop_coin::CoopCoin",
+          "0x1::aptos_coin::AptosCoin",
+          "0x18394ec9e2a191e2470612a57547624b12254c9fbb552acaff6750237491d644::MAHA::MAHA",
         ],
-        functionArguments: [1, 1],
+        functionArguments: [...params.functionArguments], // swap 1 move
       },
     });
-    const txResult = await aptosClient().waitForTransaction(response.hash);
-    console.log("Swap hash: ", txResult);
+
+    console.log(response);
+
+    if (response) {
+      const client = aptosClient();
+      const txResult = await client.waitForTransaction(response.hash);
+      console.log("Swap hash: ", txResult);
+    }
   };
 
   return (
@@ -100,7 +120,7 @@ export default function Pools() {
               <>
                 <TableHeader className="sticky top-0 z-50 bg">
                   <TableRow className="hover:bg-transparent">
-                    <TableHead className="sticky left-0 z-20 bg-[#0e203f] min-w-52 text-gray-400 font-medium">
+                    <TableHead className="sticky left-0 z-20 bg-[#0e203f] min-w-32 text-gray-400 font-medium">
                       Pool
                     </TableHead>
                     <TableHead className="min-w-32 text-gray-400 font-medium">

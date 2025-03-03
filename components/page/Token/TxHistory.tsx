@@ -14,6 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from "../../ui/Table";
+import { ScrollArea, ScrollBar } from "../../ui/scroll-area";
 
 interface Trade {
   date: string;
@@ -127,7 +128,7 @@ export default function TxHistory() {
       <div className="relative rounded-lg">
         {/* Table container with sticky header */}
         <div className="overflow-x-auto">
-          <div className="overflow-y-auto max-h-[200px] rounded-lg">
+          <ScrollArea className="overflow-y-auto max-h-[200px] rounded-lg">
             {/* Adjust max-h value based on your needs */}
             <Table className="min-w-full table">
               <TableHeader className="sticky top-0 bg z-10">
@@ -225,7 +226,8 @@ export default function TxHistory() {
                 )}
               </TableBody>
             </Table>
-          </div>
+            <ScrollBar orientation="horizontal" />
+          </ScrollArea>
         </div>
       </div>
     </div>
