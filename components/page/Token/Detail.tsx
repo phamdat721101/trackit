@@ -58,7 +58,6 @@ export default function Detail() {
     };
 
     fetchToken();
-    console.log(selectedToken);
   }, []);
   return (
     <div className="p-4 bg rounded-lg space-y-4">

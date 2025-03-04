@@ -15,6 +15,7 @@ import { useState } from "react";
 import { LoadingRow } from "./CryptoTable";
 import {
   aptosClient,
+  getPairParams,
   getSwapParams,
   TESTNET_SWAP_CONTRACT_ADDRESS,
 } from "../../warpgate/index";
@@ -31,6 +32,18 @@ export default function Pools() {
       throw new Error("Wallet not connected");
     }
 
+    const params = await getPairParams(
+      "0x1::aptos_coin::AptosCoin",
+      "MOVE",
+      "0x18394ec9e2a191e2470612a57547624b12254c9fbb552acaff6750237491d644::MAHA::MAHA",
+      "MAHA"
+    );
+
+    if (!params) return;
+    console.log(params);
+
+    const amountToken = (100000000 * +params.reserve0) / +params.reserve1;
+
     const response = await signAndSubmitTransaction({
       sender: account.address,
       data: {
@@ -39,7 +52,7 @@ export default function Pools() {
           "0x1::aptos_coin::AptosCoin",
           "0x18394ec9e2a191e2470612a57547624b12254c9fbb552acaff6750237491d644::MAHA::MAHA",
         ],
-        functionArguments: [100000000, 76201, 0, 0, 9975],
+        functionArguments: [100000000, amountToken, 0, 0, 9975],
       },
     });
 

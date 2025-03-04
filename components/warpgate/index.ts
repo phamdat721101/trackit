@@ -137,6 +137,32 @@ export async function getSwapParams(
   }
 }
 
+export async function getPairParams(
+  addr1: string,
+  symbol1: string,
+  addr2: string,
+  symbol2: string
+) {
+  const Move = new Coin(250, addr1, 8, symbol1);
+
+  const token = new Coin(250, addr2, 8, symbol2);
+
+  // Get pair
+  const [pairState, pair] = await getPair(token, Move);
+
+  if (pairState === PairState.EXISTS && pair) {
+    return {
+      reserve0: pair.reserve0.toExact(),
+      reserve1: pair.reserve1.toExact(),
+      price0: pair.token0Price.toSignificant(6),
+      price1: pair.token1Price.toSignificant(6),
+    };
+  } else {
+    console.log("Pair does not exist on blockchain");
+    return null;
+  }
+}
+
 export async function getAddLiquidParams(
   amount1: string,
   amount2: string,

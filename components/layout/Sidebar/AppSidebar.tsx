@@ -67,6 +67,7 @@ import { useState } from "react";
 import { useContext } from "react";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { WalletSelector } from "../../wallet/WalletConnect";
+import { useRouter } from "next/navigation";
 
 interface ChainButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -136,7 +137,7 @@ export function AppSidebar() {
 function MobileSidebarContent() {
   const { selectedChain, setSelectedChain, selectedNav, setSelectedNav } =
     useContext(GlobalContext);
-  const { connected } = useWallet();
+  const router = useRouter();
 
   return (
     <>
@@ -157,9 +158,11 @@ function MobileSidebarContent() {
               >
                 <SidebarMenuButton
                   asChild
-                  onClick={() => setSelectedNav(nav.name)}
+                  onClick={() => {
+                    setSelectedNav(nav.name);
+                  }}
                 >
-                  <a
+                  <Link
                     href={nav.url}
                     className={
                       selectedNav === nav.name
@@ -177,7 +180,7 @@ function MobileSidebarContent() {
                     >
                       {nav.name}
                     </span>
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             ))}
@@ -205,9 +208,10 @@ function MobileSidebarContent() {
               >
                 <SidebarMenuButton
                   asChild
-                  onClick={() => setSelectedNav(nav.name)}
+                  // onClick={() => setSelectedNav(nav.name)}
+                  disabled
                 >
-                  <a
+                  <Link
                     href={nav.url}
                     className={
                       selectedNav === nav.name
@@ -225,7 +229,7 @@ function MobileSidebarContent() {
                     >
                       {nav.name}
                     </span>
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             ))}
@@ -244,9 +248,10 @@ function MobileSidebarContent() {
               >
                 <SidebarMenuButton
                   asChild
-                  onClick={() => setSelectedNav(nav.name)}
+                  // onClick={() => setSelectedNav(nav.name)}
+                  disabled
                 >
-                  <a
+                  <Link
                     href={nav.url}
                     className={
                       selectedNav === nav.name
@@ -264,7 +269,7 @@ function MobileSidebarContent() {
                     >
                       {nav.name}
                     </span>
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             ))}
@@ -280,9 +285,8 @@ function MobileSidebarContent() {
 }
 
 function DesktopSidebarContent({ isCollapsed }: { isCollapsed: boolean }) {
-  const { selectedNav, setSelectedNav, isLogged, setIsLogged } =
-    useContext(GlobalContext);
-  const { connected, disconnect, connect } = useWallet();
+  const { selectedNav, setSelectedNav } = useContext(GlobalContext);
+  const { connected, disconnect } = useWallet();
 
   return (
     <>
@@ -303,9 +307,11 @@ function DesktopSidebarContent({ isCollapsed }: { isCollapsed: boolean }) {
               >
                 <SidebarMenuButton
                   asChild
-                  onClick={() => setSelectedNav(nav.name)}
+                  onClick={() => {
+                    setSelectedNav(nav.name);
+                  }}
                 >
-                  <a
+                  <Link
                     href={nav.url}
                     className={
                       selectedNav === nav.name
@@ -323,7 +329,7 @@ function DesktopSidebarContent({ isCollapsed }: { isCollapsed: boolean }) {
                     >
                       {nav.name}
                     </span>
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             ))}
@@ -339,9 +345,10 @@ function DesktopSidebarContent({ isCollapsed }: { isCollapsed: boolean }) {
               >
                 <SidebarMenuButton
                   asChild
-                  onClick={() => setSelectedNav(nav.name)}
+                  // onClick={() => setSelectedNav(nav.name)}
+                  disabled
                 >
-                  <a
+                  <Link
                     href={nav.url}
                     className={
                       selectedNav === nav.name
@@ -359,7 +366,7 @@ function DesktopSidebarContent({ isCollapsed }: { isCollapsed: boolean }) {
                     >
                       {nav.name}
                     </span>
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             ))}
@@ -378,9 +385,10 @@ function DesktopSidebarContent({ isCollapsed }: { isCollapsed: boolean }) {
               >
                 <SidebarMenuButton
                   asChild
-                  onClick={() => setSelectedNav(nav.name)}
+                  // onClick={() => setSelectedNav(nav.name)}
+                  disabled
                 >
-                  <a
+                  <Link
                     href={nav.url}
                     className={
                       selectedNav === nav.name
@@ -398,7 +406,7 @@ function DesktopSidebarContent({ isCollapsed }: { isCollapsed: boolean }) {
                     >
                       {nav.name}
                     </span>
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             ))}
@@ -478,201 +486,6 @@ function ChainButton({
   );
 }
 
-const data = {
-  user: {
-    name: "Dang Hoang Lam",
-    email: "m@example.com",
-    avatar: "/logo.png",
-  },
-  teams: [
-    {
-      name: "Acme Inc",
-      logo: GalleryVerticalEnd,
-      plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
-    },
-  ],
-  navMain: [
-    {
-      title: "Chains",
-      url: "#",
-      icon: Chain,
-      isActive: true,
-      items: [
-        {
-          title: "History",
-          url: "#",
-        },
-        {
-          title: "Starred",
-          url: "#",
-        },
-        {
-          title: "Settings",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Dexes",
-      url: "#",
-      icon: Scan,
-      items: [
-        {
-          title: "Genesis",
-          url: "#",
-        },
-        {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Dashboard",
-      url: "#",
-      icon: PanelLeft,
-      items: [
-        {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "More",
-      url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "General",
-          url: "#",
-        },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
-        },
-      ],
-    },
-  ],
-  projects: [
-    {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: Map,
-    },
-  ],
-};
-
-const items = [
-  {
-    title: "Chains",
-    url: "#",
-    icon: Chain,
-    collapsible: true,
-    items: [
-      {
-        title: (
-          <div className="flex items-center justify-center gap-2">
-            <Image
-              src="/movement-mark.svg"
-              alt="WarpGate"
-              width={24}
-              height={24}
-            />
-            <span>MOVE</span>
-          </div>
-        ),
-        url: "#",
-      },
-      {
-        title: (
-          <div className="flex items-center justify-center gap-2">
-            <Image src="/Aptos_mark.png" alt="Aptos" width={24} height={24} />
-            <span>APT</span>
-          </div>
-        ),
-        url: "#",
-      },
-    ],
-  },
-  {
-    title: "Dexes",
-    url: "#",
-    icon: Scan,
-    collapsible: true,
-    items: [
-      {
-        title: (
-          <div className="flex items-center justify-center gap-2">
-            <Image src="/warpgate.png" alt="WarpGate" width={24} height={24} />
-            <span>WarpGate</span>
-          </div>
-        ),
-        url: "#",
-      },
-      {
-        title: (
-          <div className="flex items-center justify-center gap-2">
-            <Image src="/routex.png" alt="RouteX" width={24} height={24} />
-            <span>RouteX</span>
-          </div>
-        ),
-        url: "#",
-      },
-    ],
-  },
-  {
-    title: "Dashboard",
-    url: "/dashboard",
-    icon: PanelLeft,
-    collapsible: false,
-  },
-];
-
 const chains = [
   {
     name: "Movement",
@@ -736,22 +549,26 @@ const mainNav = [
   {
     icon: <UsersIcon />,
     name: "New Pair",
-    url: "#",
+    url: "/new-pair",
+    content: "Add and track a newly created token pair on the platform.",
   },
   {
     icon: <ChartColumnIncreasingIcon />,
     name: "Trending",
-    url: "#",
+    url: "/trending",
+    content: "View top-trending tokens based on volume and social mentions.",
   },
   {
     icon: <DatabaseIcon />,
     name: "Holding",
-    url: "#",
+    url: "/holding",
+    content: "Monitor your current holdings and portfolio performance.",
   },
   {
     icon: <FileChartColumnIncreasingIcon />,
     name: "Follow",
-    url: "#",
+    url: "/follow",
+    content: "Follow specific tokens or wallets for real-time updates.",
   },
 ];
 
@@ -760,27 +577,35 @@ const secondNav = [
     icon: <ChartSplineIcon />,
     name: "Token Analytics",
     url: "#",
+    content:
+      "Access detailed analytics for any token, including price charts and on-chain data.",
   },
   {
     icon: <ViewIcon />,
     name: "Wallet Analyzer",
     url: "#",
+    content:
+      "Analyze wallet addresses, track transactions, and review portfolio allocations.",
   },
   {
     icon: <FishSymbolIcon />,
     name: "Whales Tracker",
     url: "#",
+    content: "Identify and monitor large wallet (whale) activities and trades.",
   },
   {
     icon: <SendIcon />,
     name: "Telegram Bot",
     url: "#",
+    content:
+      "Configure the Telegram bot for real-time token price alerts and notifications.",
   },
 
   {
     icon: <NewspaperIcon />,
     name: "News Aggregator",
     url: "#",
+    content: "Stay updated with curated crypto news and market insights.",
   },
 ];
 
@@ -789,16 +614,21 @@ const thirdNav = [
     icon: <TrophyIcon />,
     name: "Top Traders",
     url: "#",
+    content:
+      "Track the best-performing traders and learn from their strategies.",
   },
   {
     icon: <MessageSquareMoreIcon />,
     name: "InsightsGPT",
     url: "#",
+    content:
+      "Leverage AI-driven insights for market trends and token research.",
   },
 
   {
     icon: <ChartCandlestickIcon />,
     name: "Smart Traders",
     url: "#",
+    content: "Gain access to exclusive tools used by professional traders.",
   },
 ];

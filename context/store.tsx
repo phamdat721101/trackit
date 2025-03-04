@@ -24,7 +24,7 @@ const GlobalContext = createContext<ContextProps>({
   setSelectedToken: () => {},
   selectedChain: "movement",
   setSelectedChain: () => {},
-  selectedNav: "Meme",
+  selectedNav: "",
   setSelectedNav: () => {},
 });
 
@@ -41,7 +41,7 @@ export const GlobalContextProvider = ({
     TokenInfo | TokenInfoSui | null
   >(token);
   const [selectedChain, setSelectedChain] = useState<string>("movement");
-  const [selectedNav, setSelectedNav] = useState<string>("Meme");
+  const [selectedNav, setSelectedNav] = useState<string>("");
 
   return (
     <GlobalContext.Provider
