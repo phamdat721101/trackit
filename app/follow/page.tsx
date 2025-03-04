@@ -1,7 +1,7 @@
 "use client";
 
-import Tutorials from "@/components/page/Follow/Tutorials";
-import GlobalContext from "@/context/store";
+import Tutorials from "../../components/page/Follow/Tutorials";
+import GlobalContext from "../../context/store";
 import { useContext, useEffect } from "react";
 
 export default function Page() {

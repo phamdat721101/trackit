@@ -6,7 +6,7 @@ import {
   DialogContent,
   DialogDescription,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "../../ui/dialog";
 import { Check } from "lucide-react";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
