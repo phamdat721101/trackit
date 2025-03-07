@@ -68,6 +68,8 @@ import { useContext } from "react";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { WalletSelector } from "../../wallet/WalletConnect";
 import { useRouter } from "next/navigation";
+import { Button } from "../../ui/Button";
+import SubscriptionDialog from "../Subscription";
 
 interface ChainButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -137,7 +139,7 @@ export function AppSidebar() {
 function MobileSidebarContent() {
   const { selectedChain, setSelectedChain, selectedNav, setSelectedNav } =
     useContext(GlobalContext);
-  const router = useRouter();
+  const [isSubscriptionOpen, setIsSubscriptionOpen] = useState(false);
 
   return (
     <>
@@ -277,6 +279,21 @@ function MobileSidebarContent() {
         </SidebarGroup>
       </div>
 
+      <div className="pt-4 mx-auto">
+        <Button
+          variant="outline"
+          className="px-10 bg-transparent border-bluesky text-bluesky hover:bg-blue-500 hover:text-white"
+          onClick={() => setIsSubscriptionOpen(true)}
+        >
+          Subscribe
+        </Button>
+        {/* Subscription Modal */}
+        <SubscriptionDialog
+          open={isSubscriptionOpen}
+          onOpenChange={() => setIsSubscriptionOpen(false)}
+        />
+      </div>
+
       <div className="p-4">
         <WalletSelector />
       </div>
@@ -287,6 +304,7 @@ function MobileSidebarContent() {
 function DesktopSidebarContent({ isCollapsed }: { isCollapsed: boolean }) {
   const { selectedNav, setSelectedNav } = useContext(GlobalContext);
   const { connected, disconnect } = useWallet();
+  const [isSubscriptionOpen, setIsSubscriptionOpen] = useState(false);
 
   return (
     <>
@@ -412,6 +430,21 @@ function DesktopSidebarContent({ isCollapsed }: { isCollapsed: boolean }) {
             ))}
           </SidebarMenu>
         </SidebarGroup>
+      </div>
+
+      <div className="pt-4 mx-auto">
+        <Button
+          variant="outline"
+          className="px-10 bg-transparent border-bluesky text-bluesky hover:bg-blue-500 hover:text-white"
+          onClick={() => setIsSubscriptionOpen(true)}
+        >
+          Subscribe
+        </Button>
+        {/* Subscription Modal */}
+        <SubscriptionDialog
+          open={isSubscriptionOpen}
+          onOpenChange={() => setIsSubscriptionOpen(false)}
+        />
       </div>
 
       <div className="p-4 pl-6 space-y-6">
