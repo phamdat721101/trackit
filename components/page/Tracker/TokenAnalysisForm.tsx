@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
-import { TokenInputForm } from "@/types/interface";
+import { Button } from "../../ui/Button";
+import { TokenInputForm } from "../../../types/interface";
 import { Search, Calendar, ArrowRight, Loader } from "lucide-react";
 
 interface TokenAnalysisFormProps {

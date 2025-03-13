@@ -11,7 +11,7 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "../../ui/popover";
+} from "../../ui/Popover";
 import {
   Tooltip,
   TooltipContent,

@@ -15,7 +15,7 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "../../ui/popover";
+} from "../../ui/Popover";
 import { ChevronDown } from "lucide-react";
 
 type LiquidityPosition = {
