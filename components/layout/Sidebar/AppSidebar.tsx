@@ -39,6 +39,7 @@ import {
   RadarIcon,
   MessageSquareMoreIcon,
   TrophyIcon,
+  CpuIcon,
 } from "lucide-react";
 import { NavMain } from "../Sidebar/NavMain";
 import { NavUser } from "../Sidebar/nav-user";
@@ -602,6 +603,12 @@ const mainNav = [
     name: "Follow",
     url: "/follow",
     content: "Follow specific tokens or wallets for real-time updates.",
+  },
+  {
+    icon: <CpuIcon />,
+    name: "Tracker",
+    url: "/tracker",
+    content: "Professional analysis tools for tokens.",
   },
 ];
 

@@ -1,9 +1,5 @@
-import Watchlist from "../../components/page/Watchlist";
+import Tracker from "@/components/page/Tracker/index";
 
-export default function WatchlistPage() {
-  return (
-    <div className="h-screen">
-      <Watchlist />
-    </div>
-  );
+export default function TrackerPage() {
+  return <Tracker />;
 }

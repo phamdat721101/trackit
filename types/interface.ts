@@ -196,3 +196,118 @@ export interface PricePredictionData {
   };
   coinPrice: number;
 }
+
+interface Token {
+  _id: string;
+  symbol: string;
+  name: string;
+  icon_uri?: string;
+  address: string;
+  decimals: number;
+  type: string;
+  wrapAddress: string;
+  project_uri?: string;
+  createdAt: string;
+  updatedAt: string;
+  __v?: number;
+  feedId?: string;
+  active?: boolean;
+  logo_url?: string;
+}
+
+interface Bribe {
+  reward: number;
+  quoteReward: number;
+  token: Token;
+}
+
+interface Gauge {
+  address: string;
+  feesAddress: string;
+  bribeAddress: string;
+  rewardPool: string;
+  tbv: number;
+  fees: any[];
+  bribes: Bribe[];
+  nextIncentivize: any[];
+  apr: number;
+  votes: string;
+  gaugeStatus: string;
+  votesPercent: number;
+}
+
+export interface Pool {
+  pool: {
+    _id: string;
+    name: string;
+    symbol: string;
+    address: string;
+    apr: number;
+    stable: boolean;
+    tvl: number;
+    totalSupply: number;
+    reserve0: number;
+    reserve1: number;
+    token0Address: string;
+    wrapToken0Address: string;
+    token0: Token;
+    token1Address: string;
+    wrapToken1Address: string;
+    token1: Token;
+    gaugeAddress: string;
+    gauge: Gauge;
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
+  };
+  staked0: number;
+  staked1: number;
+}
+
+export interface TokenAnalysis {
+  priceData: DataPoint[];
+  volumeData: DataPoint[];
+  holders: {
+    current: number;
+    previous: number;
+    growthRate: number;
+  };
+  liquidity: {
+    score: number;
+    pools: LiquidityPool[];
+  };
+  riskAssessment: {
+    level: "Low" | "Medium" | "High";
+    score: number;
+    reasons: string[];
+  };
+}
+
+export interface DataPoint {
+  date: string;
+  value: number;
+}
+
+export interface LiquidityPool {
+  name: string;
+  value: number;
+}
+
+export interface TokenInputForm {
+  tokenAddress: string;
+  days: number;
+}
+
+export interface TokenMetricCardProps {
+  title: string;
+  value: string | number;
+  subValue?: string;
+  status?: "positive" | "neutral" | "negative";
+  items?: string[];
+}
+
+export interface DataChartProps {
+  data: DataPoint[];
+  type: "line" | "bar";
+  color?: string;
+}
