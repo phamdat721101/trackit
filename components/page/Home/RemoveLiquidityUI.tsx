@@ -7,6 +7,15 @@ import { Card, CardContent } from "../../ui/Card";
 import { Slider } from "../../ui/slider";
 import { Input } from "../../ui/Input";
 import LiquidityPositionSelector from "./PositionSelector";
+import { useWallet } from "@aptos-labs/wallet-adapter-react";
+import {
+  aptosClient,
+  getRemoveLiquidParams,
+  TESTNET_SWAP_CONTRACT_ADDRESS,
+} from "../../warpgate/index";
+import Link from "next/link";
+import { useToast } from "@/hooks/use-toast";
+import { convertAmountFromHumanReadableToOnChain } from "@aptos-labs/ts-sdk";
 
 // Mock liquidity positions
 const liquidityPositions = [
@@ -41,6 +50,58 @@ export default function RemoveLiquidityUI() {
   const [lpAmount, setLpAmount] = useState(
     ((Number(selectedPosition.balance) * percentage) / 100).toFixed(6)
   );
+  const { account, signAndSubmitTransaction } = useWallet();
+  const { toast } = useToast();
+
+  const removeLiquid = async () => {
+    if (!account) {
+      throw new Error("Wallet not connected");
+    }
+
+    const amount = "0.005";
+
+    const removeParams = await getRemoveLiquidParams(
+      convertAmountFromHumanReadableToOnChain(+amount, 8).toString(),
+      "0",
+      "0",
+      "0x18394ec9e2a191e2470612a57547624b12254c9fbb552acaff6750237491d644::MAHA::MAHA",
+      "0x1::aptos_coin::AptosCoin"
+    );
+
+    if (!removeParams) return;
+
+    const response = await signAndSubmitTransaction({
+      sender: account.address,
+      data: {
+        function: `${TESTNET_SWAP_CONTRACT_ADDRESS}::router::remove_liquidity`,
+        typeArguments: [...removeParams.typeArguments],
+        functionArguments: [...removeParams.functionArguments],
+      },
+    });
+
+    if (response) {
+      const client = aptosClient();
+      const txResult = await client.waitForTransaction({
+        transactionHash: response.hash,
+        options: {
+          checkSuccess: true,
+        },
+      });
+
+      txResult.success &&
+        toast({
+          title: "Successfully removed liquidity!",
+          description: (
+            <Link
+              target="_blank"
+              href={`https://explorer.movementnetwork.xyz/txn/${txResult.hash}?network=bardock+testnet`}
+            >
+              Hash: {txResult.hash}
+            </Link>
+          ),
+        });
+    }
+  };
 
   // Update LP amount when percentage changes
   const handlePercentageChange = (value: number) => {
@@ -209,6 +270,7 @@ export default function RemoveLiquidityUI() {
           <Button
             className="w-full mt-4 sm:mt-6 h-10 sm:h-12 text-base sm:text-lg"
             size="lg"
+            onClick={removeLiquid}
           >
             Remove Liquidity
           </Button>

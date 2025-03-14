@@ -12,6 +12,16 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../../ui/tooltip";
+import { useWallet } from "@aptos-labs/wallet-adapter-react";
+import {
+  aptosClient,
+  estimateLiquidToAdd,
+  getAddLiquidParams,
+  getPairParams,
+  TESTNET_SWAP_CONTRACT_ADDRESS,
+} from "../../warpgate/index";
+import Link from "next/link";
+import { useToast } from "@/hooks/use-toast";
 
 // Mock token data - same as in swap-interface.tsx
 const tokens = [
@@ -31,13 +41,89 @@ const tokens = [
     price: 2000,
     icon: "/eth-logo.png",
   },
+  {
+    id: "aptos",
+    name: "Aptos",
+    symbol: "APT",
+    balance: "4",
+    price: 5.1,
+    icon: "/aptos_mark.svg",
+  },
 ];
 
 export default function AddLiquidityUI() {
+  const { account, signAndSubmitTransaction } = useWallet();
   const [token1, setToken1] = useState(tokens[0]);
   const [token2, setToken2] = useState(tokens[1]);
   const [amount1, setAmount1] = useState("1");
   const [amount2, setAmount2] = useState("");
+  const { toast } = useToast();
+
+  const addLiquid = async () => {
+    if (!account) {
+      throw new Error("Wallet not connected");
+    }
+
+    const params = await getPairParams(
+      "0x1::aptos_coin::AptosCoin",
+      "MOVE",
+      "0x18394ec9e2a191e2470612a57547624b12254c9fbb552acaff6750237491d644::MAHA::MAHA",
+      "MAHA"
+    );
+
+    if (!params) return;
+    const amount1 = 1;
+
+    const amount2 = estimateLiquidToAdd(
+      `${amount1}`,
+      params.reserve0,
+      params.reserve1
+    );
+
+    const addParams = await getAddLiquidParams(
+      `${amount1}`,
+      `${amount2}`,
+      "0",
+      "0",
+      "0x1::aptos_coin::AptosCoin",
+      "0x18394ec9e2a191e2470612a57547624b12254c9fbb552acaff6750237491d644::MAHA::MAHA",
+      "9975"
+    );
+
+    if (!addParams) return;
+
+    const response = await signAndSubmitTransaction({
+      sender: account.address,
+      data: {
+        function: `${TESTNET_SWAP_CONTRACT_ADDRESS}::router::add_liquidity`,
+        typeArguments: [...addParams.typeArguments],
+        functionArguments: [...addParams.functionArguments],
+      },
+    });
+
+    if (response) {
+      const client = aptosClient();
+      const txResult = await client.waitForTransaction({
+        transactionHash: response.hash,
+        options: {
+          checkSuccess: true,
+        },
+      });
+
+      txResult.success &&
+        toast({
+          title: "Successfully added liquidity!",
+          description: (
+            <Link
+              target="_blank"
+              href={`https://explorer.movementnetwork.xyz/txn/${txResult.hash}?network=bardock+testnet`}
+            >
+              Hash: {txResult.hash}
+            </Link>
+          ),
+        });
+    }
+  };
 
   // Calculate the second amount based on price ratio
   const calculateAmount2 = (value: string) => {
@@ -168,6 +254,7 @@ export default function AddLiquidityUI() {
         <Button
           className="w-full mt-4 sm:mt-6 h-10 sm:h-12 text-base sm:text-lg"
           size="lg"
+          onClick={addLiquid}
         >
           Add Liquidity
         </Button>

@@ -18,6 +18,14 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../../ui/tooltip";
+import {
+  aptosClient,
+  getSwapParams,
+  TESTNET_SWAP_CONTRACT_ADDRESS,
+} from "../../warpgate/index";
+import { useWallet } from "@aptos-labs/wallet-adapter-react";
+import Link from "next/link";
+import { useToast } from "@/hooks/use-toast";
 
 // Mock token data
 const tokens = [
@@ -37,6 +45,14 @@ const tokens = [
     price: 2000,
     icon: "/eth-logo.png",
   },
+  {
+    id: "aptos",
+    name: "Aptos",
+    symbol: "APT",
+    balance: "4",
+    price: 5.1,
+    icon: "/aptos_mark.svg",
+  },
 ];
 
 export default function SwapUI() {
@@ -45,6 +61,8 @@ export default function SwapUI() {
   const [fromAmount, setFromAmount] = useState("1");
   const [slippage, setSlippage] = useState(0.5);
   const [showSettings, setShowSettings] = useState(false);
+  const { account, signAndSubmitTransaction } = useWallet();
+  const { toast } = useToast();
 
   // Calculate the to amount based on price
   const toAmount = fromAmount
@@ -59,6 +77,53 @@ export default function SwapUI() {
     const temp = fromToken;
     setFromToken(toToken);
     setToToken(temp);
+  };
+  const swapHandler = async () => {
+    if (!account) {
+      throw new Error("Wallet not connected");
+    }
+
+    const params = await getSwapParams(
+      "1",
+      "0x1::aptos_coin::AptosCoin",
+      "MOVE",
+      "0x18394ec9e2a191e2470612a57547624b12254c9fbb552acaff6750237491d644::MAHA::MAHA",
+      "MAHA"
+    );
+
+    if (!params) return;
+
+    const response = await signAndSubmitTransaction({
+      sender: account.address,
+      data: {
+        function: `${TESTNET_SWAP_CONTRACT_ADDRESS}::router::swap_exact_input`,
+        typeArguments: [...params.typeArguments],
+        functionArguments: [...params.functionArguments], // swap 1 move
+      },
+    });
+
+    if (response) {
+      const client = aptosClient();
+      const txResult = await client.waitForTransaction({
+        transactionHash: response.hash,
+        options: {
+          checkSuccess: true,
+        },
+      });
+
+      txResult.success &&
+        toast({
+          title: "Successfully swapped!",
+          description: (
+            <Link
+              target="_blank"
+              href={`https://explorer.movementnetwork.xyz/txn/${txResult.hash}?network=bardock+testnet`}
+            >
+              Hash: {txResult.hash}
+            </Link>
+          ),
+        });
+    }
   };
 
   // Calculate price impact (mock)
@@ -254,6 +319,7 @@ export default function SwapUI() {
         <Button
           className="w-full mt-4 h-10 sm:h-12 text-base sm:text-lg"
           size="lg"
+          onClick={swapHandler}
         >
           Swap
         </Button>

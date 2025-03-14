@@ -6,6 +6,8 @@ import { BarChart, LineChart, Shield, SquareChartGantt } from "lucide-react";
 import { DataChart } from "./DataChart";
 import { TokenMetricCard } from "./TokenMetricCard";
 import { toast } from "@/hooks/use-toast";
+import { Button } from "../../ui/Button";
+import axios from "axios";
 
 export default function Page() {
   const [report, setReport] = useState<TokenAnalysis | null>(null);
@@ -72,6 +74,36 @@ export default function Page() {
     };
   };
 
+  const clickHandler = async () => {
+    try {
+      const url = process.env.NEXT_PUBLIC_MOVE_PREDICT || "";
+      const response = await fetch(url, {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          prompt: "please stake 0.1 apt for me!",
+        }),
+      });
+
+      if (response.ok) {
+        toast({
+          title: "SUCCESS!",
+          description: "Staked successfully!",
+        });
+      } else {
+        toast({
+          title: "ERROR!",
+          description: "Please try again!",
+        });
+      }
+    } catch (error) {
+      console.log("Failed to post data!");
+    }
+  };
+
   const getPredictionData = (): TokenAnalysis => {
     const mockData = getMockData();
     const lastPrice = mockData.priceData[mockData.priceData.length - 1].value;
@@ -115,7 +147,7 @@ export default function Page() {
       setReport(mockData);
       toast({
         title: "Success",
-        description: "Analysis completed successfully",
+        description: "Analysis completed successfully!",
         variant: "default",
       });
 
@@ -126,7 +158,17 @@ export default function Page() {
       setReport(predictionData);
       toast({
         title: "Prediction Complete",
-        description: "Future predictions have been calculated",
+        description: (
+          <div className="flex gap-2 items-center">
+            <span>Future predictions have been calculated!</span>
+            <Button
+              className="bg-bluesky hover:bg-bluesky/80 text-gray-50"
+              onClick={clickHandler}
+            >
+              Stake now!
+            </Button>
+          </div>
+        ),
         variant: "default",
       });
     } catch (error) {
