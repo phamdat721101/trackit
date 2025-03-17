@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button } from "../../ui/Button";
 import { Card, CardContent } from "../../ui/Card";
 import { Input } from "../../ui/Input";
@@ -20,57 +20,66 @@ import {
 } from "../../ui/tooltip";
 import {
   aptosClient,
+  getBalance,
   getSwapParams,
   TESTNET_SWAP_CONTRACT_ADDRESS,
 } from "../../warpgate/index";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import Link from "next/link";
 import { useToast } from "@/hooks/use-toast";
+import { useTokens } from "@/hooks/useTokens";
+import { useTokenBalances } from "@/hooks/useTokenBalances";
+import { useTokenPrices } from "@/hooks/useTokenPrices";
 
-// Mock token data
-const tokens = [
-  {
-    id: "move",
-    name: "Movement",
-    symbol: "MOVE",
-    balance: "1.56",
-    price: 0.5,
-    icon: "/movement-mark-full-color.png",
-  },
-  {
-    id: "eth",
-    name: "Ethereum",
-    symbol: "ETH",
-    balance: "0.01",
-    price: 2000,
-    icon: "/eth-logo.png",
-  },
-  {
-    id: "aptos",
-    name: "Aptos",
-    symbol: "APT",
-    balance: "4",
-    price: 5.1,
-    icon: "/aptos_mark.svg",
-  },
-];
+interface Token {
+  id: string;
+  name: string;
+  symbol: string;
+  balance: string;
+  price: number;
+  icon: string;
+  address: string;
+}
 
 export default function SwapUI() {
-  const [fromToken, setFromToken] = useState(tokens[0]);
-  const [toToken, setToToken] = useState(tokens[1]);
+  const { account, signAndSubmitTransaction } = useWallet();
+  const { tokens, loading: tokensLoading } = useTokens();
+  const { balances, loading: balancesLoading } = useTokenBalances(
+    account?.address,
+    tokens
+  );
+  const { prices, loading: pricesLoading } = useTokenPrices(tokens);
+
+  const [fromToken, setFromToken] = useState<Token | null>(null);
+  const [toToken, setToToken] = useState<Token | null>(null);
   const [fromAmount, setFromAmount] = useState("1");
   const [slippage, setSlippage] = useState(0.5);
   const [showSettings, setShowSettings] = useState(false);
-  const { account, signAndSubmitTransaction } = useWallet();
   const { toast } = useToast();
 
+  const enrichedTokens = useMemo(() => {
+    return tokens.map((token) => ({
+      ...token,
+      balance: balances[token.symbol] || "0",
+      price: prices[token.symbol] || 0,
+    }));
+  }, [tokens, balances, prices]);
+
+  useEffect(() => {
+    if (enrichedTokens.length > 0 && !fromToken) {
+      setFromToken(enrichedTokens[0]);
+      setToToken(enrichedTokens[1]);
+    }
+  }, [enrichedTokens]);
+
   // Calculate the to amount based on price
-  const toAmount = fromAmount
-    ? (
-        (Number.parseFloat(fromAmount) * fromToken.price) /
-        toToken.price
-      ).toFixed(6)
-    : "0";
+  const toAmount =
+    fromToken && toToken && fromAmount
+      ? (
+          (Number.parseFloat(fromAmount) * fromToken.price) /
+          toToken.price
+        ).toFixed(6)
+      : "0";
 
   // Swap the tokens
   const handleSwapTokens = () => {
@@ -84,7 +93,7 @@ export default function SwapUI() {
     }
 
     const params = await getSwapParams(
-      "1",
+      `${fromAmount}`,
       "0x1::aptos_coin::AptosCoin",
       "MOVE",
       "0x18394ec9e2a191e2470612a57547624b12254c9fbb552acaff6750237491d644::MAHA::MAHA",
@@ -98,7 +107,7 @@ export default function SwapUI() {
       data: {
         function: `${TESTNET_SWAP_CONTRACT_ADDRESS}::router::swap_exact_input`,
         typeArguments: [...params.typeArguments],
-        functionArguments: [...params.functionArguments], // swap 1 move
+        functionArguments: [...params.functionArguments],
       },
     });
 
@@ -143,7 +152,7 @@ export default function SwapUI() {
           <div className="flex justify-between items-center">
             <span className="text-sm font-medium">From</span>
             <span className="text-sm text-muted-foreground">
-              Balance: {fromToken.balance} {fromToken.symbol}
+              Balance: {fromToken?.balance || "0"} {fromToken?.symbol || ""}
             </span>
           </div>
 
@@ -151,7 +160,7 @@ export default function SwapUI() {
             <TokenSelector
               selectedToken={fromToken}
               onSelectToken={setFromToken}
-              tokens={tokens.filter((t) => t.id !== toToken.id)}
+              tokens={enrichedTokens.filter((t) => t.id !== toToken?.id)}
             />
             <Input
               type="number"
@@ -180,7 +189,7 @@ export default function SwapUI() {
           <div className="flex justify-between items-center">
             <span className="text-sm font-medium">To</span>
             <span className="text-sm text-muted-foreground">
-              Balance: {toToken.balance} {toToken.symbol}
+              Balance: {toToken?.balance || "0"} {toToken?.symbol || ""}
             </span>
           </div>
 
@@ -188,7 +197,7 @@ export default function SwapUI() {
             <TokenSelector
               selectedToken={toToken}
               onSelectToken={setToToken}
-              tokens={tokens.filter((t) => t.id !== fromToken.id)}
+              tokens={enrichedTokens.filter((t) => t.id !== fromToken?.id)}
             />
             <Input
               type="number"
@@ -218,8 +227,11 @@ export default function SwapUI() {
             </div>
             <div className="flex items-center gap-1">
               <span>
-                1 {fromToken.symbol} ={" "}
-                {(fromToken.price / toToken.price).toFixed(6)} {toToken.symbol}
+                1 {fromToken?.symbol} ={" "}
+                {fromToken && toToken
+                  ? (fromToken.price / toToken.price).toFixed(6)
+                  : "0"}{" "}
+                {toToken?.symbol}
               </span>
               <RefreshCw className="h-3.5 w-3.5 text-muted-foreground" />
             </div>
@@ -257,7 +269,7 @@ export default function SwapUI() {
                       Minimum Received
                     </span>
                     <span>
-                      {minReceived} {toToken.symbol}
+                      {minReceived} {toToken?.symbol}
                     </span>
                   </div>
                   <div className="flex justify-between text-sm">

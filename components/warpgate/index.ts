@@ -236,7 +236,9 @@ export function estimateLiquidToAdd(
   reserve0: string,
   reserve1: string
 ) {
-  const amount_1 = BigInt(convertAmountFromHumanReadableToOnChain(+amount1, 8));
+  const amount_1 = BigInt(
+    convertAmountFromHumanReadableToOnChain(+amount1, 8).toFixed(0)
+  );
   const reserve_0 = BigInt(
     convertAmountFromHumanReadableToOnChain(+reserve0, 8)
   );
@@ -246,8 +248,36 @@ export function estimateLiquidToAdd(
 
   const amount2 = (amount_1 * reserve_0) / reserve_1;
 
-  const amount_2 = convertAmountFromOnChainToHumanReadable(Number(amount2), 8);
+  const amount_2 = convertAmountFromOnChainToHumanReadable(
+    Number(amount2),
+    8
+  ).toFixed(0);
   return amount_2;
+}
+
+// Function to fetch balance from blockchain
+export async function getBalance(
+  address: string,
+  tokenAddress: `${string}::${string}::${string}`
+) {
+  try {
+    const resource = await aptos.getAccountResource({
+      accountAddress: address,
+      resourceType: tokenAddress,
+    });
+
+    if (!resource) {
+      return 0;
+    }
+
+    const { coin } = resource;
+    const balance = convertAmountFromOnChainToHumanReadable(coin.value, 8);
+
+    return balance;
+  } catch (error) {
+    console.error("Error fetching pair reserves:", error);
+    return 0;
+  }
 }
 
 // Example usage

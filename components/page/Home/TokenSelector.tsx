@@ -25,10 +25,11 @@ type Token = {
   balance: string;
   price: number;
   icon: string;
+  address: string;
 };
 
 interface TokenSelectorProps {
-  selectedToken: Token;
+  selectedToken: Token | null;
   onSelectToken: (token: Token) => void;
   tokens: Token[];
 }
@@ -50,14 +51,14 @@ export default function TokenSelector({
           <div className="flex items-center gap-1 sm:gap-2">
             <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full overflow-hidden bg-muted flex-shrink-0">
               <Image
-                src={selectedToken.icon || "/placeholder.svg"}
-                alt={selectedToken.name}
+                src={selectedToken?.icon || "/placeholder.svg"}
+                alt={selectedToken?.name || "Token"}
                 width={32}
                 height={32}
               />
             </div>
             <span className="font-medium text-sm sm:text-base">
-              {selectedToken.symbol}
+              {selectedToken?.symbol}
             </span>
           </div>
           <ChevronDown className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />

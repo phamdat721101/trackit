@@ -8,11 +8,15 @@ import { TokenMetricCard } from "./TokenMetricCard";
 import { toast } from "@/hooks/use-toast";
 import { Button } from "../../ui/Button";
 import axios from "axios";
+import { formatAddress } from "../../../types/helper";
 
 export default function Page() {
   const [report, setReport] = useState<TokenAnalysis | null>(null);
   const [loading, setLoading] = useState(false);
   const [predicting, setPredicting] = useState(false);
+  const [isStaking, setIsStaking] = useState(false);
+  const [isSuccess, setIsSuccess] = useState<boolean | undefined>();
+  const [txHash, setTxHash] = useState<string | undefined>();
   const [input, setInput] = useState({
     tokenAddress: "0x1::aptos_coin::AptosCoin",
     days: 7,
@@ -75,6 +79,7 @@ export default function Page() {
   };
 
   const clickHandler = async () => {
+    setIsStaking(true);
     try {
       const url = process.env.NEXT_PUBLIC_MOVE_PREDICT || "";
       const response = await fetch(url, {
@@ -86,20 +91,32 @@ export default function Page() {
           prompt: "please stake 0.1 apt for me!",
         }),
       });
-
       if (response.ok) {
+        const result = await response.json();
         toast({
           title: "SUCCESS!",
-          description: "Staked successfully!",
+          description: (
+            <div>
+              <span>Staked successfully! </span>
+              <span>
+                Tx hash: {formatAddress(result.data.tx_resp.hash || "")}
+              </span>
+            </div>
+          ),
         });
+        setTxHash(result.data.tx_resp.hash);
+        setIsSuccess(true);
       } else {
         toast({
           title: "ERROR!",
           description: "Please try again!",
         });
+        setIsSuccess(false);
       }
     } catch (error) {
       console.log("Failed to post data!");
+    } finally {
+      setIsStaking(false);
     }
   };
 
@@ -278,6 +295,22 @@ export default function Page() {
                     : "negative"
                 }
               />
+
+              <Button
+                className="sm:hidden bg-bluesky hover:bg-bluesky/80 text-gray-50"
+                onClick={clickHandler}
+                disabled={isStaking}
+              >
+                {isStaking ? "Staking..." : "Stake now!"}
+              </Button>
+
+              {isSuccess === true && (
+                <div className="sm:hidden -mt-3">
+                  <span>Staked successfully! </span>
+                  <span>Tx hash: {formatAddress(txHash || "")}</span>
+                </div>
+              )}
+              {isSuccess === false && <div>Please try again!</div>}
             </div>
 
             {predicting && (

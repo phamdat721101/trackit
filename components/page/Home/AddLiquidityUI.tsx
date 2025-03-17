@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button } from "../../ui/Button";
 import { Card, CardContent } from "../../ui/Card";
 import { Input } from "../../ui/Input";
@@ -22,42 +22,49 @@ import {
 } from "../../warpgate/index";
 import Link from "next/link";
 import { useToast } from "@/hooks/use-toast";
+import { useTokens } from "@/hooks/useTokens";
+import { useTokenBalances } from "@/hooks/useTokenBalances";
+import { useTokenPrices } from "@/hooks/useTokenPrices";
 
-// Mock token data - same as in swap-interface.tsx
-const tokens = [
-  {
-    id: "move",
-    name: "Movement",
-    symbol: "MOVE",
-    balance: "1.56",
-    price: 0.5,
-    icon: "/movement-mark-full-color.png",
-  },
-  {
-    id: "eth",
-    name: "Ethereum",
-    symbol: "ETH",
-    balance: "0.01",
-    price: 2000,
-    icon: "/eth-logo.png",
-  },
-  {
-    id: "aptos",
-    name: "Aptos",
-    symbol: "APT",
-    balance: "4",
-    price: 5.1,
-    icon: "/aptos_mark.svg",
-  },
-];
+interface Token {
+  id: string;
+  name: string;
+  symbol: string;
+  balance: string;
+  price: number;
+  icon: string;
+  address: string;
+}
 
 export default function AddLiquidityUI() {
   const { account, signAndSubmitTransaction } = useWallet();
-  const [token1, setToken1] = useState(tokens[0]);
-  const [token2, setToken2] = useState(tokens[1]);
-  const [amount1, setAmount1] = useState("1");
-  const [amount2, setAmount2] = useState("");
+  const { tokens, loading: tokensLoading } = useTokens();
+  const { balances, loading: balancesLoading } = useTokenBalances(
+    account?.address,
+    tokens
+  );
+  const { prices, loading: pricesLoading } = useTokenPrices(tokens);
+
+  const [token1, setToken1] = useState<Token | null>(null);
+  const [token2, setToken2] = useState<Token | null>(null);
+  const [amount1, setAmount1] = useState<string | undefined>("1");
+  const [amount2, setAmount2] = useState<string | undefined>();
   const { toast } = useToast();
+
+  const enrichedTokens = useMemo(() => {
+    return tokens.map((token) => ({
+      ...token,
+      balance: balances[token.symbol] || "0",
+      price: prices[token.symbol] || 0,
+    }));
+  }, [tokens, balances, prices]);
+
+  useEffect(() => {
+    if (enrichedTokens.length > 0 && !token1) {
+      setToken1(enrichedTokens[0]);
+      setToken2(enrichedTokens[1]);
+    }
+  }, [enrichedTokens]);
 
   const addLiquid = async () => {
     if (!account) {
@@ -72,7 +79,6 @@ export default function AddLiquidityUI() {
     );
 
     if (!params) return;
-    const amount1 = 1;
 
     const amount2 = estimateLiquidToAdd(
       `${amount1}`,
@@ -134,6 +140,8 @@ export default function AddLiquidityUI() {
     }
 
     setAmount1(value);
+
+    if (!token1 || !token2) return;
     const calculatedAmount = (
       (Number(value) * token1.price) /
       token2.price
@@ -150,6 +158,8 @@ export default function AddLiquidityUI() {
     }
 
     setAmount2(value);
+
+    if (!token1 || !token2) return;
     const calculatedAmount = (
       (Number(value) * token2.price) /
       token1.price
@@ -168,7 +178,7 @@ export default function AddLiquidityUI() {
           <div className="flex justify-between items-center">
             <span className="text-sm font-medium">First Token</span>
             <span className="text-sm text-muted-foreground">
-              Balance: {token1.balance} {token1.symbol}
+              Balance: {token1?.balance || "0"} {token1?.symbol || ""}
             </span>
           </div>
 
@@ -176,7 +186,7 @@ export default function AddLiquidityUI() {
             <TokenSelector
               selectedToken={token1}
               onSelectToken={setToken1}
-              tokens={tokens.filter((t) => t.id !== token2.id)}
+              tokens={tokens.filter((t) => t.id !== token2?.id)}
             />
             <Input
               type="number"
@@ -200,7 +210,7 @@ export default function AddLiquidityUI() {
           <div className="flex justify-between items-center">
             <span className="text-sm font-medium">Second Token</span>
             <span className="text-sm text-muted-foreground">
-              Balance: {token2.balance} {token2.symbol}
+              Balance: {token2?.balance} {token2?.symbol}
             </span>
           </div>
 
@@ -208,7 +218,7 @@ export default function AddLiquidityUI() {
             <TokenSelector
               selectedToken={token2}
               onSelectToken={setToken2}
-              tokens={tokens.filter((t) => t.id !== token1.id)}
+              tokens={tokens.filter((t) => t.id !== token1?.id)}
             />
             <Input
               type="number"
@@ -227,8 +237,11 @@ export default function AddLiquidityUI() {
               <span>Price Ratio</span>
             </div>
             <span>
-              1 {token1.symbol} = {(token1.price / token2.price).toFixed(6)}{" "}
-              {token2.symbol}
+              1 {token1?.symbol} ={" "}
+              {token1 && token2
+                ? (token1.price / token2.price).toFixed(6)
+                : "0"}{" "}
+              {token2?.symbol}
             </span>
           </div>
 

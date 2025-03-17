@@ -58,10 +58,8 @@ export default function RemoveLiquidityUI() {
       throw new Error("Wallet not connected");
     }
 
-    const amount = "0.005";
-
     const removeParams = await getRemoveLiquidParams(
-      convertAmountFromHumanReadableToOnChain(+amount, 8).toString(),
+      convertAmountFromHumanReadableToOnChain(+lpAmount, 8).toString(),
       "0",
       "0",
       "0x18394ec9e2a191e2470612a57547624b12254c9fbb552acaff6750237491d644::MAHA::MAHA",
