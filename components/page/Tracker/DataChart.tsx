@@ -10,7 +10,7 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from "recharts";
-import { DataChartProps } from "@/types/interface";
+import { DataChartProps } from "../../../types/interface";
 
 export const DataChart = ({
   data,
@@ -72,7 +72,8 @@ export const DataChart = ({
               tickLine={false}
               axisLine={false}
               tick={{ fontSize: 12 }}
-              tickFormatter={(value) => {
+              tickFormatter={(value, index) => {
+                if (index % 4 !== 0) return "";
                 const date = new Date(value);
                 return date.toLocaleDateString("en-US", {
                   month: "short",
@@ -81,14 +82,14 @@ export const DataChart = ({
               }}
               stroke="#fff"
             />
-            <YAxis
+            {/* <YAxis
               tickLine={false}
               axisLine={false}
               tick={{ fontSize: 12 }}
               tickFormatter={formatYAxis}
               width={40}
               stroke="#fff"
-            />
+            /> */}
             <Tooltip
               formatter={(value: number) => [`${value.toFixed(6)}`, "Value"]}
               labelFormatter={(label) => {
@@ -103,6 +104,7 @@ export const DataChart = ({
                 borderRadius: 10,
                 border: "1px solid rgba(255,255,255,0.1)",
                 color: "#000",
+                fontSize: "14px",
               }}
             />
             <Line
@@ -145,7 +147,8 @@ export const DataChart = ({
               tickLine={false}
               axisLine={false}
               tick={{ fontSize: 12 }}
-              tickFormatter={(value) => {
+              tickFormatter={(value, index) => {
+                if (index % 4 !== 0) return "";
                 const date = new Date(value);
                 return date.toLocaleDateString("en-US", {
                   month: "short",
@@ -154,14 +157,14 @@ export const DataChart = ({
               }}
               stroke="#fff"
             />
-            <YAxis
+            {/* <YAxis
               tickLine={false}
               axisLine={false}
               tick={{ fontSize: 12 }}
               tickFormatter={formatYAxis}
               width={40}
               stroke="#fff"
-            />
+            /> */}
             <Tooltip
               formatter={(value: number) => [
                 `${value.toLocaleString()}`,
@@ -182,6 +185,7 @@ export const DataChart = ({
                 borderRadius: 10,
                 border: "1px solid rgba(255,255,255,0.1)",
                 color: "#00a2ff",
+                fontSize: "14px",
               }}
             />
             <Bar

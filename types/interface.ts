@@ -98,6 +98,33 @@ export interface TokenInfoSui {
   website: string;
 }
 
+export interface TokenMoveFunInfo {
+  address: string;
+  type: string;
+  name: string;
+  symbol: string;
+  description: string;
+  image: string;
+  creator: string;
+  socials: {
+    telegram: string;
+    twitter: string;
+    website: string;
+  };
+  marketData: {
+    marketCap: number;
+    tokenPriceUsd: number;
+    totalVolumeUsd: number;
+    liquidityUsd: number;
+  };
+  bondingProgress: number;
+  createdAt: string;
+  updatedAt: string;
+  isMigrated: boolean;
+  migrationInfo: string | null;
+  pool_url: string;
+}
+
 export interface TradeInfo {
   side: string;
   count: string;

@@ -18,7 +18,7 @@ export const PriceFormatter: React.FC<PriceFormatterProps> = ({
         mainPart: "0",
       };
     }
-    if (price < 1e-5) {
+    if (price < 1e-3) {
       const priceString = formatTokenPrice(price, {
         showCurrencySymbol: false,
       });

@@ -15,7 +15,11 @@ import { useContext, useEffect, useState } from "react";
 import GlobalContext from "../../../context/store";
 import { Progress } from "../../ui/Progress";
 import TabDetail from "./TabDetail";
-import { formatTokenPrice, isTokenInfo } from "../../../types/helper";
+import {
+  formatTokenPrice,
+  isMovefunTokenInfo,
+  isTokenInfo,
+} from "../../../types/helper";
 import { PriceFormatter } from "../PriceFormatter";
 import TokenSwap from "./Swap";
 import axios from "axios";
@@ -66,7 +70,9 @@ export default function Detail() {
           <div className="flex items-center space-x-2">
             <Image
               src={
-                selectedToken && isTokenInfo(selectedToken)
+                selectedToken &&
+                (isTokenInfo(selectedToken) ||
+                  isMovefunTokenInfo(selectedToken))
                   ? selectedToken.image
                   : selectedToken?.token_metadata.iconUrl || ""
               }
@@ -77,9 +83,13 @@ export default function Detail() {
             />
             <div>
               <h3 className="font-bold">
-                {selectedToken && isTokenInfo(selectedToken)
-                  ? selectedToken.tickerSymbol
-                  : selectedToken?.token_metadata.symbol}
+                {selectedToken
+                  ? isTokenInfo(selectedToken)
+                    ? selectedToken.tickerSymbol
+                    : isMovefunTokenInfo(selectedToken)
+                    ? selectedToken.symbol
+                    : selectedToken.token_metadata.symbol
+                  : ""}
               </h3>
               <p className="text-sm text-muted-foreground">
                 {selectedToken?.name}
@@ -88,9 +98,13 @@ export default function Detail() {
           </div>
           <Link
             href={
-              selectedToken && isTokenInfo(selectedToken)
-                ? selectedToken.pool_url
-                : selectedToken?.website || "#"
+              selectedToken
+                ? isTokenInfo(selectedToken)
+                  ? selectedToken.pool_url
+                  : isMovefunTokenInfo(selectedToken)
+                  ? selectedToken.socials.website
+                  : selectedToken.website
+                : "#"
             }
             target="_blank"
             className="text-blue-500 hover:text-blue-600"
@@ -105,28 +119,51 @@ export default function Detail() {
               <div className="text-sm text-muted-foreground">PRICE USD</div>
               <div className="text-base font-bold">
                 $
-                {selectedToken && isTokenInfo(selectedToken) ? (
-                  <PriceFormatter price={selectedToken.aptosUSDPrice || 0} />
+                {selectedToken ? (
+                  isTokenInfo(selectedToken) ? (
+                    <PriceFormatter price={selectedToken.aptosUSDPrice || 0} />
+                  ) : isMovefunTokenInfo(selectedToken) ? (
+                    <PriceFormatter
+                      price={selectedToken.marketData.tokenPriceUsd || 0}
+                    />
+                  ) : (
+                    <PriceFormatter
+                      price={selectedToken?.token_price_usd || 0}
+                    />
+                  )
                 ) : (
-                  <PriceFormatter price={selectedToken?.token_price_usd || 0} />
+                  0
                 )}
               </div>
             </div>
             <div>
               <div className="text-sm text-muted-foreground">PRICE</div>
               <div className="text-base font-bold">
-                {selectedToken && isTokenInfo(selectedToken) ? (
-                  <>
-                    <PriceFormatter price={selectedToken.aptosUSDPrice || 0} />
-                    MOV
-                  </>
+                {selectedToken ? (
+                  isTokenInfo(selectedToken) ? (
+                    <>
+                      <PriceFormatter
+                        price={selectedToken.aptosUSDPrice || 0}
+                      />
+                      MOV
+                    </>
+                  ) : isMovefunTokenInfo(selectedToken) ? (
+                    <>
+                      <PriceFormatter
+                        price={selectedToken?.marketData.tokenPriceUsd || 0}
+                      />
+                      MOV
+                    </>
+                  ) : (
+                    <>
+                      <PriceFormatter
+                        price={selectedToken?.token_price_sui || 0}
+                      />
+                      SUI
+                    </>
+                  )
                 ) : (
-                  <>
-                    <PriceFormatter
-                      price={selectedToken?.token_price_sui || 0}
-                    />
-                    SUI
-                  </>
+                  0
                 )}
               </div>
             </div>
@@ -145,9 +182,13 @@ export default function Detail() {
               <div className="text-sm text-muted-foreground">MKT CAP</div>
               <div className="font-bold">
                 $
-                {selectedToken && isTokenInfo(selectedToken)
-                  ? formatVolume(selectedToken.marketCapUSD || 0)
-                  : formatVolume(selectedToken?.market_cap_usd || 0)}
+                {selectedToken
+                  ? isTokenInfo(selectedToken)
+                    ? formatVolume(selectedToken.marketCapUSD || 0)
+                    : isMovefunTokenInfo(selectedToken)
+                    ? formatVolume(selectedToken.marketData.marketCap || 0)
+                    : formatVolume(selectedToken.market_cap_usd || 0)
+                  : 0}
               </div>
             </div>
           </div>

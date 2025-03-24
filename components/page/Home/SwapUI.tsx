@@ -21,6 +21,7 @@ import {
 import {
   aptosClient,
   getBalance,
+  getSdk,
   getSwapParams,
   TESTNET_SWAP_CONTRACT_ADDRESS,
 } from "../../warpgate/index";
@@ -65,11 +66,26 @@ export default function SwapUI() {
     }));
   }, [tokens, balances, prices]);
 
+  const getTokenInfo = async () => {
+    const sdk = getSdk();
+    const tokenInfo = await sdk.getTokenInfo(
+      "0x2d1479ec4dbbe6f45e068fb767e761f05fab2838954e0c6b8ea87e94ea089abb::NIGHTLY::NIGHTLY"
+    );
+    console.log("Token info:", tokenInfo);
+
+    const poolState = await sdk.fetchPoolState(
+      "0x2d1479ec4dbbe6f45e068fb767e761f05fab2838954e0c6b8ea87e94ea089abb::NIGHTLY::NIGHTLY"
+    );
+    console.log("Pool state:", poolState);
+  };
+
   useEffect(() => {
     if (enrichedTokens.length > 0 && !fromToken) {
       setFromToken(enrichedTokens[0]);
       setToToken(enrichedTokens[1]);
     }
+
+    getTokenInfo();
   }, [enrichedTokens]);
 
   // Calculate the to amount based on price

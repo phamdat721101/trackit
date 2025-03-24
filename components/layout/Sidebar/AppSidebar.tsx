@@ -40,6 +40,7 @@ import {
   MessageSquareMoreIcon,
   TrophyIcon,
   CpuIcon,
+  MessageCircle,
 } from "lucide-react";
 import { NavMain } from "../Sidebar/NavMain";
 import { NavUser } from "../Sidebar/nav-user";
@@ -609,6 +610,12 @@ const mainNav = [
     name: "Tracker",
     url: "/tracker",
     content: "Professional analysis tools for tokens.",
+  },
+  {
+    icon: <MessageCircle />,
+    name: "Chat",
+    url: "/chat",
+    content: "Chat bot.",
   },
 ];
 

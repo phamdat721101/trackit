@@ -7,8 +7,8 @@ import { Button } from "../../ui/Button";
 import { Input } from "../../ui/Input";
 import { Card } from "../../ui/Card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../ui/tabs";
-import { TokenInfo, TokenInfoSui } from "../../../types/interface";
-import { isTokenInfo } from "../../../types/helper";
+import { TokenInfo, TokenInfoSui, TokenMoveFunInfo } from "../../../types/interface";
+import { isMovefunTokenInfo, isTokenInfo } from "../../../types/helper";
 import {
   Coin,
   ChainId,
@@ -43,7 +43,7 @@ interface TokenData {
 }
 
 interface SwapProps {
-  token?: TokenInfo | TokenInfoSui | null;
+  token?: TokenInfo | TokenInfoSui | TokenMoveFunInfo | null;
 }
 
 export default function TokenSwap({ token }: SwapProps) {
@@ -55,12 +55,35 @@ export default function TokenSwap({ token }: SwapProps) {
   const { toast } = useToast();
 
   useEffect(() => {
-    if (token && isTokenInfo(token)) {
+    if (!token) return;
+    if (isTokenInfo(token)) {
       const newTokenData: TokenData = {
         address: token.mintAddr,
         symbol: token.tickerSymbol,
         name: token.name,
         logo: token.image,
+        amount: "0",
+        quickAmounts: [10, 20, 25, 50, 75, 100],
+      };
+      setSelectedToken(newTokenData);
+    }
+    if (isMovefunTokenInfo(token)) {
+      const newTokenData: TokenData = {
+        address: token.address,
+        symbol: token.symbol,
+        name: token.name,
+        logo: token.image,
+        amount: "0",
+        quickAmounts: [10, 20, 25, 50, 75, 100],
+      };
+      setSelectedToken(newTokenData);
+    }
+    if (!(isTokenInfo(token) || isMovefunTokenInfo(token))) {
+      const newTokenData: TokenData = {
+        address: token.token_address,
+        symbol: token.symbol,
+        name: token.name,
+        logo: token.token_metadata.iconUrl,
         amount: "0",
         quickAmounts: [10, 20, 25, 50, 75, 100],
       };

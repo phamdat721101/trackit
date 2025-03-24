@@ -19,6 +19,7 @@ import {
   CurrencyAmount,
   DEFAULT_FEE,
 } from "warpgate-swap-sdk";
+import { TokenSDK } from "warpgate-fun-sdk";
 
 // Enum to track pair states
 export enum PairState {
@@ -26,6 +27,12 @@ export enum PairState {
   NOT_EXISTS,
   EXISTS,
   INVALID,
+}
+
+// Initialize SDK
+const sdk = new TokenSDK();
+export function getSdk() {
+  return sdk;
 }
 
 export const TESTNET_SWAP_CONTRACT_ADDRESS =

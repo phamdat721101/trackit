@@ -37,11 +37,13 @@ import {
   PricePredictionData,
   TokenInfo,
   TokenInfoSui,
+  TokenMoveFunInfo,
 } from "../../../types/interface";
 import {
   formatAddress,
   formatTokenPrice,
   formatVolume,
+  isMovefunTokenInfo,
   isTokenInfo,
 } from "../../../types/helper";
 import { format, formatDistanceToNowStrict } from "date-fns";
@@ -62,9 +64,16 @@ import PricePredictionModal from "./PricePrediction";
 import { PriceFormatter } from "../PriceFormatter";
 import Link from "next/link";
 
-export default function CryptoTable() {
+interface CryptoTableProps {
+  dex?: string;
+}
+
+export default function CryptoTable({ dex }: CryptoTableProps) {
   const { setSelectedToken, selectedChain } = useContext(GlobalContext);
   const [tokenInfoList, setTokenInfoList] = useState<TokenInfo[]>([]);
+  const [tokenMovefunList, setTokenMovefunList] = useState<TokenMoveFunInfo[]>(
+    []
+  );
   const [tokenInfoSuiList, setTokenInfoSuiList] = useState<TokenInfoSui[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -78,22 +87,29 @@ export default function CryptoTable() {
   const [hasMore, setHasMore] = useState(true);
   const [pricePrediction, setPricePrediction] =
     useState<PricePredictionData | null>(null);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
   const itemsPerPage = 10;
 
-  const clickHandler = (token: TokenInfo | TokenInfoSui) => {
+  const clickHandler = (token: TokenInfo | TokenInfoSui | TokenMoveFunInfo) => {
     setSelectedToken(token);
     if (isTokenInfo(token)) {
       router.push(`/token/${token.mintAddr}`);
+    } else if (isMovefunTokenInfo(token)) {
+      router.push(`/token/${token.address}`);
     } else {
       router.push(`/token/${token.token_address}`);
     }
   };
 
-  const copyAddress = async (token: TokenInfo | TokenInfoSui) => {
+  const copyAddress = async (
+    token: TokenInfo | TokenInfoSui | TokenMoveFunInfo
+  ) => {
     setSelectedToken(token);
     try {
       if (isTokenInfo(token)) {
         await navigator.clipboard.writeText(token.mintAddr);
+      } else if (isMovefunTokenInfo(token)) {
+        await navigator.clipboard.writeText(token.address);
       } else {
         await navigator.clipboard.writeText(token.token_address);
       }
@@ -161,9 +177,13 @@ export default function CryptoTable() {
   const fetchTokenInfoList = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_TRACKIT_API_HOST}/token/list?limit=${itemsPerPage}&offset=${currentPage}&chain=${selectedChain}`
-      );
+      let url: string;
+      if (selectedChain === "movement" && dex === "Move.Fun") {
+        url = `${process.env.NEXT_PUBLIC_TRACKIT_API_HOST}/move_fun/list`;
+      } else {
+        url = `${process.env.NEXT_PUBLIC_TRACKIT_API_HOST}/token/list?limit=${itemsPerPage}&offset=${currentPage}&chain=${selectedChain}`;
+      }
+      const response = await axios.get(url);
 
       if (response.status === 200) {
         if (selectedChain === "sui") {
@@ -171,9 +191,14 @@ export default function CryptoTable() {
           setTokenInfoSuiList((prev) => [...prev, ...data]);
           setCurrentPage((prev) => prev + 1);
         } else {
-          const data: TokenInfo[] = response.data;
-          setTokenInfoList((prev) => [...prev, ...data]);
-          setCurrentPage((prev) => prev + 1);
+          if (dex === "Move.Fun") {
+            const data: TokenMoveFunInfo[] = response.data;
+            setTokenMovefunList((prev) => [...prev, ...data]);
+          } else {
+            const data: TokenInfo[] = response.data;
+            setTokenInfoList((prev) => [...prev, ...data]);
+            setCurrentPage((prev) => prev + 1);
+          }
         }
       }
     } catch (err) {
@@ -184,6 +209,11 @@ export default function CryptoTable() {
   };
 
   useEffect(() => {
+    setTokenInfoList([]);
+    setTokenInfoSuiList([]);
+    setTokenMovefunList([]);
+    setCurrentPage(1);
+
     fetchTokenInfoList();
   }, [selectedChain]);
 
@@ -247,246 +277,468 @@ export default function CryptoTable() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {selectedChain !== "sui" &&
-                    tokenInfoList.map((token: TokenInfo, index) => {
-                      return (
-                        <TableRow
-                          key={index}
-                          className="hover:bg-blue-900 transition-colors duration-150 group"
-                          onClick={() => clickHandler(token)}
-                        >
-                          <TableCell className="sticky left-0 z-20 bg-[#0e203f] group-hover:bg-blue-900 transition-colors duration-150">
-                            <div className="flex items-center gap-2">
-                              <Tooltip>
-                                {/* Wrap the date cell content with a Tooltip */}
-                                <TooltipTrigger asChild>
-                                  <Image
-                                    src="/dexes/warpgate.png"
-                                    alt="warpgate"
-                                    width={20}
-                                    height={20}
-                                    className="rounded-full"
-                                  />
-                                </TooltipTrigger>
-                                <TooltipContent className="p-1.5 text-xs bg-gray-50 text-gray-900">
-                                  Warpgate
-                                </TooltipContent>
-                              </Tooltip>
-
-                              {/* Token info cell content */}
+                  {selectedChain !== "sui" && dex !== "Move.Fun"
+                    ? tokenInfoList.map((token: TokenInfo, index) => {
+                        return (
+                          <TableRow
+                            key={index}
+                            className="hover:bg-blue-900 transition-colors duration-150 group"
+                            onClick={() => clickHandler(token)}
+                          >
+                            <TableCell className="sticky left-0 z-20 bg-[#0e203f] group-hover:bg-blue-900 transition-colors duration-150">
                               <div className="flex items-center gap-2">
-                                <img
-                                  src={token.image}
-                                  alt={token.name}
-                                  className="h-8 w-8 rounded-full"
-                                />
-                                <div className="flex flex-col">
-                                  <div className="flex items-center gap-2">
-                                    <Link
-                                      href={token.pool_url}
-                                      target="_blank"
-                                      className="font-semibold text-gray-400 cursor-pointer"
-                                      onClick={(e) => e.stopPropagation()}
-                                    >
-                                      {token.tickerSymbol}
-                                    </Link>
-                                    <button
-                                      className={`${
-                                        copiedTokenIds.has(token.id)
-                                          ? "text-green-500"
-                                          : "text-gray-500"
-                                      }`}
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        copyAddress(token);
-                                      }}
-                                    >
-                                      {!copiedTokenIds.has(token.id) ? (
-                                        <CopyIcon width={12} height={12} />
-                                      ) : (
-                                        <ClipboardCheckIcon
-                                          width={12}
-                                          height={12}
-                                        />
+                                <Tooltip>
+                                  {/* Wrap the date cell content with a Tooltip */}
+                                  <TooltipTrigger asChild>
+                                    <Image
+                                      src="/dexes/warpgate.png"
+                                      alt="warpgate"
+                                      width={20}
+                                      height={20}
+                                      className="rounded-full"
+                                    />
+                                  </TooltipTrigger>
+                                  <TooltipContent className="p-1.5 text-xs bg-gray-50 text-gray-900">
+                                    Warpgate
+                                  </TooltipContent>
+                                </Tooltip>
+
+                                {/* Token info cell content */}
+                                <div className="flex items-center gap-2">
+                                  <img
+                                    src={token.image}
+                                    alt={token.name}
+                                    className="h-8 w-8 rounded-full"
+                                  />
+                                  <div className="flex flex-col">
+                                    <div className="flex items-center gap-2">
+                                      <Link
+                                        href={token.pool_url}
+                                        target="_blank"
+                                        className="font-semibold text-gray-400 cursor-pointer"
+                                        onClick={(e) => e.stopPropagation()}
+                                      >
+                                        {token.tickerSymbol}
+                                      </Link>
+                                      <button
+                                        className={`${
+                                          copiedTokenIds.has(token.id)
+                                            ? "text-green-500"
+                                            : "text-gray-500"
+                                        }`}
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          copyAddress(token);
+                                        }}
+                                      >
+                                        {!copiedTokenIds.has(token.id) ? (
+                                          <CopyIcon width={12} height={12} />
+                                        ) : (
+                                          <ClipboardCheckIcon
+                                            width={12}
+                                            height={12}
+                                          />
+                                        )}
+                                      </button>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                      <span className="text-xs text-gray-400">
+                                        {token.creator
+                                          ? formatAddress(token.creator)
+                                          : formatAddress(token.creator)}
+                                      </span>
+                                      {token.website && (
+                                        <button
+                                          className="text-gray-500"
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            window.open(
+                                              token.website ||
+                                                "https://www.movementnetwork.xyz/",
+                                              "_blank",
+                                              "noopener noreferrer"
+                                            );
+                                          }}
+                                        >
+                                          <GlobeIcon width={12} height={12} />
+                                        </button>
                                       )}
-                                    </button>
-                                  </div>
-                                  <div className="flex items-center gap-2">
-                                    <span className="text-xs text-gray-400">
-                                      {token.creator
-                                        ? formatAddress(token.creator)
-                                        : formatAddress(token.creator)}
-                                    </span>
-                                    {token.website && (
-                                      <button
-                                        className="text-gray-500"
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          window.open(
-                                            token.website ||
-                                              "https://www.movementnetwork.xyz/",
-                                            "_blank",
-                                            "noopener noreferrer"
-                                          );
-                                        }}
-                                      >
-                                        <GlobeIcon width={12} height={12} />
-                                      </button>
-                                    )}
-                                    {token.twitter && (
-                                      <button
-                                        className="text-gray-500"
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          window.open(
-                                            token.twitter || "https://x.com/",
-                                            "_blank",
-                                            "noopener noreferrer"
-                                          );
-                                        }}
-                                      >
-                                        <Twitter />
-                                      </button>
-                                    )}
-                                    {token.telegram && (
-                                      <button
-                                        className="text-gray-500"
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          window.open(
-                                            token.telegram ||
-                                              "https://telegram.org",
-                                            "_blank",
-                                            "noopener noreferrer"
-                                          );
-                                        }}
-                                      >
-                                        <SendIcon width={12} height={12} />
-                                      </button>
-                                    )}
+                                      {token.twitter && (
+                                        <button
+                                          className="text-gray-500"
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            window.open(
+                                              token.twitter || "https://x.com/",
+                                              "_blank",
+                                              "noopener noreferrer"
+                                            );
+                                          }}
+                                        >
+                                          <Twitter />
+                                        </button>
+                                      )}
+                                      {token.telegram && (
+                                        <button
+                                          className="text-gray-500"
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            window.open(
+                                              token.telegram ||
+                                                "https://telegram.org",
+                                              "_blank",
+                                              "noopener noreferrer"
+                                            );
+                                          }}
+                                        >
+                                          <SendIcon width={12} height={12} />
+                                        </button>
+                                      )}
+                                    </div>
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <Tooltip>
-                              {/* Wrap the date cell content with a Tooltip */}
-                              <TooltipTrigger asChild>
-                                {/* Use TooltipTrigger for accessibility */}
-                                <span className="text-green-400 font-medium text-[15px] cursor-pointer">
-                                  {/* Make it look clickable */}
-                                  {calculateDaysSinceCreation(token.cdate)}
+                            </TableCell>
+                            <TableCell>
+                              <Tooltip>
+                                {/* Wrap the date cell content with a Tooltip */}
+                                <TooltipTrigger asChild>
+                                  {/* Use TooltipTrigger for accessibility */}
+                                  <span className="text-green-400 font-medium text-[15px] cursor-pointer">
+                                    {/* Make it look clickable */}
+                                    {calculateDaysSinceCreation(token.cdate)}
+                                  </span>
+                                </TooltipTrigger>
+                                <TooltipContent className="bg-gray-50 text-gray-900">
+                                  {/* Tooltip content shows the original date */}
+                                  {format(new Date(token.cdate), "yyyy-MM-dd")}
+                                  {/* Format the date as you like */}
+                                </TooltipContent>
+                              </Tooltip>
+                            </TableCell>
+                            <TableCell>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <span className="flex text-gray-400 font-bold text-[15px]">
+                                    $
+                                    {token.aptosUSDPrice && (
+                                      <PriceFormatter
+                                        price={token.aptosUSDPrice}
+                                      />
+                                    )}
+                                  </span>
+                                </TooltipTrigger>
+                                <TooltipContent className="bg-gray-50 text-gray-900">
+                                  {token.aptosUSDPrice
+                                    ? formatTokenPrice(token.aptosUSDPrice)
+                                    : "N/A"}
+                                </TooltipContent>
+                              </Tooltip>
+                            </TableCell>
+                            <TableCell>
+                              <span className="text-gray-400 font-semibold text-[15px]">
+                                {token.marketCapUSD
+                                  ? formatVolume(token.marketCapUSD)
+                                  : "--"}
+                              </span>
+                            </TableCell>
+                            <TableCell>
+                              <span className="text-gray-400 font-bold text-[15px]">
+                                {+token.holderPercentage}
+                              </span>
+                            </TableCell>
+                            <TableCell>
+                              <span className="text-gray-400 font-bold text-[15px]">
+                                {token.trades
+                                  .map((trade) => +trade.count)
+                                  .reduce((acc, cur) => acc + cur, 0)}
+                              </span>
+                              <div className="text-xs">
+                                <span className="text-green-500 font-semibold">
+                                  {token.trades
+                                    .filter((trade) => trade.side === "BUY")
+                                    .map((trade) => +trade.count)
+                                    .reduce((acc, cur) => acc + cur, 0)}
+                                </span>{" "}
+                                /{" "}
+                                <span className="text-red-500 font-semibold">
+                                  {token.trades
+                                    .filter((trade) => trade.side === "SELL")
+                                    .map((trade) => +trade.count)
+                                    .reduce((acc, cur) => acc + cur, 0)}
                                 </span>
-                              </TooltipTrigger>
-                              <TooltipContent className="bg-gray-50 text-gray-900">
-                                {/* Tooltip content shows the original date */}
-                                {format(new Date(token.cdate), "yyyy-MM-dd")}
-                                {/* Format the date as you like */}
-                              </TooltipContent>
-                            </Tooltip>
-                          </TableCell>
-                          <TableCell>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <span className="flex text-gray-400 font-bold text-[15px]">
-                                  $
-                                  {token.aptosUSDPrice && (
-                                    <PriceFormatter
-                                      price={token.aptosUSDPrice}
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <span className="text-sky-600 font-bold text-[15px]">
+                                $
+                                {formatVolume(
+                                  token.trades
+                                    .map((trade) => +trade.volume)
+                                    .reduce((acc, cur) => acc + cur, 0)
+                                )}
+                              </span>
+                            </TableCell>
+                            <TableCell>
+                              <span className="text-sky-600 font-bold text-[15px]">
+                                {token.bondinCurvepercentage.toFixed(2)}%
+                              </span>
+                            </TableCell>
+                            <TableCell className="flex items-center gap-3">
+                              <Button
+                                size="sm"
+                                onClick={() => clickHandler(token)}
+                                className="px-5 flex items-center bg-transparent hover:bg-bluesky text-[#8899A8] hover:text-gray-50 border border-bluesky"
+                              >
+                                <Image
+                                  src="/flash.png"
+                                  alt="flash"
+                                  width={20}
+                                  height={20}
+                                />
+                                <span className="text-[15px] font-medium">
+                                  Buy
+                                </span>
+                              </Button>
+                              <Button
+                                size="sm"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  predictionHandler(
+                                    token.name,
+                                    token.tickerSymbol
+                                  );
+                                }}
+                                className="px-2.5 bg-transparent hover:bg-bluesky text-yellow-400 border border-bluesky rounded-full"
+                              >
+                                <SparklesIcon />
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })
+                    : tokenMovefunList.map((token: TokenMoveFunInfo, index) => {
+                        return (
+                          <TableRow
+                            key={index}
+                            className="hover:bg-blue-900 transition-colors duration-150 group"
+                            onClick={() => clickHandler(token)}
+                          >
+                            <TableCell className="sticky left-0 z-20 bg-[#0e203f] group-hover:bg-blue-900 transition-colors duration-150">
+                              <div className="flex items-center gap-2">
+                                <Tooltip>
+                                  {/* Wrap the date cell content with a Tooltip */}
+                                  <TooltipTrigger asChild>
+                                    <Image
+                                      src="/dexes/move_fun.jpg"
+                                      alt="move.fun"
+                                      width={20}
+                                      height={20}
+                                      className="rounded-full"
                                     />
+                                  </TooltipTrigger>
+                                  <TooltipContent className="p-1.5 text-xs bg-gray-50 text-gray-900">
+                                    Move.Fun
+                                  </TooltipContent>
+                                </Tooltip>
+
+                                {/* Token info cell content */}
+                                <div className="flex items-center gap-2">
+                                  <img
+                                    src={token.image}
+                                    alt={token.name}
+                                    className="h-8 w-8 rounded-full"
+                                  />
+                                  <div className="flex flex-col">
+                                    <div className="flex items-center gap-2">
+                                      <Link
+                                        href={token.pool_url}
+                                        target="_blank"
+                                        className="font-semibold text-gray-400 cursor-pointer"
+                                        onClick={(e) => e.stopPropagation()}
+                                      >
+                                        {token.symbol}
+                                      </Link>
+                                      <button
+                                        className={`${
+                                          copiedTokenIds.has(token.address)
+                                            ? "text-green-500"
+                                            : "text-gray-500"
+                                        }`}
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          copyAddress(token);
+                                        }}
+                                      >
+                                        {!copiedTokenIds.has(token.address) ? (
+                                          <CopyIcon width={12} height={12} />
+                                        ) : (
+                                          <ClipboardCheckIcon
+                                            width={12}
+                                            height={12}
+                                          />
+                                        )}
+                                      </button>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                      <span className="text-xs text-gray-400">
+                                        {token.creator
+                                          ? formatAddress(token.creator)
+                                          : formatAddress(token.creator)}
+                                      </span>
+                                      {token.socials.website && (
+                                        <button
+                                          className="text-gray-500"
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            window.open(
+                                              token.socials.website ||
+                                                "https://www.movementnetwork.xyz/",
+                                              "_blank",
+                                              "noopener noreferrer"
+                                            );
+                                          }}
+                                        >
+                                          <GlobeIcon width={12} height={12} />
+                                        </button>
+                                      )}
+                                      {token.socials.twitter && (
+                                        <button
+                                          className="text-gray-500"
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            window.open(
+                                              token.socials.twitter ||
+                                                "https://x.com/",
+                                              "_blank",
+                                              "noopener noreferrer"
+                                            );
+                                          }}
+                                        >
+                                          <Twitter />
+                                        </button>
+                                      )}
+                                      {token.socials.telegram && (
+                                        <button
+                                          className="text-gray-500"
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            window.open(
+                                              token.socials.telegram ||
+                                                "https://telegram.org",
+                                              "_blank",
+                                              "noopener noreferrer"
+                                            );
+                                          }}
+                                        >
+                                          <SendIcon width={12} height={12} />
+                                        </button>
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <Tooltip>
+                                {/* Wrap the date cell content with a Tooltip */}
+                                <TooltipTrigger asChild>
+                                  {/* Use TooltipTrigger for accessibility */}
+                                  <span className="text-green-400 font-medium text-[15px] cursor-pointer">
+                                    {/* Make it look clickable */}
+                                    {calculateDaysSinceCreation(
+                                      token.createdAt
+                                    )}
+                                  </span>
+                                </TooltipTrigger>
+                                <TooltipContent className="bg-gray-50 text-gray-900">
+                                  {/* Tooltip content shows the original date */}
+                                  {format(
+                                    new Date(token.createdAt),
+                                    "yyyy-MM-dd"
                                   )}
+                                  {/* Format the date as you like */}
+                                </TooltipContent>
+                              </Tooltip>
+                            </TableCell>
+                            <TableCell>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <span className="flex text-gray-400 font-bold text-[15px]">
+                                    $
+                                    {token.marketData.tokenPriceUsd && (
+                                      <PriceFormatter
+                                        price={token.marketData.tokenPriceUsd}
+                                      />
+                                    )}
+                                  </span>
+                                </TooltipTrigger>
+                                <TooltipContent className="bg-gray-50 text-gray-900">
+                                  {token.marketData.tokenPriceUsd
+                                    ? formatTokenPrice(
+                                        token.marketData.tokenPriceUsd
+                                      )
+                                    : "N/A"}
+                                </TooltipContent>
+                              </Tooltip>
+                            </TableCell>
+                            <TableCell>
+                              <span className="text-gray-400 font-semibold text-[15px]">
+                                {token.marketData.marketCap
+                                  ? formatVolume(token.marketData.marketCap)
+                                  : "--"}
+                              </span>
+                            </TableCell>
+                            <TableCell>
+                              <span className="text-gray-400 font-bold text-[15px]">
+                                --
+                              </span>
+                            </TableCell>
+                            <TableCell>
+                              <span className="text-gray-400 font-bold text-[15px]">
+                                --
+                              </span>
+                            </TableCell>
+                            <TableCell>
+                              <span className="text-sky-600 font-bold text-[15px]">
+                                ${formatVolume(token.marketData.totalVolumeUsd)}
+                              </span>
+                            </TableCell>
+                            <TableCell>
+                              <span className="text-sky-600 font-bold text-[15px]">
+                                {token.bondingProgress.toFixed(2)}%
+                              </span>
+                            </TableCell>
+                            <TableCell className="flex items-center gap-3">
+                              <Button
+                                size="sm"
+                                onClick={() => clickHandler(token)}
+                                className="px-5 flex items-center bg-transparent hover:bg-bluesky text-[#8899A8] hover:text-gray-50 border border-bluesky"
+                              >
+                                <Image
+                                  src="/flash.png"
+                                  alt="flash"
+                                  width={20}
+                                  height={20}
+                                />
+                                <span className="text-[15px] font-medium">
+                                  Buy
                                 </span>
-                              </TooltipTrigger>
-                              <TooltipContent className="bg-gray-50 text-gray-900">
-                                {token.aptosUSDPrice
-                                  ? formatTokenPrice(token.aptosUSDPrice)
-                                  : "N/A"}
-                              </TooltipContent>
-                            </Tooltip>
-                          </TableCell>
-                          <TableCell>
-                            <span className="text-gray-400 font-semibold text-[15px]">
-                              {token.marketCapUSD
-                                ? formatVolume(token.marketCapUSD)
-                                : "--"}
-                            </span>
-                          </TableCell>
-                          <TableCell>
-                            <span className="text-gray-400 font-bold text-[15px]">
-                              {+token.holderPercentage}
-                            </span>
-                          </TableCell>
-                          <TableCell>
-                            <span className="text-gray-400 font-bold text-[15px]">
-                              {token.trades
-                                .map((trade) => +trade.count)
-                                .reduce((acc, cur) => acc + cur, 0)}
-                            </span>
-                            <div className="text-xs">
-                              <span className="text-green-500 font-semibold">
-                                {token.trades
-                                  .filter((trade) => trade.side === "BUY")
-                                  .map((trade) => +trade.count)
-                                  .reduce((acc, cur) => acc + cur, 0)}
-                              </span>{" "}
-                              /{" "}
-                              <span className="text-red-500 font-semibold">
-                                {token.trades
-                                  .filter((trade) => trade.side === "SELL")
-                                  .map((trade) => +trade.count)
-                                  .reduce((acc, cur) => acc + cur, 0)}
-                              </span>
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <span className="text-sky-600 font-bold text-[15px]">
-                              $
-                              {formatVolume(
-                                token.trades
-                                  .map((trade) => +trade.volume)
-                                  .reduce((acc, cur) => acc + cur, 0)
-                              )}
-                            </span>
-                          </TableCell>
-                          <TableCell>
-                            <span className="text-sky-600 font-bold text-[15px]">
-                              {token.bondinCurvepercentage.toFixed(2)}%
-                            </span>
-                          </TableCell>
-                          <TableCell className="flex items-center gap-3">
-                            <Button
-                              size="sm"
-                              onClick={() => clickHandler(token)}
-                              className="px-5 flex items-center bg-transparent hover:bg-bluesky text-[#8899A8] hover:text-gray-50 border border-bluesky"
-                            >
-                              <Image
-                                src="/flash.png"
-                                alt="flash"
-                                width={20}
-                                height={20}
-                              />
-                              <span className="text-[15px] font-medium">
-                                Buy
-                              </span>
-                            </Button>
-                            <Button
-                              size="sm"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                predictionHandler(
-                                  token.name,
-                                  token.tickerSymbol
-                                );
-                              }}
-                              className="px-2.5 bg-transparent hover:bg-bluesky text-yellow-400 border border-bluesky rounded-full"
-                            >
-                              <SparklesIcon />
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })}
+                              </Button>
+                              <Button
+                                size="sm"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  predictionHandler(token.name, token.symbol);
+                                }}
+                                className="px-2.5 bg-transparent hover:bg-bluesky text-yellow-400 border border-bluesky rounded-full"
+                              >
+                                <SparklesIcon />
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
                   {selectedChain === "sui" &&
                     tokenInfoSuiList.map((token: TokenInfoSui, index) => {
                       return (
@@ -515,14 +767,14 @@ export default function CryptoTable() {
                               {/* Token info cell content */}
                               <div className="flex items-center gap-2">
                                 <img
-                                  src={token.token_metadata.iconUrl}
+                                  src={token.token_metadata?.iconUrl}
                                   alt=""
                                   className="h-8 w-8 rounded-full"
                                 />
                                 <div className="flex flex-col">
                                   <div className="flex items-center gap-2">
                                     <span className="font-semibold text-gray-400">
-                                      {token.token_metadata.symbol}
+                                      {token.token_metadata?.symbol}
                                     </span>
                                     <button
                                       className={`${
@@ -547,7 +799,8 @@ export default function CryptoTable() {
                                   </div>
                                   <div className="flex items-center gap-2">
                                     <span className="text-xs text-gray-400">
-                                      {formatAddress(token.created_by)}
+                                      {token.created_by &&
+                                        formatAddress(token.created_by)}
                                     </span>
                                     {token.website && (
                                       <button
@@ -606,15 +859,19 @@ export default function CryptoTable() {
                                 {/* Use TooltipTrigger for accessibility */}
                                 <span className="text-green-400 font-medium text-[15px] cursor-pointer">
                                   {/* Make it look clickable */}
-                                  {calculateDaysSinceCreation(token.created_at)}
+                                  {token.created_at &&
+                                    calculateDaysSinceCreation(
+                                      token.created_at
+                                    )}
                                 </span>
                               </TooltipTrigger>
                               <TooltipContent className="bg-gray-50 text-gray-900">
                                 {/* Tooltip content shows the original date */}
-                                {format(
-                                  new Date(token.created_at),
-                                  "yyyy-MM-dd"
-                                )}
+                                {token.created_at &&
+                                  format(
+                                    new Date(token.created_at),
+                                    "yyyy-MM-dd"
+                                  )}
                               </TooltipContent>
                             </Tooltip>
                           </TableCell>

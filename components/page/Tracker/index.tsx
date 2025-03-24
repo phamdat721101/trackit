@@ -225,13 +225,13 @@ export default function Page() {
         {report && (
           <div className="space-y-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="rounded-xl p-6 bg">
+              <div className="rounded-xl p-3 pb-0 sm:p-6 sm:pb-0 bg">
                 <div className="flex justify-between items-center mb-6">
                   <div className="flex items-center">
-                    <div className="bg-crypto-blue/10 p-1.5 rounded-full mr-3">
+                    <div className="bg-crypto-blue/10 p-1.5 rounded-full sm:mr-3">
                       <LineChart className="h-4 w-4 text-blue-500" />
                     </div>
-                    <h2 className="text-lg font-semibold text-white">
+                    <h2 className="sm:text-lg font-semibold text-white">
                       Price Movement
                     </h2>
                   </div>
@@ -239,20 +239,20 @@ export default function Page() {
                     <span>
                       {predicting
                         ? "Last & Next 3 Days"
-                        : `Last ${input.days} days`}
+                        : `Last ${input.days}d`}
                     </span>
                   </div>
                 </div>
                 <DataChart data={report.priceData} type="line" />
               </div>
 
-              <div className="bg rounded-xl p-6">
+              <div className="bg rounded-xl p-3 pb-0 sm:p-6 sm:pb-0">
                 <div className="flex justify-between items-center mb-6">
                   <div className="flex items-center">
-                    <div className="bg-crypto-purple/10 p-1.5 rounded-full mr-3">
+                    <div className="bg-crypto-purple/10 p-1.5 rounded-full smmr-3">
                       <SquareChartGantt className="h-4 w-4 text-green-500" />
                     </div>
-                    <h2 className="text-lg font-semibold text-white">
+                    <h2 className="sm:text-lg font-semibold text-white">
                       Transaction Volume
                     </h2>
                   </div>
@@ -260,7 +260,7 @@ export default function Page() {
                     <span>
                       {predicting
                         ? "Last & Next 3 Days"
-                        : `Last ${input.days} days`}
+                        : `Last ${input.days}d`}
                     </span>
                   </div>
                 </div>

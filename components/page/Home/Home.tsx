@@ -1,20 +1,28 @@
 "use client";
 
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Button } from "../../ui/Button";
 import CryptoTable from "./CryptoTable";
 import { FilterIcon, FilterXIcon } from "lucide-react";
 import Pools from "./Pools";
-import { useWallet } from "@razorlabs/razorkit";
+import { Card } from "../../ui/Card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../ui/tabs";
+import GlobalContext from "../../../context/store";
 
 export default function Home() {
+  const { selectedChain } = useContext(GlobalContext);
   const [isFiltered, setIsFiltered] = useState<boolean>(false);
   const [selectedTab, setSelectedTab] = useState("Token");
+  const [selectedDex, setSelectedDex] = useState("Move.Fun");
+
+  const handleTabChange = (value: string) => {
+    setSelectedDex(value);
+  };
 
   const renderComponent = () => {
     switch (selectedTab) {
       case "Token":
-        return <CryptoTable />;
+        return <CryptoTable dex={selectedDex} />;
       case "Pool":
         return <Pools />;
       default:
@@ -43,19 +51,35 @@ export default function Home() {
         </div>
 
         <div className="ml-auto flex items-center gap-4">
+          {selectedChain === "movement" && (
+            <Card className="bg-items text-white border-itemborder">
+              <Tabs
+                defaultValue="Move.Fun"
+                value={selectedDex}
+                onValueChange={handleTabChange}
+                className="w-full"
+              >
+                <TabsList className="grid grid-cols-2 p-0 text-center bg-transparent">
+                  {dexes.map((tab, index) => (
+                    <TabsTrigger
+                      key={index}
+                      value={tab}
+                      className="py-0 grid data-[state=active]:bg-itemborder data-[state=active]:text-gray-50 h-full rounded-lg data-[state=active]:rounded-none data-[state=active]:first:rounded-l-lg data-[state=active]:last:rounded-r-lg"
+                    >
+                      <span>{tab}</span>
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+              </Tabs>
+            </Card>
+          )}
           <Button
-            className="px-5 text-gray-300 bg-[#102447] hover:bg-[#005880] hover:text-current"
+            className="px-5 text-gray-300 bg-[#102447] hover:bg-[#005880] hover:text-current border border-[#1a3c78]"
             onClick={() => setIsFiltered(!isFiltered)}
           >
             {!isFiltered ? <FilterIcon /> : <FilterXIcon />}
             <span className="text-[15px]">Filter Token</span>
           </Button>
-          {/* <Button
-            variant="default"
-            className="px-5 bg-bluesky text-base font-semibold hover:bg-bluesky/80"
-          >
-            Connect
-          </Button> */}
         </div>
       </div>
       {renderComponent()}
@@ -64,3 +88,4 @@ export default function Home() {
 }
 
 const tabs = ["Token", "Pool"];
+const dexes = ["Move.Fun", "Warpgate"];

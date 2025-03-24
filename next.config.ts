@@ -22,6 +22,12 @@ const nextConfig: NextConfig = {
         port: "",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "chocolate-geographical-weasel-195.mypinata.cloud",
+        port: "",
+        pathname: "/**",
+      },
     ],
   },
 };
