@@ -102,7 +102,7 @@ export default function Detail() {
                 ? isTokenInfo(selectedToken)
                   ? selectedToken.pool_url
                   : isMovefunTokenInfo(selectedToken)
-                  ? selectedToken.socials.website
+                  ? selectedToken.pool_url
                   : selectedToken.website
                 : "#"
             }
