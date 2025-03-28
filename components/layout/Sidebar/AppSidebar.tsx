@@ -2,23 +2,7 @@
 
 import { cn } from "../../../lib/utils";
 import {
-  Link as Chain,
-  Scan,
-  PanelLeftIcon,
-  PanelLeft,
-  Settings2,
   Menu,
-  ListCheckIcon,
-  ChevronLeft,
-  ChevronRight,
-  PieChart,
-  Frame,
-  GalleryVerticalEnd,
-  AudioWaveform,
-  Command,
-  ComponentIcon,
-  CoinsIcon,
-  ScanSearchIcon,
   SlidersVerticalIcon,
   LogOutIcon,
   FlameIcon,
@@ -28,22 +12,16 @@ import {
   FileChartColumnIncreasingIcon,
   LogInIcon,
   NewspaperIcon,
-  SquareStackIcon,
   SendIcon,
-  RocketIcon,
   ViewIcon,
   ChartSplineIcon,
   FishSymbolIcon,
-  HandCoinsIcon,
   ChartCandlestickIcon,
-  RadarIcon,
   MessageSquareMoreIcon,
   TrophyIcon,
   CpuIcon,
   MessageCircle,
 } from "lucide-react";
-import { NavMain } from "../Sidebar/NavMain";
-import { NavUser } from "../Sidebar/nav-user";
 import {
   Sheet,
   SheetContent,
@@ -52,9 +30,6 @@ import {
 } from "../../ui/Sheet";
 import {
   SidebarMenuButton,
-  SidebarMenuSubButton,
-  SidebarMenuSub,
-  SidebarMenuSubItem,
   SidebarMenuItem,
   SidebarMenu,
   SidebarGroup,
@@ -69,7 +44,6 @@ import { useState } from "react";
 import { useContext } from "react";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { WalletSelector } from "../../wallet/WalletConnect";
-import { useRouter } from "next/navigation";
 import { Button } from "../../ui/Button";
 import SubscriptionDialog from "../Subscription";
 

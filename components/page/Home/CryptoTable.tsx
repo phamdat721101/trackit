@@ -215,7 +215,7 @@ export default function CryptoTable({ dex }: CryptoTableProps) {
     setCurrentPage(1);
 
     fetchTokenInfoList();
-  }, [selectedChain]);
+  }, [selectedChain, dex]);
 
   return (
     <>

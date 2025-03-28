@@ -154,12 +154,12 @@ export default function TokenSwap({ token }: SwapProps) {
   return (
     <Card className="bg-items text-white border-itemborder">
       <Tabs value={activeTab ?? ""} className="w-full">
-        <TabsList className="grid grid-cols-2 p-0 w-full h-12 rounded-lg bg-items">
+        <TabsList className="grid grid-cols-2 w-full h-12 rounded-lg bg-items">
           <TabsTrigger
             value="buy"
             onClick={() => handleTabClick("buy")}
             className={cn(
-              "h-full flex items-center gap-2 rounded-lg transition-colors text-gray-50 rounded-none rounded-l-lg border-r border-r-itemborder",
+              "h-full flex items-center gap-2 rounded-lg transition-colors text-gray-50 rounded-none rounded-l-lg",
               activeTab === "buy"
                 ? "bg-[#424242] data-[state=active]:bg-green-500/50 data-[state=active]:text-gray-50 data-[state=active]:rounded-none data-[state=active]:rounded-l-lg"
                 : "hover:bg-green-500/50 hover:rounded-none hover:rounded-l-lg"
@@ -247,38 +247,33 @@ export default function TokenSwap({ token }: SwapProps) {
             {connected ? (
               <Button
                 onClick={() => swapHandler()}
-                className={cn(
-                  "w-full h-12 text-lg font-semibold",
-                  activeTab === "buy"
-                    ? "bg-[#b4e85b] hover:bg-[#a4d54b] text-black"
-                    : "bg-[#e85b5b] hover:bg-[#d54b4b]"
-                )}
+                className="w-full h-10 text-sm font-semibold bg-transparent border border-bluesky text-bluesky hover:bg-blue-500 hover:text-white"
               >
                 <ArrowRightLeftIcon className="w-5 h-5 mr-2" />
                 SWAP
               </Button>
             ) : (
-              <Button
-                className={cn(
-                  "w-full h-12 text-lg font-semibold",
-                  activeTab === "buy"
-                    ? "bg-[#b4e85b] hover:bg-[#a4d54b] text-black"
-                    : "bg-[#e85b5b] hover:bg-[#d54b4b]"
-                )}
-              >
+              <Button className="w-full h-10 text-sm font-semibold bg-transparent border border-bluesky text-bluesky hover:bg-blue-500 hover:text-white">
                 <Wallet className="w-5 h-5 mr-2" />
                 CONNECT WALLET
               </Button>
             )}
 
             <div className="text-center text-xs text-gray-400">
-              <p>
-                You receive min. {selectedToken?.amount} {selectedToken?.symbol}
-              </p>
-              <p>Platform fee: 0.5%</p>
-              <p className="flex items-center justify-center gap-1">
-                Priority fee: 0.002 MOV
-              </p>
+              <div className="flex justify-between items-center">
+                <span>You receive min:</span>
+                <span className="text-white">
+                  {selectedToken?.amount} {selectedToken?.symbol}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span>Platform fee:</span>
+                <span className="text-white">0.5%</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span>Priority fee:</span>
+                <span className="text-white">0.002 MOV</span>
+              </div>
             </div>
           </div>
         </TabsContent>
@@ -349,37 +344,30 @@ export default function TokenSwap({ token }: SwapProps) {
             </div>
 
             {connected ? (
-              <Button
-                className={cn(
-                  "w-full h-12 text-lg font-semibold",
-                  activeTab === "buy"
-                    ? "bg-[#b4e85b] hover:bg-[#a4d54b] text-black"
-                    : "bg-[#e85b5b] hover:bg-[#d54b4b]"
-                )}
-              >
+              <Button className="w-full h-10 text-sm font-semibold bg-transparent border border-bluesky text-bluesky hover:bg-blue-500 hover:text-white">
                 <ArrowRightLeftIcon className="w-5 h-5 mr-2" />
                 SWAP
               </Button>
             ) : (
-              <Button
-                className={cn(
-                  "w-full h-12 text-lg font-semibold",
-                  activeTab === "buy"
-                    ? "bg-[#b4e85b] hover:bg-[#a4d54b] text-black"
-                    : "bg-[#e85b5b] hover:bg-[#d54b4b]"
-                )}
-              >
+              <Button className="w-full h-10 text-sm font-semibold bg-transparent border border-bluesky text-bluesky hover:bg-blue-500 hover:text-white">
                 <Wallet className="w-5 h-5 mr-2" />
                 CONNECT WALLET
               </Button>
             )}
 
             <div className="text-center text-xs text-gray-400">
-              <p>You receive min. {selectedToken?.amount} MOV</p>
-              <p>Platform fee: 0.5%</p>
-              <p className="flex items-center justify-center gap-1">
-                Priority fee: 0.002 MOV
-              </p>
+              <div className="flex justify-between items-center">
+                <span>You receive min:</span>
+                <span className="text-white">{selectedToken?.amount} MOV</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span>Platform fee:</span>
+                <span className="text-white">0.5%</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span>Priority fee:</span>
+                <span className="text-white">0.002 MOV</span>
+              </div>
             </div>
           </div>
         </TabsContent>

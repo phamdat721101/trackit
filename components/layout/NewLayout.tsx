@@ -1,23 +1,15 @@
 "use client";
 import { AppSidebar } from "../layout/Sidebar/AppSidebar";
 import SearchForm from "./SearchForm";
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "../ui/sidebar";
+import { SidebarInset, SidebarProvider } from "../ui/sidebar";
 import { Toaster } from "../ui/Toaster";
-import { ChatBox } from "./Chatbox";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import GlobalContext from "../../context/store";
 import { BellIcon, BoltIcon, UserCircleIcon } from "lucide-react";
 import { Separator } from "../ui/separator";
 import SelectChain from "./SelectChain";
 import { WalletSelector } from "../wallet/WalletConnect";
-import {
-  ConnectButton,
-  WalletProvider as RazorProvider,
-} from "@razorlabs/razorkit";
+import { WalletProvider as RazorProvider } from "@razorlabs/razorkit";
 
 const Layout = ({
   children,
@@ -62,7 +54,6 @@ const Layout = ({
               </header>
               <div className="flex-1">
                 <div className="p-4 w-full">{children}</div>
-                <ChatBox />
               </div>
             </SidebarInset>
           </main>

@@ -73,8 +73,8 @@ export default function Pools() {
   }, [selectedChain]);
 
   return (
-    <>
-      <div className="md:mx-auto flex-1 max-w-5xl overflow-hidden">
+    <div className="w-full flex justify-center">
+      <div className="flex-1 max-w-5xl overflow-hidden">
         <ScrollArea className="w-full h-full">
           <Table className="table bg">
             {isLoading && (
@@ -123,7 +123,7 @@ export default function Pools() {
                         <TableCell>
                           <Button
                             size="sm"
-                            className="px-5 flex items-center bg-transparent hover:bg-bluesky text-[#8899A8] hover:text-gray-50 border border-bluesky"
+                            className="px-5 flex items-center bg-transparent hover:bg-bluesky text-bluesky hover:text-gray-50 border border-bluesky"
                             onClick={onOpenAddLiquidity}
                           >
                             <PlusIcon />
@@ -133,7 +133,7 @@ export default function Pools() {
                         <TableCell>
                           <Button
                             size="sm"
-                            className="px-5 flex items-center bg-transparent hover:bg-bluesky text-[#8899A8] hover:text-gray-50 border border-bluesky"
+                            className="px-5 flex items-center bg-transparent hover:bg-bluesky text-bluesky hover:text-gray-50 border border-bluesky"
                             onClick={onOpenRemoveLiquidity}
                           >
                             <MinusIcon />
@@ -145,7 +145,7 @@ export default function Pools() {
                         <TableCell>
                           <Button
                             size="sm"
-                            className="px-5 flex items-center bg-transparent hover:bg-bluesky text-[#8899A8] hover:text-gray-50 border border-bluesky"
+                            className="px-5 flex items-center bg-transparent hover:bg-bluesky text-bluesky hover:text-gray-50 border border-bluesky"
                             onClick={onOpenSwap}
                           >
                             <ArrowRightLeftIcon />
@@ -266,6 +266,6 @@ export default function Pools() {
           )}
         </Button>
       )}
-    </>
+    </div>
   );
 }

@@ -1,9 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { X } from "lucide-react";
 import { Button } from "../ui/Button";
-import { Input } from "../ui/Input";
 import {
   Dialog,
   DialogContent,
@@ -11,14 +9,8 @@ import {
   DialogOverlay,
   DialogPortal,
   DialogTitle,
-  DialogClose,
 } from "../ui/dialog";
-import {
-  FormWrapper,
-  FormLabel,
-  FormInputWrapper,
-  FormInput,
-} from "../ui/form";
+import { FormWrapper, FormInputWrapper, FormInput } from "../ui/form";
 
 interface SubscriptionDialogProps {
   open: boolean;
