@@ -23,6 +23,7 @@ import {
   User,
   ArrowRightFromLine,
   UserCircleIcon,
+  Wallet2Icon,
 } from "lucide-react";
 import { useCallback, useState } from "react";
 import { Button } from "../ui/Button";
@@ -135,6 +136,28 @@ export function WalletSelector(walletSortingOptions: WalletSortingOptions) {
           <div className="flex gap-2 text-gray-400">
             <UserCircleIcon />
             <span className="md:hidden text-gray-400">Connect Wallet</span>
+          </div>
+        </button>
+      </DialogTrigger>
+      <ConnectWalletDialog close={closeDialog} {...walletSortingOptions} />
+    </Dialog>
+  );
+}
+
+export function WalletConnectButton(
+  walletSortingOptions: WalletSortingOptions
+) {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const closeDialog = useCallback(() => setIsDialogOpen(false), []);
+
+  return (
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+      <DialogTrigger asChild>
+        <button className="px-4 py-3 bg-transparent border border-bluesky text-bluesky hover:bg-blue-500 hover:text-white rounded-md">
+          <div className="flex gap-2 text-sm">
+            <Wallet2Icon width={20} height={20} />
+            <span>Connect Wallet</span>
           </div>
         </button>
       </DialogTrigger>

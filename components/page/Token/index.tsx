@@ -43,15 +43,15 @@ export default function Token() {
           </TabsList> */}
         </Tabs>
         <Tabs defaultValue="All" className="w-full">
-          <TabsList className="p-0 text-center bg-[#102447] border border-[#1a3c78] rounded-xl">
+          <TabsList className="p-0 text-center bg-transparent rounded-xl gap-1">
             {sub_tabs.map((tab, index) => (
               <TabsTrigger
                 key={index}
                 value={tab}
                 disabled={tab !== "All"}
-                className="grid data-[state=active]:bg-[#005880] data-[state=active]:text-gray-50 h-full rounded-lg data-[state=active]:rounded-none data-[state=active]:first:rounded-s-lg data-[state=active]:last:rounded-e-lg"
+                className="min-w-14 py-0 grid bg-[#102447] data-[state=active]:bg-[#005880] data-[state=active]:text-gray-50 h-9 rounded-lg data-[state=active]:rounded-none data-[state=active]:rounded-lg border border-[#1a3c78]"
               >
-                <span>{tab}</span>
+                <span className="text-xs">{tab}</span>
               </TabsTrigger>
             ))}
           </TabsList>

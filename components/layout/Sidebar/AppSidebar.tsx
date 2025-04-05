@@ -21,6 +21,7 @@ import {
   TrophyIcon,
   CpuIcon,
   MessageCircle,
+  Gamepad2Icon,
 } from "lucide-react";
 import {
   Sheet,
@@ -590,6 +591,12 @@ const mainNav = [
     name: "Chat",
     url: "/chat",
     content: "Chat bot.",
+  },
+  {
+    icon: <Gamepad2Icon />,
+    name: "Games",
+    url: "/games",
+    content: "TrackIt games",
   },
 ];
 

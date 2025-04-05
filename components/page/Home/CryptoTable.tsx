@@ -117,6 +117,8 @@ export default function CryptoTable({ dex }: CryptoTableProps) {
         const newSet = new Set(prev);
         if (isTokenInfo(token)) {
           newSet.add(token.id);
+        } else if (isMovefunTokenInfo(token)) {
+          newSet.add(token.address);
         } else {
           newSet.add(token.symbol);
         }
@@ -128,6 +130,8 @@ export default function CryptoTable({ dex }: CryptoTableProps) {
           const newSet = new Set(prev);
           if (isTokenInfo(token)) {
             newSet.delete(token.id);
+          } else if (isMovefunTokenInfo(token)) {
+            newSet.delete(token.address);
           } else {
             newSet.delete(token.symbol);
           }

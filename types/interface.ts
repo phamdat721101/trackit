@@ -338,3 +338,23 @@ export interface DataChartProps {
   type: "line" | "bar";
   color?: string;
 }
+
+interface NftMetadata {
+  name: string;
+  image: string;
+  attributes: {
+    date: string;
+    score: number;
+  };
+  description: string;
+}
+
+export interface TetrisScore {
+  id: number;
+  email: string;
+  move_wallet: string;
+  score: number;
+  nft_metadata: NftMetadata;
+  created_at: string;
+  updated_at: string;
+}
