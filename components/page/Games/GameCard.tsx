@@ -32,10 +32,10 @@ export default function GameCard({
             height={300}
             className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
           />
-          <div className="absolute top-3 left-3 bg-black/50 backdrop-blur-sm rounded-full px-3 py-1 flex items-center gap-1.5">
+          {/* <div className="absolute top-3 left-3 bg-black/50 backdrop-blur-sm rounded-full px-3 py-1 flex items-center gap-1.5">
             <Eye className="w-4 h-4 text-yellow-300" />
             <span className="text-sm font-medium">{players} Playing</span>
-          </div>
+          </div> */}
         </div>
         <div
           className={`${bgColor} p-6 flex-1 flex flex-col transition-colors duration-300 group-hover:brightness-110`}

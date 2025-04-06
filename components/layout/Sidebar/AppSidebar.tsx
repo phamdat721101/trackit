@@ -177,7 +177,7 @@ function MobileSidebarContent() {
             />
           ))}
         </SidebarGroup>
-        <SidebarSeparator className="bg-gray-500" />
+        {/* <SidebarSeparator className="bg-gray-500" />
         <SidebarGroup>
           <SidebarMenu className="gap-4">
             {secondNav.map((nav) => (
@@ -253,7 +253,7 @@ function MobileSidebarContent() {
               </SidebarMenuItem>
             ))}
           </SidebarMenu>
-        </SidebarGroup>
+        </SidebarGroup> */}
       </div>
 
       <div className="pt-4 mx-auto">
@@ -330,7 +330,7 @@ function DesktopSidebarContent({ isCollapsed }: { isCollapsed: boolean }) {
             ))}
           </SidebarMenu>
         </SidebarGroup>
-        <SidebarSeparator className="bg-gray-500" />
+        {/* <SidebarSeparator className="bg-gray-500" />
         <SidebarGroup>
           <SidebarMenu className="gap-4">
             {secondNav.map((nav) => (
@@ -406,7 +406,7 @@ function DesktopSidebarContent({ isCollapsed }: { isCollapsed: boolean }) {
               </SidebarMenuItem>
             ))}
           </SidebarMenu>
-        </SidebarGroup>
+        </SidebarGroup> */}
       </div>
 
       <div className="pt-4 mx-auto">

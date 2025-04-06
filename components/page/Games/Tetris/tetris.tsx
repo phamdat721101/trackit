@@ -1,7 +1,8 @@
 "use client";
-import { WalletConnectButton } from "../../../../components/wallet/WalletConnect";
+import { WalletConnectButton } from "../../../wallet/WalletConnect";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import React, { useState, useEffect, useCallback, useRef } from "react";
+import { AccountAddress } from "@aptos-labs/ts-sdk";
 
 // Define types for our tetromino pieces
 type TetrominoType = "I" | "J" | "L" | "O" | "S" | "T" | "Z";
@@ -136,20 +137,39 @@ const Tetris: React.FC = () => {
   const [tickRate, setTickRate] = useState(TICK_RATE_MS);
   const [nextTetromino, setNextTetromino] = useState<Tetromino | null>(null);
   const [linesCleared, setLinesCleared] = useState(0);
+  const [currentAddress, setCurrentAddress] = useState("");
+  const [walletAddress, setWalletAddress] = useState("");
+  const [addressError, setAddressError] = useState<string | null>(null);
   const { account, connected } = useWallet();
 
   // Initialize game on client-side only
   useEffect(() => {
-    // Initialize the game state only on the client
-    setBoard(createEmptyBoard());
-    const firstTetromino = randomTetromino();
-    const secondTetromino = randomTetromino();
-    setCurrentTetromino(firstTetromino);
-    setNextTetromino(secondTetromino);
-    setPosition(getInitialPosition(firstTetromino.type));
-    connected && setInitialized(true);
-    isMounted.current = true;
-  }, [connected]);
+    if (!isMounted.current) {
+      // Initialize the game state only on the client
+      setBoard(createEmptyBoard());
+      const firstTetromino = randomTetromino();
+      const secondTetromino = randomTetromino();
+      setCurrentTetromino(firstTetromino);
+      setNextTetromino(secondTetromino);
+      setPosition(getInitialPosition(firstTetromino.type));
+
+      // Mark as mounted
+      isMounted.current = true;
+    }
+
+    // Check if we're authenticated, either via wallet connection or manual address entry
+    const isAuthenticated = connected || currentAddress !== "";
+    if (isAuthenticated) {
+      setInitialized(true);
+    }
+  }, [connected, currentAddress]);
+
+  // Update currentAddress when wallet connects
+  useEffect(() => {
+    if (connected && account) {
+      setCurrentAddress(account.address);
+    }
+  }, [connected, account]);
 
   // Check if the current position is valid
   const isPositionValid = useCallback(
@@ -538,7 +558,7 @@ const Tetris: React.FC = () => {
         },
       };
 
-      console.log(content);
+      // console.log(content);
 
       try {
         const response = await fetch(url, {
@@ -558,13 +578,15 @@ const Tetris: React.FC = () => {
         console.log("Failed to save score. Try again!");
       }
     };
-    if (gameOver && account) {
-      saveTetrisScore(account?.address, score);
+    if (gameOver) {
+      if (currentAddress) {
+        saveTetrisScore(currentAddress, score);
+      }
     }
-  }, [gameOver]);
+  }, [gameOver, currentAddress, score]);
 
   // Show loading state until client-side initialization is complete
-  if (!initialized && connected) {
+  if (currentAddress && !initialized) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg text-white rounded-lg">
         <h1 className="text-4xl font-bold mb-4">Tetris</h1>
@@ -573,13 +595,60 @@ const Tetris: React.FC = () => {
     );
   }
 
-  if (!connected) {
+  // Authentication screen - show both options
+  if (!initialized) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg text-white rounded-lg">
         <h1 className="text-4xl font-bold mb-4 text-gray-200">
-          Connect your wallet first!
+          Connect to play Tetris
         </h1>
-        <WalletConnectButton />
+
+        <div className="flex flex-col items-center w-full max-w-md gap-4">
+          {/* Wallet Connection Option */}
+          <div className="w-full text-center">
+            <WalletConnectButton />
+          </div>
+
+          <div className="flex items-center w-full my-2">
+            <div className="flex-1 border-t border-gray-600"></div>
+            <span className="px-4 text-gray-400">OR</span>
+            <div className="flex-1 border-t border-gray-600"></div>
+          </div>
+
+          {/* Manual Address Entry Option */}
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (isValidAptosAddress(walletAddress)) {
+                setCurrentAddress(walletAddress);
+                setAddressError(null);
+              } else {
+                setAddressError("Invalid Aptos address");
+              }
+            }}
+            className="w-full"
+          >
+            <input
+              type="text"
+              value={walletAddress}
+              onChange={(e) => {
+                setWalletAddress(e.currentTarget.value);
+                setAddressError(null);
+              }}
+              placeholder="Enter your Aptos wallet address"
+              className="w-full p-2.5 rounded-lg bg-[#102447] focus:outline-none text-sm text-gray-50 border border-bluesky mb-2"
+            />
+            {addressError && (
+              <p className="text-red-500 mb-2">{addressError}</p>
+            )}
+            <button
+              type="submit"
+              className="w-full p-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white"
+            >
+              Start Game
+            </button>
+          </form>
+        </div>
       </div>
     );
   }
@@ -739,3 +808,12 @@ const Tetris: React.FC = () => {
 };
 
 export default Tetris;
+
+const isValidAptosAddress = (address: string) => {
+  try {
+    AccountAddress.fromString(address);
+    return true;
+  } catch (error) {
+    return false;
+  }
+};

@@ -14,8 +14,8 @@ export const formatVolume = (volume: number): string => {
   return volume.toFixed(2).toString();
 };
 
-export const formatAddress = (address: string): string => {
-  return `${address.slice(0, 6)}...${address.slice(-4)}`;
+export const formatAddress = (address: string, start = 6, end = -4): string => {
+  return `${address.slice(0, start)}...${address.slice(end)}`;
 };
 
 interface PriceFormatterOptions {
