@@ -3,6 +3,7 @@ import { WalletConnectButton } from "../../../wallet/WalletConnect";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { AccountAddress } from "@aptos-labs/ts-sdk";
+import MobileControls from "../DraggableBtn";
 
 // Define types for our tetromino pieces
 type TetrominoType = "I" | "J" | "L" | "O" | "S" | "T" | "Z";
@@ -599,7 +600,7 @@ const Tetris: React.FC = () => {
   if (!initialized) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg text-white rounded-lg">
-        <h1 className="text-4xl font-bold mb-4 text-gray-200">
+        <h1 className="text-center text-4xl font-bold mb-4 text-gray-200">
           Connect to play Tetris
         </h1>
 
@@ -671,7 +672,7 @@ const Tetris: React.FC = () => {
     <div className="flex flex-col items-center text-white">
       <h1 className="text-4xl font-bold mb-4">Tetris</h1>
 
-      <div className="flex flex-col lg:flex-row gap-8">
+      <div className="flex flex-col lg:flex-row gap-2 md:gap-8">
         <div className="relative">
           {/* Main game board */}
           <div
@@ -713,6 +714,18 @@ const Tetris: React.FC = () => {
               <h2 className="text-3xl font-bold">Paused</h2>
             </div>
           )}
+
+          {/* Buttons for mobile */}
+          <MobileControls
+            moveHorizontal={moveHorizontal}
+            moveDown={moveDown}
+            rotate={rotate}
+            hardDrop={hardDrop}
+            isPaused={isPaused}
+            setIsPaused={setIsPaused}
+            gameOver={gameOver}
+            className="md:hidden"
+          />
         </div>
 
         <div className="flex flex-col justify-between gap-2">
@@ -759,8 +772,8 @@ const Tetris: React.FC = () => {
             </ul>
           </div>
 
-          {/* Buttons for mobile */}
-          <div className="grid grid-cols-3 gap-2">
+          {/* Buttons for desktop */}
+          <div className="hidden md:grid grid-cols-3 gap-2">
             <button
               className="min-w-20 bg p-2 rounded border border-itemborder hover:bg-blue-500"
               onClick={() => moveHorizontal(-1)}
