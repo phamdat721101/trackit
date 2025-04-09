@@ -50,6 +50,11 @@ const MobileControls: React.FC<MobileControlsProps> = ({
     }
 
     setIsDragging(true);
+
+    // Remove transition during dragging for immediate response
+    if (buttonGroupRef.current) {
+      buttonGroupRef.current.style.transition = "none";
+    }
   };
 
   // Handle the dragging movement
@@ -70,7 +75,7 @@ const MobileControls: React.FC<MobileControlsProps> = ({
     const containerRect = containerRef.current.getBoundingClientRect();
     const buttonRect = buttonGroupRef.current.getBoundingClientRect();
 
-    // Calculate new position while keeping buttons within parent boundaries
+    // Calculate new position
     let newX = clientX - containerRect.left - dragOffset.x;
     let newY = clientY - containerRect.top - dragOffset.y;
 
@@ -87,6 +92,12 @@ const MobileControls: React.FC<MobileControlsProps> = ({
   // Handle the end of dragging
   const handleDragEnd = () => {
     setIsDragging(false);
+
+    // Restore transition after dragging ends
+    if (buttonGroupRef.current) {
+      buttonGroupRef.current.style.transition =
+        "transform 0.2s ease, left 0.2s ease, top 0.2s ease";
+    }
   };
 
   // Add and remove event listeners
@@ -106,6 +117,14 @@ const MobileControls: React.FC<MobileControlsProps> = ({
     };
   }, [isDragging]);
 
+  // Set initial transition properties when component mounts
+  useEffect(() => {
+    if (buttonGroupRef.current) {
+      buttonGroupRef.current.style.transition =
+        "transform 0.2s ease, left 0.2s ease, top 0.2s ease";
+    }
+  }, []);
+
   return (
     <div
       ref={containerRef}
@@ -115,15 +134,16 @@ const MobileControls: React.FC<MobileControlsProps> = ({
         ref={buttonGroupRef}
         className="absolute grid grid-cols-3 gap-1 z-10 pointer-events-auto"
         style={{
-          bottom: 0,
-          right: 0,
-          transform: `translate(-${buttonPosition.x}px, -${buttonPosition.y}px)`,
+          left: buttonPosition.x,
+          top: buttonPosition.y,
           touchAction: "none",
+          willChange: "transform, left, top",
+          transform: "translateZ(0)",
         }}
       >
         {/* Drag handle */}
         <div
-          className="col-span-3 h-6 bg-gray-700 bg-opacity-50 rounded-t-md mb-1 flex items-center justify-center cursor-move"
+          className="col-span-3 h-6 bg-gray-700 bg-opacity-50 rounded-t-md mb-1 flex items-center justify-center cursor-move select-none"
           onMouseDown={handleDragStart}
           onTouchStart={handleDragStart}
         >
@@ -131,31 +151,31 @@ const MobileControls: React.FC<MobileControlsProps> = ({
         </div>
 
         <button
-          className="min-w-10 bg py-3 rounded-full border border-itemborder hover:bg-blue-500 text-sm opacity-80 focus:bg-[#0e203f] active:bg-[#0e203f]"
+          className="min-w-10 bg py-3 rounded-full border border-itemborder hover:bg-blue-500 text-sm opacity-80 focus:bg-[#0e203f] active:bg-[#0e203f] select-none"
           onClick={() => moveHorizontal(-1)}
         >
           ←
         </button>
         <button
-          className="bg py-3 rounded-full border border-itemborder hover:bg-blue-500 text-sm opacity-80 focus:bg-[#0e203f] active:bg-[#0e203f]"
+          className="bg py-3 rounded-full border border-itemborder hover:bg-blue-500 text-sm opacity-80 focus:bg-[#0e203f] active:bg-[#0e203f] select-none"
           onClick={rotate}
         >
           Rotate
         </button>
         <button
-          className="min-w-10 bg py-3 rounded-full border border-itemborder hover:bg-blue-500 text-sm opacity-80 focus:bg-[#0e203f] active:bg-[#0e203f]"
+          className="min-w-10 bg py-3 rounded-full border border-itemborder hover:bg-blue-500 text-sm opacity-80 focus:bg-[#0e203f] active:bg-[#0e203f] select-none"
           onClick={() => moveHorizontal(1)}
         >
           →
         </button>
         <button
-          className="min-w-10 bg py-3 rounded-full border border-itemborder hover:bg-blue-500 text-sm opacity-80 focus:bg-[#0e203f] active:bg-[#0e203f]"
+          className="min-w-10 bg py-3 rounded-full border border-itemborder hover:bg-blue-500 text-sm opacity-80 focus:bg-[#0e203f] active:bg-[#0e203f] select-none"
           onClick={moveDown}
         >
           ↓
         </button>
         <button
-          className="bg py-3 rounded-full border border-itemborder hover:bg-blue-500 text-sm opacity-80 focus:bg-[#0e203f] active:bg-[#0e203f]"
+          className="bg py-3 rounded-full border border-itemborder hover:bg-blue-500 text-sm opacity-80 focus:bg-[#0e203f] active:bg-[#0e203f] select-none"
           onClick={hardDrop}
         >
           Drop
@@ -165,7 +185,7 @@ const MobileControls: React.FC<MobileControlsProps> = ({
             !gameOver && "hover:bg-blue-500"
           } ${
             isPaused ? "bg-blue-500" : "focus:bg-[#0e203f] active:bg-[#0e203f]"
-          }`}
+          } select-none`}
           onClick={() => setIsPaused(!isPaused)}
           disabled={gameOver}
         >

@@ -775,37 +775,37 @@ const Tetris: React.FC = () => {
           {/* Buttons for desktop */}
           <div className="hidden md:grid grid-cols-3 gap-2">
             <button
-              className="min-w-20 bg p-2 rounded border border-itemborder hover:bg-blue-500"
+              className="min-w-20 bg p-2 select-none rounded border border-itemborder hover:bg-blue-500"
               onClick={() => moveHorizontal(-1)}
             >
               ←
             </button>
             <button
-              className="bg p-2 rounded border border-itemborder hover:bg-blue-500"
+              className="bg p-2 select-none rounded border border-itemborder hover:bg-blue-500"
               onClick={rotate}
             >
               Rotate
             </button>
             <button
-              className="min-w-20 bg p-2 rounded border border-itemborder hover:bg-blue-500"
+              className="min-w-20 bg p-2 select-none rounded border border-itemborder hover:bg-blue-500"
               onClick={() => moveHorizontal(1)}
             >
               →
             </button>
             <button
-              className="min-w-20 bg p-2 rounded border border-itemborder hover:bg-blue-500"
+              className="min-w-20 bg p-2 select-none rounded border border-itemborder hover:bg-blue-500"
               onClick={moveDown}
             >
               ↓
             </button>
             <button
-              className="bg p-2 rounded border border-itemborder hover:bg-blue-500"
+              className="bg p-2 select-none rounded border border-itemborder hover:bg-blue-500"
               onClick={hardDrop}
             >
               Drop
             </button>
             <button
-              className={`min-w-20 bg p-2 rounded border border-itemborder ${
+              className={`min-w-20 bg p-2 select-none rounded border border-itemborder ${
                 !gameOver && "hover:bg-blue-500"
               } ${isPaused && "bg-blue-500"}`}
               onClick={() => setIsPaused(!isPaused)}
