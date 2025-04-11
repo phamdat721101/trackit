@@ -7,7 +7,7 @@ import {
   DialogDescription,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from "../../ui/dialog";
 import { ArrowRight, Check } from "lucide-react";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { Button } from "../../ui/Button";
@@ -25,7 +25,7 @@ interface DialogProps {
 }
 
 export default function BannerDialog({ value: timeLeft }: DialogProps) {
-  const [showDialog, setShowDialog] = useState(false);
+  const [showDialog, setShowDialog] = useState(true);
 
   return (
     <Dialog open={showDialog} onOpenChange={setShowDialog}>
