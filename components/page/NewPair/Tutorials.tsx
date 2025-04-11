@@ -7,7 +7,6 @@ import {
   DialogDescription,
   DialogTitle,
 } from "../../ui/dialog";
-import { Button } from "../../ui/Button";
 import { Check, X } from "lucide-react";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 

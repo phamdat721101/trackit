@@ -10,12 +10,14 @@ import GlobalContext from "../../../context/store";
 import YieldInfo from "./YieldInfo";
 import TokenCards from "./TokenCards";
 import Home from "./Home";
+import TokenSaleBanner from "./TokenSaleBanner";
 
 export default function Page() {
   const { selectedChain } = useContext(GlobalContext);
 
   return (
     <div className="grow w-full">
+      <TokenSaleBanner />
       {selectedChain === "movement" ||
       selectedChain === "sui" ||
       selectedChain === "aptos" ? (
