@@ -3,6 +3,7 @@ import { Card } from "../../ui/Card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../ui/tabs";
 import {
   ArrowDown,
+  ArrowRightLeft,
   ArrowUp,
   ExternalLink,
   Globe,
@@ -23,7 +24,8 @@ import {
 import { PriceFormatter } from "../PriceFormatter";
 import TokenSwap from "./Swap";
 import axios from "axios";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import { TokenInfo, TokenInfoSui, TokenMoveFunInfo } from "@/types/interface";
 
 const formatVolume = (volume: number): string => {
   if (volume >= 1000000) {
@@ -40,6 +42,7 @@ export default function Detail() {
   const { selectedToken } = useContext(GlobalContext);
   const params = useParams<{ id: string }>();
   const [tokenData, setTokenData] = useState();
+  const router = useRouter();
 
   useEffect(() => {
     const fetchToken = async () => {
@@ -63,6 +66,21 @@ export default function Detail() {
 
     fetchToken();
   }, []);
+
+  const clickHandler = (
+    token: TokenInfo | TokenInfoSui | TokenMoveFunInfo | null
+  ) => {
+    if (!token) return;
+
+    if (isTokenInfo(token)) {
+      router.push(`#`);
+    } else if (isMovefunTokenInfo(token)) {
+      window.open(token.pool_url || "#", "_blank");
+    } else {
+      router.push(`#`);
+    }
+  };
+
   return (
     <div className="p-4 bg rounded-lg space-y-4">
       <Card className="p-4 bg-items text-white border-itemborder">
@@ -102,7 +120,7 @@ export default function Detail() {
                 ? isTokenInfo(selectedToken)
                   ? selectedToken.pool_url
                   : isMovefunTokenInfo(selectedToken)
-                  ? selectedToken.pool_url
+                  ? selectedToken.pool_url || "#"
                   : selectedToken.website
                 : "#"
             }
@@ -217,7 +235,14 @@ export default function Detail() {
         </Tabs>
       </Card>
 
-      <TokenSwap token={selectedToken} />
+      <Button
+        className="w-full h-10 text-sm font-semibold bg-transparent border border-bluesky text-bluesky hover:bg-blue-500 hover:text-white"
+        onClick={() => clickHandler(selectedToken)}
+      >
+        <ArrowRightLeft className="w-5 h-5 mr-2" />
+        TRADE NOW !
+      </Button>
+      {/* <TokenSwap token={selectedToken} /> */}
 
       <Image
         src={"/banner.png"}

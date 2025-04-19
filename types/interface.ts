@@ -122,7 +122,13 @@ export interface TokenMoveFunInfo {
   updatedAt: string;
   isMigrated: boolean;
   migrationInfo: string | null;
-  pool_url: string;
+  pool_url?: string | null;
+  price_change_percentage?: {
+    "24H": string | null;
+    "1H": string | null;
+    "5M": string | null;
+    "15M": string | null;
+  };
 }
 
 export interface TradeInfo {

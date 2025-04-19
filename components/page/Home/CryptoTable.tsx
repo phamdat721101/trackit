@@ -556,7 +556,9 @@ export default function CryptoTable({ dex }: CryptoTableProps) {
                                   <div className="flex flex-col">
                                     <div className="flex items-center gap-2">
                                       <Link
-                                        href={token.pool_url}
+                                        href={
+                                          token.pool_url ? token.pool_url : "#"
+                                        }
                                         target="_blank"
                                         className="font-semibold text-gray-400 cursor-pointer"
                                         onClick={(e) => e.stopPropagation()}
