@@ -240,27 +240,7 @@ function DesktopSidebarContent({ isCollapsed }: { isCollapsed: boolean }) {
           open={isSubscriptionOpen}
           onOpenChange={() => setIsSubscriptionOpen(false)}
         />
-      </div>
-
-      <div className="p-4 pl-6 space-y-6">
-        {/* <NavUser user={data.user} showDetails={!isCollapsed} /> */}
-        <SidebarGroup>
-          <SidebarMenu>
-            {connected && (
-              <>                               
-              </>
-            )}
-            {!connected && (
-              <SidebarMenuItem>
-                <SidebarMenuButton className="text-gray-400" onClick={() => {}}>
-                  <LogInIcon />
-                  <span>Login</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            )}
-          </SidebarMenu>
-        </SidebarGroup>
-      </div>
+      </div>      
     </>
   );
 }
