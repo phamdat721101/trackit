@@ -13,9 +13,7 @@ const sub_tabs = [
   "Whale",
   "Fresh",
   "Snipers",
-  // "Top",
-  // "DEV",
-  // "Insiders",
+
 ];
 
 export default function Token() {
@@ -30,17 +28,6 @@ export default function Token() {
 
         {/* Tabs */}
         <Tabs defaultValue="Activity" className="w-full">
-          {/* <TabsList className="p-0 text-center bg-transparent space-x-5">
-            {main_tabs.map((tab, index) => (
-              <TabsTrigger
-                key={index}
-                value={tab}
-                className="md:px-5 grid bg-[#102447] data-[state=active]:bg-[#005880] data-[state=active]:text-gray-300 h-full rounded-lg data-[state=active]:rounded-lg"
-              >
-                <span>{tab}</span>
-              </TabsTrigger>
-            ))}
-          </TabsList> */}
         </Tabs>
         <Tabs defaultValue="All" className="w-full">
           <TabsList className="p-0 text-center bg-transparent rounded-xl gap-1">

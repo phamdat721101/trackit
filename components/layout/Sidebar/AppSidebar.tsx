@@ -3,13 +3,8 @@
 import { cn } from "../../../lib/utils";
 import {
   Menu,
-  SlidersVerticalIcon,
-  LogOutIcon,
   FlameIcon,
-  UsersIcon,
   ChartColumnIncreasingIcon,
-  DatabaseIcon,
-  FileChartColumnIncreasingIcon,
   LogInIcon,
   NewspaperIcon,
   SendIcon,
@@ -23,20 +18,8 @@ import {
   MessageCircle,
   Gamepad2Icon,
 } from "lucide-react";
-import {
-  Sheet,
-  SheetContent,
-  SheetTitle,
-  SheetTrigger,
-} from "../../ui/Sheet";
-import {
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarMenu,
-  SidebarGroup,
-  SidebarSeparator,
-  SidebarHeader,
-} from "../../ui/sidebar";
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "../../ui/Sheet";
+import { SidebarMenuButton, SidebarMenuItem, SidebarMenu, SidebarGroup, SidebarSeparator } from "../../ui/sidebar";
 import { VisuallyHidden, Root } from "@radix-ui/react-visually-hidden";
 import Image from "next/image";
 import Link from "next/link";
@@ -92,18 +75,7 @@ export function AppSidebar() {
           transition-all duration-300
           h-screen
         `}
-        >
-          {/* <button
-            onClick={() => setIsCollapsed(!isCollapsed)}
-            className="absolute -right-3 top-1/2 bg-bluesky hover:bg-blue-300 rounded-full p-1 z-10"
-          >
-            {isCollapsed ? (
-              <ChevronRight className="h-4 w-4 text-primary-foreground" />
-            ) : (
-              <ChevronLeft className="h-4 w-4 text-primary-foreground" />
-            )}
-          </button> */}
-
+        >         
           <div className="flex flex-col h-full sidebar">
             <DesktopSidebarContent isCollapsed={isCollapsed} />
           </div>
@@ -176,84 +148,7 @@ function MobileSidebarContent() {
               onClick={() => setSelectedChain(chain.value)}
             />
           ))}
-        </SidebarGroup>
-        {/* <SidebarSeparator className="bg-gray-500" />
-        <SidebarGroup>
-          <SidebarMenu className="gap-4">
-            {secondNav.map((nav) => (
-              <SidebarMenuItem
-                key={nav.name}
-                className={`${selectedNav === nav.name ? "selected-nav" : ""}`}
-              >
-                <SidebarMenuButton
-                  asChild
-                  // onClick={() => setSelectedNav(nav.name)}
-                  disabled
-                >
-                  <Link
-                    href={nav.url}
-                    className={
-                      selectedNav === nav.name
-                        ? "text-bluesky"
-                        : "text-gray-500"
-                    }
-                  >
-                    {nav.icon}
-                    <span
-                      className={
-                        selectedNav === nav.name
-                          ? "text-gray-400"
-                          : "text-gray-500"
-                      }
-                    >
-                      {nav.name}
-                    </span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ))}
-          </SidebarMenu>
-        </SidebarGroup>
-        <SidebarSeparator className="bg-gray-500" />
-        <SidebarGroup>
-          <SidebarHeader className="uppercase text-sm font-semibold">
-            Premium Tools
-          </SidebarHeader>
-          <SidebarMenu className="gap-4">
-            {thirdNav.map((nav) => (
-              <SidebarMenuItem
-                key={nav.name}
-                className={`${selectedNav === nav.name ? "selected-nav" : ""}`}
-              >
-                <SidebarMenuButton
-                  asChild
-                  // onClick={() => setSelectedNav(nav.name)}
-                  disabled
-                >
-                  <Link
-                    href={nav.url}
-                    className={
-                      selectedNav === nav.name
-                        ? "text-bluesky"
-                        : "text-gray-500"
-                    }
-                  >
-                    {nav.icon}
-                    <span
-                      className={
-                        selectedNav === nav.name
-                          ? "text-gray-400"
-                          : "text-gray-500"
-                      }
-                    >
-                      {nav.name}
-                    </span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ))}
-          </SidebarMenu>
-        </SidebarGroup> */}
+        </SidebarGroup>       
       </div>
 
       <div className="pt-4 mx-auto">
@@ -329,84 +224,7 @@ function DesktopSidebarContent({ isCollapsed }: { isCollapsed: boolean }) {
               </SidebarMenuItem>
             ))}
           </SidebarMenu>
-        </SidebarGroup>
-        {/* <SidebarSeparator className="bg-gray-500" />
-        <SidebarGroup>
-          <SidebarMenu className="gap-4">
-            {secondNav.map((nav) => (
-              <SidebarMenuItem
-                key={nav.name}
-                className={`${selectedNav === nav.name ? "selected-nav" : ""}`}
-              >
-                <SidebarMenuButton
-                  asChild
-                  // onClick={() => setSelectedNav(nav.name)}
-                  disabled
-                >
-                  <Link
-                    href={nav.url}
-                    className={
-                      selectedNav === nav.name
-                        ? "text-bluesky"
-                        : "text-gray-500"
-                    }
-                  >
-                    {nav.icon}
-                    <span
-                      className={
-                        selectedNav === nav.name
-                          ? "text-gray-400"
-                          : "text-gray-500"
-                      }
-                    >
-                      {nav.name}
-                    </span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ))}
-          </SidebarMenu>
-        </SidebarGroup>
-        <SidebarSeparator className="bg-gray-500" />
-        <SidebarGroup>
-          <SidebarHeader className="uppercase text-sm font-semibold">
-            Premium Tools
-          </SidebarHeader>
-          <SidebarMenu className="gap-4">
-            {thirdNav.map((nav) => (
-              <SidebarMenuItem
-                key={nav.name}
-                className={`${selectedNav === nav.name ? "selected-nav" : ""}`}
-              >
-                <SidebarMenuButton
-                  asChild
-                  // onClick={() => setSelectedNav(nav.name)}
-                  disabled
-                >
-                  <Link
-                    href={nav.url}
-                    className={
-                      selectedNav === nav.name
-                        ? "text-bluesky"
-                        : "text-gray-500"
-                    }
-                  >
-                    {nav.icon}
-                    <span
-                      className={
-                        selectedNav === nav.name
-                          ? "text-gray-400"
-                          : "text-gray-500"
-                      }
-                    >
-                      {nav.name}
-                    </span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ))}
-          </SidebarMenu>
-        </SidebarGroup> */}
+        </SidebarGroup>       
       </div>
 
       <div className="pt-4 mx-auto">
@@ -429,22 +247,7 @@ function DesktopSidebarContent({ isCollapsed }: { isCollapsed: boolean }) {
         <SidebarGroup>
           <SidebarMenu>
             {connected && (
-              <>
-                <SidebarMenuItem>
-                  <SidebarMenuButton className="text-gray-400">
-                    <SlidersVerticalIcon />
-                    <span>Settings</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <SidebarMenuButton
-                    className="text-gray-400"
-                    onClick={disconnect}
-                  >
-                    <LogOutIcon />
-                    <span>Logout</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
+              <>                               
               </>
             )}
             {!connected && (
@@ -501,84 +304,25 @@ const chains = [
     name: "Movement",
     logo: "/chains/movement-mark.svg",
     value: "movement",
-  },
-  {
-    name: "Sui",
-    logo: "/chains/sui.svg",
-    value: "sui",
-  },
+  },  
   {
     name: "Aptos",
     logo: "/chains/aptos.png",
     value: "aptos",
-  },
-  {
-    name: "Viction",
-    logo: "/chains/viction.svg",
-    value: "viction",
-  },
-  {
-    name: "Kaia",
-    logo: "/chains/kaia.svg",
-    value: "kaia",
-  },
-  {
-    name: "Polkadot",
-    logo: "/chains/polkadot.svg",
-    value: "polkadot",
-  },
-  {
-    name: "Berachain",
-    logo: "/chains/berachain.png",
-    value: "berachain",
-  },
-  {
-    name: "Starknet",
-    logo: "/chains/starknet.svg",
-    value: "starknet",
-  },
-
-  {
-    name: "Manta",
-    logo: "/chains/manta.svg",
-    value: "manta",
-  },
-  {
-    name: "Ancient8",
-    logo: "/chains/ancient8.svg",
-    value: "ancient8",
-  },
+  },  
 ];
 
 const mainNav = [
   {
     icon: <FlameIcon />,
-    name: "Meme",
+    name: "Explore",
     url: "/",
-  },
-  {
-    icon: <UsersIcon />,
-    name: "New Pair",
-    url: "/new-pair",
-    content: "Add and track a newly created token pair on the platform.",
   },
   {
     icon: <ChartColumnIncreasingIcon />,
     name: "Trending",
     url: "/trending",
     content: "View top-trending tokens based on volume and social mentions.",
-  },
-  {
-    icon: <DatabaseIcon />,
-    name: "Holding",
-    url: "/holding",
-    content: "Monitor your current holdings and portfolio performance.",
-  },
-  {
-    icon: <FileChartColumnIncreasingIcon />,
-    name: "Follow",
-    url: "/follow",
-    content: "Follow specific tokens or wallets for real-time updates.",
   },
   {
     icon: <CpuIcon />,

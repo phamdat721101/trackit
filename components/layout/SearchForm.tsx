@@ -1,63 +1,6 @@
 import React, { useState } from "react";
 import { Clock, AlertCircle, Search, X } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "../ui/dialog";
-
-// Mock data - replace with your actual API data
-const exchangeData = [
-  {
-    name: "Binance",
-    rate: 2.83927341,
-    eta: "5-45 min",
-    kycRisk: "Low",
-    tag: "Trusted partner",
-    tagColor: "text-green-400 bg-green-400/10",
-  },
-  {
-    name: "EasyBit",
-    rate: 2.84381467,
-    eta: "5-45 min",
-    kycRisk: "Medium",
-    tag: "Best rate",
-    tagColor: "text-yellow-400 bg-yellow-400/10",
-  },
-  {
-    name: "ChangeHero",
-    rate: 2.8437469347,
-    eta: "5-30 min",
-    kycRisk: "Low",
-    tag: "Fastest",
-    tagColor: "text-blue-400 bg-blue-400/10",
-  },
-  {
-    name: "Changelly",
-    rate: 2.84136667,
-    eta: "5-35 min",
-    kycRisk: "Medium",
-    tag: "",
-    tagColor: "",
-  },
-  {
-    name: "ChangeHero",
-    rate: 2.8437469347,
-    eta: "5-30 min",
-    kycRisk: "Low",
-    tag: "Fastest",
-    tagColor: "text-blue-400 bg-blue-400/10",
-  },
-  {
-    name: "Changelly",
-    rate: 2.84136667,
-    eta: "5-35 min",
-    kycRisk: "Medium",
-    tag: "",
-    tagColor: "",
-  },
-];
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 
 interface ResponseProps {
   srcAsset: string;
@@ -94,11 +37,6 @@ export default function SearchForm() {
     setError(null);
     setHasSearched(true);
 
-    // Filter results based on search value
-    // const filtered = exchangeData.filter((exchange) =>
-    //   exchange.name.toLowerCase().includes(searchValue.toLowerCase())
-    // );
-    // setResults(filtered);
     try {
       if (!searchValue.trim()) {
         throw new Error("Please enter a token address");
@@ -172,13 +110,6 @@ export default function SearchForm() {
                     <span className="text-lg font-medium text-gray-100">
                       {exchange.source}
                     </span>
-                    {/* {exchange.tag && (
-                      <span
-                        className={`text-xs px-2 py-1 rounded-full ${exchange.tagColor}`}
-                      >
-                        {exchange.tag}
-                      </span>
-                    )} */}
                   </div>
 
                   <div className="flex justify-between items-center">

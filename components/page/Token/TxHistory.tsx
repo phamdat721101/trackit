@@ -1,87 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ChevronDown, ChevronsUpDownIcon, Filter } from "lucide-react";
+import { ChevronsUpDownIcon } from "lucide-react";
 import { useParams } from "next/navigation";
 import { TxnInfo } from "../../../types/interface";
 import axios from "axios";
 import { format } from "date-fns";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "../../ui/Table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../ui/Table";
 import { ScrollArea, ScrollBar } from "../../ui/scroll-area";
-
-interface Trade {
-  date: string;
-  type: string;
-  usd: string;
-  cell: string;
-  apt: string;
-  price: string;
-  maker: string;
-}
-
-const trades: Trade[] = [
-  {
-    date: "Nov 21 11:49:38 PM",
-    type: "Buy",
-    usd: "<0.01",
-    cell: "0.2650",
-    apt: "0.0006400",
-    price: "0.02902",
-    maker: "5a1b1d",
-  },
-  {
-    date: "Nov 21 11:45:45 PM",
-    type: "Sell",
-    usd: "16.01",
-    cell: "550.00",
-    apt: "1.32",
-    price: "0.02912",
-    maker: "77e786",
-  },
-  {
-    date: "Nov 21 11:43:45 PM",
-    type: "Sell",
-    usd: "0.87",
-    cell: "30.10",
-    apt: "0.07255",
-    price: "0.02911",
-    maker: "16651c",
-  },
-  {
-    date: "Nov 21 11:41:20 PM",
-    type: "Buy",
-    usd: "0.02",
-    cell: "0.7288",
-    apt: "0.001760",
-    price: "0.02909",
-    maker: "a5b899",
-  },
-  {
-    date: "Nov 21 11:41:16 PM",
-    type: "Buy",
-    usd: "0.02",
-    cell: "0.7288",
-    apt: "0.001760",
-    price: "0.02909",
-    maker: "92d5c",
-  },
-  {
-    date: "Nov 21 11:39:01 PM",
-    type: "Buy",
-    usd: "14.52",
-    cell: "496.94",
-    apt: "1.20",
-    price: "0.02921",
-    maker: "b95781",
-  },
-];
 
 const header_table = [
   "Date",
@@ -109,7 +35,6 @@ export default function TxHistory() {
         );
         if (response.status === 200) {
           const data: TxnInfo[] = response.data.txnData;
-          // console.log(data);
           setTxnData(data);
         }
       } catch (err) {
@@ -176,15 +101,6 @@ export default function TxHistory() {
                       >
                         {trade.side}
                       </TableCell>
-                      {/* <td
-                  className={`px-4 py-2 ${
-                    trade.usd.startsWith("<")
-                      ? "text-green-500"
-                      : "text-red-500"
-                  }`}
-                >
-                  {trade.usd}
-                </td> */}
                       <TableCell className="px-4 py-2 whitespace-nowrap">
                         {(+trade.xAmt).toLocaleString("en-US", {
                           minimumFractionDigits: 2,
@@ -197,15 +113,6 @@ export default function TxHistory() {
                           maximumFractionDigits: 2,
                         })}
                       </TableCell>
-                      {/* <td
-                  className={`px-4 py-2 whitespace-nowrap ${
-                    trade.price.startsWith("0.02")
-                      ? "text-green-500"
-                      : "text-red-500"
-                  }`}
-                >
-                  {trade.price}
-                </td> */}
                       <TableCell className="px-4 py-2 whitespace-nowrap">
                         {formatAddress(trade.userWalletAddr)}
                       </TableCell>

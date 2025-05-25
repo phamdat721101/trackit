@@ -16,53 +16,12 @@ const chains = [
     name: "Movement",
     logo: "/chains/movement-mark.svg",
     value: "movement",
-  },
-  {
-    name: "Sui",
-    logo: "/chains/sui.svg",
-    value: "sui",
-  },
+  }, 
   {
     name: "Aptos",
     logo: "/chains/aptos.png",
     value: "aptos",
-  },
-  {
-    name: "Viction",
-    logo: "/chains/viction.svg",
-    value: "viction",
-  },
-  {
-    name: "Kaia",
-    logo: "/chains/kaia.svg",
-    value: "kaia",
-  },
-  {
-    name: "Polkadot",
-    logo: "/chains/polkadot.svg",
-    value: "polkadot",
-  },
-  {
-    name: "Berachain",
-    logo: "/chains/berachain.png",
-    value: "berachain",
-  },
-  {
-    name: "Starknet",
-    logo: "/chains/starknet.svg",
-    value: "starknet",
-  },
-
-  {
-    name: "Manta",
-    logo: "/chains/manta.svg",
-    value: "manta",
-  },
-  {
-    name: "Ancient8",
-    logo: "/chains/ancient8.svg",
-    value: "ancient8",
-  },
+  }
 ];
 
 export default function SelectChain() {

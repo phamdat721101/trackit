@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { ArrowRight, XIcon } from "lucide-react";
 import { Button } from "../../ui/Button";
 import { Card, CardContent } from "../../ui/Card";
-import BannerDialog from "./BannerDialog";
 
 type TimeLeft = {
   days: number;
@@ -64,15 +63,6 @@ export default function TokenSaleBanner() {
       <Card className="overflow-hidden border-0 bg-gradient-to-r from-bluesky via-blue-700 to-blue-500">
         <CardContent className="relative p-0">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 p-4 md:p-6 text-white">
-            <div className="col-span-2 space-y-4">
-              <h2 className="text-3xl md:text-4xl font-bold">
-                TrackIt Token: Coming soon!
-              </h2>
-              <p className="text-white">
-                Don&apos;t miss it! Trackit Token is on its way!
-              </p>
-            </div>
-
             <div className="flex flex-col justify-center gap-2">
               <div className="grid grid-cols-4 gap-2 text-center">
                 <CountdownItem value={timeLeft.days} label="Days" />
@@ -81,9 +71,9 @@ export default function TokenSaleBanner() {
                 <CountdownItem value={timeLeft.seconds} label="Seconds" />
               </div>
             </div>
-            <div className="m-auto">
+            {/* <div className="m-auto">
               <BannerDialog value={timeLeft} />
-            </div>
+            </div> */}
           </div>
           <Button
             onClick={() => setShowBanner(false)}

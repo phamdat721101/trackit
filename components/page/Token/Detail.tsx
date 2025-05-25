@@ -1,28 +1,14 @@
 import { Button } from "../../ui/Button";
 import { Card } from "../../ui/Card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../ui/tabs";
-import {
-  ArrowDown,
-  ArrowRightLeft,
-  ArrowUp,
-  ExternalLink,
-  Globe,
-  MessageCircle,
-  Timer,
-} from "lucide-react";
+import { ArrowRightLeft, ExternalLink } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
 import GlobalContext from "../../../context/store";
-import { Progress } from "../../ui/Progress";
 import TabDetail from "./TabDetail";
-import {
-  formatTokenPrice,
-  isMovefunTokenInfo,
-  isTokenInfo,
-} from "../../../types/helper";
+import { isMovefunTokenInfo, isTokenInfo } from "../../../types/helper";
 import { PriceFormatter } from "../PriceFormatter";
-import TokenSwap from "./Swap";
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
 import { TokenInfo, TokenInfoSui, TokenMoveFunInfo } from "@/types/interface";

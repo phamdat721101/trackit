@@ -9,27 +9,9 @@ import { Card } from "../../ui/Card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../ui/tabs";
 import { TokenInfo, TokenInfoSui, TokenMoveFunInfo } from "../../../types/interface";
 import { isMovefunTokenInfo, isTokenInfo } from "../../../types/helper";
-import {
-  Coin,
-  ChainId,
-  Pair,
-  Route,
-  Trade,
-  TradeType,
-  Percent,
-  Router,
-  CurrencyAmount,
-  Currency,
-  DEFAULT_FEE,
-  SWAP_ADDRESS,
-} from "warpgate-swap-sdk";
+import { SWAP_ADDRESS } from "warpgate-swap-sdk";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
-import { 
-  aptosClient,
-  getPair,
-  getSwapParams,
-  PairState,
-} from "../../warpgate/index";
+import {  aptosClient, getSwapParams } from "../../warpgate/index";
 import { useToast } from "@/hooks/use-toast";
 import Link from "next/link";
 
@@ -41,7 +23,6 @@ interface TokenData {
   amount: string;
   quickAmounts: number[];
 }
-
 interface SwapProps {
   token?: TokenInfo | TokenInfoSui | TokenMoveFunInfo | null;
 }
